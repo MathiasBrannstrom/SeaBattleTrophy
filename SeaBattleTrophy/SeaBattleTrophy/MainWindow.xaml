@@ -6,8 +6,13 @@
         xmlns:local="clr-namespace:SeaBattleTrophy.WPF"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        <ScrollViewer HorizontalScrollBarVisibility="Visible">
+    <Grid Background="DarkBlue">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <local:ShipOrderControl x:Name="ShipOrderControl"/>
+        <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Visible">
             <local:SeaMap x:Name="SeaMap"/>
         </ScrollViewer>
         

@@ -11,6 +11,9 @@
     <UserControl.Resources>
         <utilities:DoubleConverter x:Key="DoubleConverter" />
     </UserControl.Resources>
+    <UserControl.RenderTransform>
+        <TranslateTransform X="{Binding XPosInPixels}" Y="{Binding YPosInPixels}" />
+    </UserControl.RenderTransform>
     
     <Grid Width="{Binding LengthInPixels}" Height="{Binding WidthInPixels}">
         <Grid.RenderTransform>

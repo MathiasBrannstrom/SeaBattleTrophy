@@ -50,8 +50,6 @@ namespace SeaBattleTrophy.WPF
                 var shipControl = new Ship();
                 shipControl.DataContext = shipVM;
                 ShipGrid.Children.Add(shipControl);
-
-                shipControl.RenderTransform = new TranslateTransform { X = shipVM.XPosInPixels, Y = shipVM.YPosInPixels };
             }
         }
 

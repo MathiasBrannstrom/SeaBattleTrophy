@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SeaBattleTrophyGame;
+using SeaBattleTrophy.WPF.ViewModels;
 
 namespace SeaBattleTrophy.WPF
 {
@@ -28,6 +29,8 @@ namespace SeaBattleTrophy.WPF
             InitializeComponent();
             SetupGame();
             SeaMap.DataContext = _game;
+            var shipOrderViewModel = new ShipOrderViewModel(_game.Ships.First());
+            ShipOrderControl.DataContext = shipOrderViewModel;
         }
 
         public void SetupGame()

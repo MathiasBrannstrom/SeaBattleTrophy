@@ -74,9 +74,13 @@
     <Compile Include="SeaMap.xaml.cs">
       <DependentUpon>SeaMap.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ShipOrderControl.xaml.cs">
+      <DependentUpon>ShipOrderControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\Ships\Ship.xaml.cs">
       <DependentUpon>Ship.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\ShipOrderViewModel.cs" />
     <Compile Include="ViewModels\ShipViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -91,6 +95,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="SeaMap.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ShipOrderControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

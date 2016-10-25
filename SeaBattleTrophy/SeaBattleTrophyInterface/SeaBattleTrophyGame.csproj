@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Objects\Ship\Ship.cs" />
+    <Compile Include="Orders\ShipOrder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SeaBattleTrophyGame.cs" />
     <Compile Include="SeaMap.cs" />
