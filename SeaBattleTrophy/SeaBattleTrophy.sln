@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeaBattleTrophy.WPF", "SeaBattleTrophy\SeaBattleTrophy.WPF.csproj", "{C5530BB4-8B1A-4E09-8896-E6780CEB8555}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeaBattleTrophyGame", "SeaBattleTrophyInterface\SeaBattleTrophyGame.csproj", "{46FBF003-825C-496E-AFBA-52EEF8B7BE1D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{346B5139-46FC-456C-A8F2-738FD5E1023C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C5530BB4-8B1A-4E09-8896-E6780CEB8555}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5530BB4-8B1A-4E09-8896-E6780CEB8555}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5530BB4-8B1A-4E09-8896-E6780CEB8555}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5530BB4-8B1A-4E09-8896-E6780CEB8555}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46FBF003-825C-496E-AFBA-52EEF8B7BE1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46FBF003-825C-496E-AFBA-52EEF8B7BE1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46FBF003-825C-496E-AFBA-52EEF8B7BE1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46FBF003-825C-496E-AFBA-52EEF8B7BE1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{346B5139-46FC-456C-A8F2-738FD5E1023C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{346B5139-46FC-456C-A8F2-738FD5E1023C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{346B5139-46FC-456C-A8F2-738FD5E1023C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{346B5139-46FC-456C-A8F2-738FD5E1023C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

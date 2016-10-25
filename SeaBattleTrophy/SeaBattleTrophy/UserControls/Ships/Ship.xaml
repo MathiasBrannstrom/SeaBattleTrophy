@@ -1,0 +1,13 @@
+﻿<UserControl x:Class="SeaBattleTrophy.WPF.UserControls.Ships.Ship"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SeaBattleTrophy.WPF.UserControls.Ships"
+             xmlns:ship="clr-namespace:SeaBattleTrophy.Objects.Ship;assembly=SeaBattleTrophy"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance ship:IShip}">
+    <Grid Width="{Binding Size.Width}" Height="{Binding Size.Height}">
+        <Border Background="BurlyWood" BorderBrush="BlanchedAlmond" BorderThickness="5"/>
+    </Grid>
+</UserControl>
