@@ -12,13 +12,19 @@
         <utilities:DoubleConverter x:Key="DoubleConverter" />
     </UserControl.Resources>
     
-    <Grid Width="{Binding WidthInPixels}" Height="{Binding LengthInPixels}">
+    <Grid Width="{Binding LengthInPixels}" Height="{Binding WidthInPixels}">
         <Grid.RenderTransform>
-            <TranslateTransform X="{Binding ElementName=thisControl, Path=ActualWidth,  ConverterParameter=-0.5, Converter={StaticResource DoubleConverter}}"
+            <TransformGroup>
+                <TranslateTransform X="{Binding ElementName=thisControl, Path=ActualWidth,  ConverterParameter=-0.5, Converter={StaticResource DoubleConverter}}"
                             Y="{Binding ElementName=thisControl, Path=ActualHeight,  ConverterParameter=-0.5, Converter={StaticResource DoubleConverter}}"/>
+                <RotateTransform Angle="{Binding RotationAngle}" CenterX="0.5" CenterY="0.5"/>
+            </TransformGroup>
         </Grid.RenderTransform>
         <Border Background="BurlyWood" BorderBrush="BlanchedAlmond" BorderThickness="2">
-            <Ellipse Fill="Black" Height="3" Width="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Grid>
+                <Rectangle Fill="Black" Height="3" Width="6" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                <Ellipse Fill="Black" Height="3" Width="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
         </Border>
     </Grid>
 </UserControl>

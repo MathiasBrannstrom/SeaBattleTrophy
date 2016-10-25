@@ -22,7 +22,7 @@ namespace SeaBattleTrophyGame
         {
             Ships = new List<IShip>();
 
-            Ships.Add(new Ship { Width = 10, Length = 40, Position = new Point2D { X = 30, Y = 30 } });
+            Ships.Add(new Ship { Width = 10, Length = 40, Position = new Point2D { X = 30, Y = 30 }, AngleInDegrees = 30 });
             SeaMap = new SeaMap { SizeInMeters = 200 };
         }
 

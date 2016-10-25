@@ -9,7 +9,8 @@ namespace SeaBattleTrophyGame.Objects.Ship
 {
     public interface IShip
     {
-        Vector2D Direction { get; set; }
+        // [0, 360[   0 angle points east, increasing angle turns CCW.
+        float AngleInDegrees { get; set; }
 
         Point2D Position { get; set; }
         
@@ -20,7 +21,7 @@ namespace SeaBattleTrophyGame.Objects.Ship
 
     internal class Ship : IShip
     {
-        public Vector2D Direction { get; set; }
+        public float AngleInDegrees { get; set; }
 
         public Point2D Position { get; set; }
 

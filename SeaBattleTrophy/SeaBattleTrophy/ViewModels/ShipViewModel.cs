@@ -26,5 +26,7 @@ namespace SeaBattleTrophy.WPF.ViewModels
 
         public float YPosInPixels { get { return _ship.Position.Y / _metersPerPixel; } }
 
+        public float RotationAngle { get { return -_ship.AngleInDegrees; } }
+
     }
 }
