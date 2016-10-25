@@ -4,10 +4,21 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SeaBattleTrophy.WPF.UserControls.Ships"
-             xmlns:ship="clr-namespace:SeaBattleTrophy.Objects.Ship;assembly=SeaBattleTrophy"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance ship:IShip}">
-    <Grid Width="{Binding Size.Width}" Height="{Binding Size.Height}">
-        <Border Background="BurlyWood" BorderBrush="BlanchedAlmond" BorderThickness="5"/>
+             xmlns:shipVM="clr-namespace:SeaBattleTrophy.WPF.ViewModels"
+             xmlns:utilities="clr-namespace:Utilities;assembly=Utilities"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance shipVM:ShipViewModel}" x:Name="thisControl"
+             HorizontalAlignment="Left" VerticalAlignment="Top">
+    <UserControl.Resources>
+        <utilities:DoubleConverter x:Key="DoubleConverter" />
+    </UserControl.Resources>
+    
+    <Grid Width="{Binding WidthInPixels}" Height="{Binding LengthInPixels}">
+        <Grid.RenderTransform>
+            <TranslateTransform X="{Binding ElementName=thisControl, Path=ActualWidth,  ConverterParameter=-0.5, Converter={StaticResource DoubleConverter}}"
+                            Y="{Binding ElementName=thisControl, Path=ActualHeight,  ConverterParameter=-0.5, Converter={StaticResource DoubleConverter}}"/>
+        </Grid.RenderTransform>
+        <Border Background="BurlyWood" BorderBrush="BlanchedAlmond" BorderThickness="2">
+            <Ellipse Fill="Black" Height="3" Width="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
     </Grid>
 </UserControl>

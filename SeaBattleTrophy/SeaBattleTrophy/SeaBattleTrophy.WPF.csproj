@@ -77,6 +77,7 @@
     <Compile Include="UserControls\Ships\Ship.xaml.cs">
       <DependentUpon>Ship.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\ShipViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -144,6 +145,10 @@
     <ProjectReference Include="..\SeaBattleTrophyInterface\SeaBattleTrophyGame.csproj">
       <Project>{46fbf003-825c-496e-afba-52eef8b7be1d}</Project>
       <Name>SeaBattleTrophyGame</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilities\Utilities.csproj">
+      <Project>{346b5139-46fc-456c-a8f2-738fd5e1023c}</Project>
+      <Name>Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

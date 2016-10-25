@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Utilities;
 
-namespace SeaBattleTrophy.Objects.Ship
+namespace SeaBattleTrophyGame.Objects.Ship
 {
     public class ShipInformation
     {

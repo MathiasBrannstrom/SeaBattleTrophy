@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using SeaBattleTrophy;
+using SeaBattleTrophyGame;
 
 namespace SeaBattleTrophy.WPF
 {
@@ -21,18 +21,18 @@ namespace SeaBattleTrophy.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        private SeaBattleTrophyGame _game;
+        private ISeaBattleTrophyGame _game;
 
         public MainWindow()
         {
-            SetupGame();
-            DataContext = _game;
             InitializeComponent();
+            SetupGame();
+            SeaMap.DataContext = _game;
         }
 
         public void SetupGame()
         {
-            _game = new SeaBattleTrophyGame();
+            _game = new SeaBattleTrophyGameManager();
 
         }
     }
