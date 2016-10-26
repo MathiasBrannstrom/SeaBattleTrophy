@@ -9,17 +9,29 @@ using System.ComponentModel;
 
 namespace SeaBattleTrophyGame.Objects.Ship
 {
-    public interface IShip : INotifyPropertyChanged
+    public enum SailLevel
+    {
+        LowSails = 0,
+        CombatSails = 1,
+        FullSails = 2,
+        FullSailsWithLeadSail = 3
+    }
+
+    public interface IShipReadOnly : INotifyPropertyChanged
     {
         // [0, 360[   0 angle points east, increasing angle turns CCW.
-        float AngleInDegrees { get; set; }
+        float AngleInDegrees { get; }
 
-        Point2D Position { get; set; }
-        
-        float Length { get; set; }
+        Point2D Position { get; }
 
-        float Width { get; set; }
+        float Length { get; }
 
+        float Width { get; }
+
+        SailLevel SailLevel { get; }
+    }
+    public interface IShip : IShipReadOnly
+    {
         void ApplyShipOrder(IShipOrder order);
     }
 
@@ -33,6 +45,8 @@ namespace SeaBattleTrophyGame.Objects.Ship
 
         public float Width { get; set; }
 
+        public SailLevel SailLevel { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private Vector2D GetDirection()
@@ -44,27 +58,56 @@ namespace SeaBattleTrophyGame.Objects.Ship
         {
             foreach(var movementOrder in order.MovementOrders)
             {
-                ApplyMovementOrder(movementOrder);
+                if (movementOrder is ForwardMovementOrder)
+                    ApplyMovementOrder((ForwardMovementOrder)movementOrder);
+                else if (movementOrder is YawMovementOrder)
+                    ApplyMovementOrder((YawMovementOrder)movementOrder);
             }
         }
 
-        private void ApplyMovementOrder(MovementOrder movementOrder)
+        private void ChangeSailLevel(SailLevelChange sailLevelChange)
         {
-            switch (movementOrder.Direction)
+            switch (sailLevelChange)
             {
-                case Direction.Forward:
-                    Position = Position + GetDirection() * movementOrder.Distance;
-                    OnPropertyChanged("Position");
+                case SailLevelChange.DecreaseSailLevel:
+                    SailLevel = (SailLevel)Math.Max(0, (int)(SailLevel - 1));
                     break;
-                case Direction.Port:
-                    AngleInDegrees += movementOrder.Distance;
-                    OnPropertyChanged("AngleInDegrees");
-                    break;
-                case Direction.Starboard:
-                    AngleInDegrees -= movementOrder.Distance;
-                    OnPropertyChanged("AngleInDegrees");
+                case SailLevelChange.IncreaseSailLevel:
+                    SailLevel = (SailLevel)Math.Min(3, (int)(SailLevel + 1));
                     break;
             }
+
+            OnPropertyChanged("SailLevel");
+        }
+
+        private void ApplyMovementOrder(ForwardMovementOrder movementOrder)
+        {
+            Position = Position + GetDirection() * movementOrder.Distance;
+            OnPropertyChanged("Position");
+        }
+
+        private void ApplyMovementOrder(YawMovementOrder movementOrder)
+        {
+            var angleChange = (float)(movementOrder.Distance * 180 / (movementOrder.YawRadius * Math.PI));
+            var xChange = (float)(movementOrder.YawRadius * (1 - Math.Cos(angleChange/180*Math.PI)));
+            var yChange = (float)(movementOrder.YawRadius * Math.Sin(angleChange/180*Math.PI));
+
+            var changeVector = new Vector2D(xChange, yChange);
+            changeVector = changeVector.Rotate(AngleInDegrees - 90);
+
+            switch (movementOrder.Direction)
+            {
+                case Direction.Port:
+                    AngleInDegrees += angleChange;
+                    break;
+                case Direction.Starboard:
+                    AngleInDegrees -= angleChange;
+                    break;
+            }
+            Position = Position + changeVector;
+
+            OnPropertyChanged("Position");
+            OnPropertyChanged("AngleInDegrees");
         }
 
         // Create the OnPropertyChanged method to raise the event

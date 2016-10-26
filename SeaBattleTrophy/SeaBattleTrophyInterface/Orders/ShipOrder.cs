@@ -3,25 +3,41 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SeaBattleTrophyGame.Objects.Ship;
 
 namespace SeaBattleTrophyGame.Orders
 {
+    public enum SailLevelChange
+    {
+        StayAtCurrentSailSpeed,
+        IncreaseSailLevel,
+        DecreaseSailLevel
+    }
+
     public interface IShipOrder
     {
         List<MovementOrder> MovementOrders { get; }
+
+        SailLevelChange ShipSailLevelIncrement { get; }
     }
 
     public enum Direction
     {
-        Forward,
         Port,
         Starboard
     }
 
-    public struct MovementOrder
+    public abstract class MovementOrder
     {
-        public Direction Direction;
-        public float Distance;
+        public float Distance { get; set; }
+    }
+
+    public class ForwardMovementOrder : MovementOrder { }
+
+    public class YawMovementOrder : MovementOrder
+    {
+        public Direction Direction { get; set; }
+        public float YawRadius { get; set; }
     }
 
     public struct ShipOrder : IShipOrder
@@ -33,5 +49,8 @@ namespace SeaBattleTrophyGame.Orders
             return new ShipOrder { MovementOrders = list };
         }
 
-        public List<MovementOrder> MovementOrders { get; set; } }
+        public List<MovementOrder> MovementOrders { get; set; }
+
+        public SailLevelChange ShipSailLevelIncrement { get; set; }
+    }
 }

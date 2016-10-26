@@ -19,19 +19,19 @@ namespace SeaBattleTrophy.WPF.ViewModels
         
         public void ForwardButton()
         {
-            var order = ShipOrder.SingleMovementShipOrder(new MovementOrder { Direction = Direction.Forward, Distance = 10 });
+            var order = ShipOrder.SingleMovementShipOrder(new ForwardMovementOrder { Distance = 5 });
             _ship.ApplyShipOrder(order);
         }
 
         public void TurnCCW()
         {
-            var order = ShipOrder.SingleMovementShipOrder(new MovementOrder { Direction = Direction.Port, Distance = 15 });
+            var order = ShipOrder.SingleMovementShipOrder(new YawMovementOrder { Direction = Direction.Port, Distance = 5, YawRadius = 20 });
             _ship.ApplyShipOrder(order);
         }
 
         public void TurnCW()
         {
-            var order = ShipOrder.SingleMovementShipOrder(new MovementOrder { Direction = Direction.Starboard, Distance = 15 });
+            var order = ShipOrder.SingleMovementShipOrder(new YawMovementOrder { Direction = Direction.Starboard, Distance = 5, YawRadius = 20 });
             _ship.ApplyShipOrder(order);
         }
     }
