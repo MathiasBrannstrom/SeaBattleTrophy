@@ -13,6 +13,7 @@ namespace SeaBattleTrophy.WPF.ViewModels
     {
         private IShip _ship;
         ShipOrder _order = new ShipOrder();
+        ShipOrder? _lastOrder;
         private bool _isShipOrderReadyToSend;
         private SailLevelChange _requestedSailLevelChange;
 
@@ -44,6 +45,13 @@ namespace SeaBattleTrophy.WPF.ViewModels
             }
         }
 
+        public bool IsLastOrderValidToSendAgain
+        {
+            get { return _lastOrder.HasValue && _lastOrder.Value.GetTotalDistance().NearEquals(_ship.CurrentSpeed); }
+        }
+
+
+
         public ShipOrderViewModel(IShip ship)
         {
             _ship = ship;
@@ -74,11 +82,18 @@ namespace SeaBattleTrophy.WPF.ViewModels
             RequestedSailLevelChange = SailLevelChange.StayAtCurrentSailSpeed;
         }
 
-        public void ApplyOrder()
+        public void SendOrder()
         {
             _order.ShipSailLevelIncrement = RequestedSailLevelChange;
             _ship.ApplyShipOrder(_order);
+            _lastOrder = _order;
+            PropertyChanged.Raise(() => IsLastOrderValidToSendAgain);
             Reset();
+        }
+
+        public void SendLastOrderAgain()
+        {
+            _ship.ApplyShipOrder(_lastOrder);
         }
     }
 }

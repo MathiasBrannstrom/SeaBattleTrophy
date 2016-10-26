@@ -15,6 +15,8 @@ namespace SeaBattleTrophyGame
 
     public interface IShipOrder
     {
+        float GetTotalDistance();
+
         List<MovementOrder> MovementOrders { get; }
 
         SailLevelChange ShipSailLevelIncrement { get; }
@@ -46,6 +48,13 @@ namespace SeaBattleTrophyGame
             var list = new List<MovementOrder>();
             list.Add(movementOrder);
             return new ShipOrder { MovementOrders = list };
+        }
+
+        public float GetTotalDistance()
+        {
+            if (MovementOrders == null)
+                return 0;
+            else return MovementOrders.Sum(movementOrder => movementOrder.Distance);
         }
 
         public List<MovementOrder> MovementOrders { get; set; }

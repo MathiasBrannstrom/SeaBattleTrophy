@@ -80,7 +80,7 @@ namespace SeaBattleTrophyGame
 
         public void ApplyShipOrder(IShipOrder order)
         {
-            if (!order.MovementOrders.Sum(movementOrder => movementOrder.Distance).NearEquals(CurrentSpeed))
+            if (!order.GetTotalDistance().NearEquals(CurrentSpeed))
                 throw new InvalidOperationException("The sum of all movement order distances must be the current speed");
 
             foreach(var movementOrder in order.MovementOrders)
