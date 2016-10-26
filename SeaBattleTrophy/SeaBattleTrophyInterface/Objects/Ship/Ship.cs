@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Utilities;
-using SeaBattleTrophyGame.Orders;
 using System.ComponentModel;
 
-namespace SeaBattleTrophyGame.Objects.Ship
+namespace SeaBattleTrophyGame
 {
     public enum SailLevel
     {
@@ -29,6 +28,9 @@ namespace SeaBattleTrophyGame.Objects.Ship
         float Width { get; }
 
         SailLevel SailLevel { get; }
+
+        float CurrentSpeed { get; }
+
     }
     public interface IShip : IShipReadOnly
     {
@@ -45,9 +47,31 @@ namespace SeaBattleTrophyGame.Objects.Ship
 
         public float Width { get; set; }
 
+        public float CurrentSpeed
+        {
+            get { return 15.0f * SailLevelSpeedModifier(SailLevel); }
+        }
+
         public SailLevel SailLevel { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private static float SailLevelSpeedModifier(SailLevel sailLevel)
+        {
+            switch(sailLevel)
+            {
+                case SailLevel.LowSails:
+                    return 0.4f;
+                case SailLevel.CombatSails:
+                    return 0.6f;
+                case SailLevel.FullSails:
+                    return 0.8f;
+                case SailLevel.FullSailsWithLeadSail:
+                    return 1.0f;
+                default:
+                    throw new ArgumentOutOfRangeException("This sail speed is not supported!");
+            }
+        }
 
         private Vector2D GetDirection()
         {
@@ -56,6 +80,9 @@ namespace SeaBattleTrophyGame.Objects.Ship
 
         public void ApplyShipOrder(IShipOrder order)
         {
+            if (!order.MovementOrders.Sum(movementOrder => movementOrder.Distance).NearEquals(CurrentSpeed))
+                throw new InvalidOperationException("The sum of all movement order distances must be the current speed");
+
             foreach(var movementOrder in order.MovementOrders)
             {
                 if (movementOrder is ForwardMovementOrder)
@@ -63,6 +90,9 @@ namespace SeaBattleTrophyGame.Objects.Ship
                 else if (movementOrder is YawMovementOrder)
                     ApplyMovementOrder((YawMovementOrder)movementOrder);
             }
+
+            if (order.ShipSailLevelIncrement != SailLevelChange.StayAtCurrentSailSpeed)
+                ChangeSailLevel(order.ShipSailLevelIncrement);
         }
 
         private void ChangeSailLevel(SailLevelChange sailLevelChange)
@@ -77,6 +107,7 @@ namespace SeaBattleTrophyGame.Objects.Ship
                     break;
             }
 
+            OnPropertyChanged("CurrentSpeed");
             OnPropertyChanged("SailLevel");
         }
 

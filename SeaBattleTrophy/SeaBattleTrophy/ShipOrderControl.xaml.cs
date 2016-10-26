@@ -52,5 +52,10 @@ namespace SeaBattleTrophy.WPF
 
             _shipOrderViewModel = shipOrderViewModel;
         }
+
+        private void ApplyOrderButtonClicked(object sender, RoutedEventArgs e)
+        {
+            _shipOrderViewModel.ApplyOrder();
+        }
     }
 }

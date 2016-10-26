@@ -4,12 +4,34 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SeaBattleTrophy.WPF"
+             xmlns:viewmodels="clr-namespace:SeaBattleTrophy.WPF.ViewModels"
+             xmlns:utilities="clr-namespace:Utilities;assembly=Utilities"
+             xmlns:game="clr-namespace:SeaBattleTrophyGame;assembly=SeaBattleTrophyGame"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
-             DataContextChanged="HandleDataContextChanged">
+             DataContextChanged="HandleDataContextChanged"
+             d:DataContext="{d:DesignInstance viewmodels:ShipOrderViewModel}">
+    <UserControl.Resources>
+        <utilities:EnumToBooleanConverter x:Key="EnumToBoolConverter"/>
+        <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+    </UserControl.Resources>
     <StackPanel>
         <Button Height="30" Click="ForwardButtonClicked">Straight ahead!</Button>
         <Button Height="30" Click="CCWButtonClicked">Turn 15deg CCW</Button>
         <Button Height="30" Click="CWButtonClicked">Turn 15deg CW</Button>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <RadioButton Grid.Column="0" IsChecked="{Binding RequestedSailLevelChange, Converter={StaticResource EnumToBoolConverter}, 
+                ConverterParameter={x:Static game:SailLevelChange.IncreaseSailLevel}}">Increase sails</RadioButton>
+            <RadioButton Grid.Column="1" IsChecked="{Binding RequestedSailLevelChange, Converter={StaticResource EnumToBoolConverter}, 
+                ConverterParameter={x:Static game:SailLevelChange.StayAtCurrentSailSpeed}}">Keep sails</RadioButton>
+            <RadioButton Grid.Column="2" IsChecked="{Binding RequestedSailLevelChange, Converter={StaticResource EnumToBoolConverter}, 
+                ConverterParameter={x:Static game:SailLevelChange.DecreaseSailLevel}}">Decrease sails</RadioButton>
+        </Grid>
+        <Button Height="30" Click="ApplyOrderButtonClicked" IsEnabled="{Binding IsShipOrderReadyToSend}">Apply order</Button>
     </StackPanel>
 </UserControl>

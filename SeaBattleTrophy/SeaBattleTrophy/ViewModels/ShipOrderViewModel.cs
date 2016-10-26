@@ -3,14 +3,46 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SeaBattleTrophyGame.Objects.Ship;
-using SeaBattleTrophyGame.Orders;
+using SeaBattleTrophyGame;
+using System.ComponentModel;
+using Utilities;
 
 namespace SeaBattleTrophy.WPF.ViewModels
 {
-    public class ShipOrderViewModel
+    public class ShipOrderViewModel : INotifyPropertyChanged
     {
         private IShip _ship;
+        ShipOrder _order = new ShipOrder();
+        private bool _isShipOrderReadyToSend;
+        private SailLevelChange _requestedSailLevelChange;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public SailLevelChange RequestedSailLevelChange
+        {
+            get { return _requestedSailLevelChange; }
+            set
+            {
+                if(_requestedSailLevelChange != value)
+                {
+                    _requestedSailLevelChange = value;
+                    PropertyChanged.Raise(() => RequestedSailLevelChange);
+                }
+            }
+        }
+
+        public bool IsShipOrderReadyToSend
+        {
+            get { return _isShipOrderReadyToSend; }
+            set
+            {
+                if(_isShipOrderReadyToSend != value)
+                {
+                    _isShipOrderReadyToSend = value;
+                    PropertyChanged.Raise(() => IsShipOrderReadyToSend);
+                }
+            }
+        }
 
         public ShipOrderViewModel(IShip ship)
         {
@@ -19,20 +51,34 @@ namespace SeaBattleTrophy.WPF.ViewModels
         
         public void ForwardButton()
         {
-            var order = ShipOrder.SingleMovementShipOrder(new ForwardMovementOrder { Distance = 5 });
-            _ship.ApplyShipOrder(order);
+            _order = ShipOrder.SingleMovementShipOrder(new ForwardMovementOrder { Distance = _ship.CurrentSpeed });
+            IsShipOrderReadyToSend = true;
         }
 
         public void TurnCCW()
         {
-            var order = ShipOrder.SingleMovementShipOrder(new YawMovementOrder { Direction = Direction.Port, Distance = 5, YawRadius = 20 });
-            _ship.ApplyShipOrder(order);
+            _order = ShipOrder.SingleMovementShipOrder(new YawMovementOrder { Direction = Direction.Port, Distance = _ship.CurrentSpeed, YawRadius = 20 });
+            IsShipOrderReadyToSend = true;
         }
 
         public void TurnCW()
         {
-            var order = ShipOrder.SingleMovementShipOrder(new YawMovementOrder { Direction = Direction.Starboard, Distance = 5, YawRadius = 20 });
-            _ship.ApplyShipOrder(order);
+            _order = ShipOrder.SingleMovementShipOrder(new YawMovementOrder { Direction = Direction.Starboard, Distance = _ship.CurrentSpeed, YawRadius = 20 });
+            IsShipOrderReadyToSend = true;
+        }
+
+        public void Reset()
+        {
+            _order = new ShipOrder();
+            IsShipOrderReadyToSend = false;
+            RequestedSailLevelChange = SailLevelChange.StayAtCurrentSailSpeed;
+        }
+
+        public void ApplyOrder()
+        {
+            _order.ShipSailLevelIncrement = RequestedSailLevelChange;
+            _ship.ApplyShipOrder(_order);
+            Reset();
         }
     }
 }

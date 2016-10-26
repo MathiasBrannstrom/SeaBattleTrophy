@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SeaBattleTrophyGame.Objects.Ship;
+using SeaBattleTrophyGame;
 using System.ComponentModel;
+using Utilities;
 
 namespace SeaBattleTrophy.WPF.ViewModels
 {
@@ -23,16 +24,19 @@ namespace SeaBattleTrophy.WPF.ViewModels
 
         private void HandleShipPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == "Position")
+            if(e.PropertyName == nameof(IShip.Position))
             {
-                OnPropertyChanged("XPosInPixels");
-                OnPropertyChanged("YPosInPixels");
+                PropertyChanged.Raise(() => XPosInPixels);
+                PropertyChanged.Raise(() => YPosInPixels);
             }
 
-            if(e.PropertyName == "AngleInDegrees")
+            if(e.PropertyName == nameof(IShip.AngleInDegrees))
             {
-                OnPropertyChanged("RotationAngle");
+                PropertyChanged.Raise(() => RotationAngle);
             }
+
+            if (e.PropertyName == nameof(IShip.CurrentSpeed))
+                PropertyChanged.Raise(() => Speed);
         }
 
         public float WidthInPixels { get { return _ship.Width / _metersPerPixel; } }
@@ -44,6 +48,8 @@ namespace SeaBattleTrophy.WPF.ViewModels
         public float YPosInPixels { get { return SeaMap.SeaMapSizeInPixels - _ship.Position.Y / _metersPerPixel; } }
 
         public float RotationAngle { get { return -_ship.AngleInDegrees; } }
+
+        public float Speed { get { return _ship.CurrentSpeed; } }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

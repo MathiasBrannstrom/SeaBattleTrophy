@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using SeaBattleTrophyGame.Objects.Ship;
 
-namespace SeaBattleTrophyGame.Orders
+namespace SeaBattleTrophyGame
 {
     public enum SailLevelChange
     {
