@@ -61,6 +61,15 @@ namespace SeaBattleTrophy.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All ships have not gotten orders yet..
+        /// </summary>
+        public static string AllShipsDoNotHaveOrdersYet {
+            get {
+                return ResourceManager.GetString("AllShipsDoNotHaveOrdersYet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Decrease sail level.
         /// </summary>
         public static string DecreaseSailLevel {

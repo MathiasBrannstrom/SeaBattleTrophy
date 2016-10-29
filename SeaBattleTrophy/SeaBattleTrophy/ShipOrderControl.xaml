@@ -115,6 +115,24 @@
             <RadioButton Grid.Column="2" IsChecked="{Binding RequestedSailLevelChange, Converter={StaticResource EnumToBoolConverter}, 
                 ConverterParameter={x:Static game:SailLevelChange.IncreaseSailLevel}}"  Content="{x:Static properties:Strings.IncreaseSailLevel}"/>
         </Grid>
-        <Button Height="30" Click="SendOrderButtonClicked" IsEnabled="{Binding AreShipOrdersReadyToSend}" Margin="5" Content="{x:Static properties:Strings.SendOrders}"/>
+        <Button Height="30" Click="SendOrderButtonClicked" Margin="5">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Content" Value="{x:Static properties:Strings.SendOrders}" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding AreShipOrdersReadyToSend}" Value="False">
+                            <Setter Property="IsEnabled" Value="False" />
+                            <Setter Property="Content">
+                                <Setter.Value>
+                                    <StackPanel Orientation="Vertical">
+                                        <Label Content="{x:Static properties:Strings.AllShipsDoNotHaveOrdersYet}" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
     </StackPanel>
 </UserControl>
