@@ -36,34 +36,24 @@
     </UserControl.Resources>
     <StackPanel Width="300" Background="Gray">
         <Grid Margin="5">
-            <ProgressBar Height="80" />
+            <ProgressBar Height="80" Maximum="{Binding CurrentMaxSpeed}" Value="{Binding CurrentDistanceRemaining, Mode=OneWay}" />
             <Label Content="{Binding CurrentMaxSpeed}" HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Grid>
-        <Border BorderBrush="DarkGray" BorderThickness="1" Margin="5" IsEnabled="False"> <!--For future use-->
-            <Grid Margin="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <Label Grid.RowSpan="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
-                    Forward
-                </Label>
-                <Slider Grid.Row="0" Grid.Column="1" />
-                <TextBox Grid.Row="1" Grid.Column="1" />
-                <Button Grid.RowSpan="2" Grid.Column="2" Width="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}">+</Button>
-            </Grid>
-        </Border>
+        <StackPanel Grid.IsSharedSizeScope="True">
+            <local:MovementOrderControl Label="Forward" 
+                                        MinDistance="0" MaxDistance="{Binding CurrentDistanceRemaining}"
+                                        OrderAdded="HandleForwardMovementOrderAdded"/>
 
+            <local:MovementOrderControl  Label="Port" 
+                                        MinDistance="0" MaxDistance="{Binding CurrentDistanceRemaining}"
+                                        OrderAdded="HandlePortMovementOrderAdded"/>
+
+            <local:MovementOrderControl Label="Starboard" 
+                                        MinDistance="0" MaxDistance="{Binding CurrentDistanceRemaining}"
+                                        OrderAdded="HandleStarboardMovementOrderAdded"/>
+        </StackPanel>
         <ListView MinHeight="160" Margin="5" ItemsSource="{Binding CurrentMovementOrders}" ItemTemplate="{StaticResource MovementOrderTemplate}" />
 
-        <Button Height="30" Click="ForwardButtonClicked" Margin="5">Straight ahead!</Button>
-        <Button Height="30" Click="CCWButtonClicked" Margin="5">Turn 15deg CCW</Button>
-        <Button Height="30" Click="CWButtonClicked" Margin="5">Turn 15deg CW</Button>
         <Grid Margin="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>

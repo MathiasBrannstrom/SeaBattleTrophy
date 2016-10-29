@@ -17,6 +17,8 @@ namespace SeaBattleTrophyGame
         bool DoesAllShipsHaveValidOrders { get; }
 
         void RemoveMovementOrderFromShip(IShipReadOnly value, MovementOrder movementOrder);
+
+        void AddMovementOrder(IShipReadOnly value, MovementOrder movementOrder);
     }
 
     public class ShipOrderManager : IShipOrderManager
@@ -30,9 +32,18 @@ namespace SeaBattleTrophyGame
         {
             foreach(var ship in ships)
             {
+                ship.PropertyChanged += HandleShipPropertyChanged;
                 ship.SetShipOrder(new ShipOrder());
                 _shipsByIndex.Add(ship.Index, ship);
 
+            }
+        }
+
+        private void HandleShipPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if(e.PropertyName == nameof(Ship.HasValidShipOrder))
+            {
+                PropertyChanged.Raise(() => DoesAllShipsHaveValidOrders);
             }
         }
 
@@ -46,31 +57,26 @@ namespace SeaBattleTrophyGame
                 ship.ApplyCurrentShipOrder();
                 ship.SetShipOrder(new ShipOrder());
             }
-
-            PropertyChanged.Raise(() => DoesAllShipsHaveValidOrders);
         }
 
         public void UpdateWithPartialShipOrder(IShipReadOnly ship, IShipOrder newShipOrders)
         {
             _shipsByIndex[ship.Index].CurrentShipOrder.UpdateWithNewOrders(newShipOrders);
-
-            //TODO: This could be optimized to not have to recheck all ships each time one ship has it's orders updated.
-            // Well, now it has been optimized so that the ships store a bool on them whether or not it is updated, but I still would like to clean this up a bit.
-            PropertyChanged.Raise(() => DoesAllShipsHaveValidOrders);
         }
 
         public void RemoveMovementOrderFromShip(IShipReadOnly ship, MovementOrder movementOrder)
         {
             _shipsByIndex[ship.Index].CurrentShipOrder.MovementOrders.Remove(movementOrder);
-            PropertyChanged.Raise(() => DoesAllShipsHaveValidOrders);
+        }
+
+        public void AddMovementOrder(IShipReadOnly ship, MovementOrder movementOrder)
+        {
+            _shipsByIndex[ship.Index].CurrentShipOrder.MovementOrders.Add(movementOrder);
         }
 
         public bool DoesAllShipsHaveValidOrders
         {
-            get
-            { 
-                return _shipsByIndex.All(kvp => kvp.Value.HasValidShipOrder);
-            }
+            get { return _shipsByIndex.All(kvp => kvp.Value.HasValidShipOrder); }
         }
     }
 }

@@ -77,6 +77,9 @@
     <Compile Include="ShipOrderControl.xaml.cs">
       <DependentUpon>ShipOrderControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\MovementOrderControl.xaml.cs">
+      <DependentUpon>MovementOrderControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\Ships\Ship.xaml.cs">
       <DependentUpon>Ship.xaml</DependentUpon>
     </Compile>
@@ -100,6 +103,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ShipOrderControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\MovementOrderControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

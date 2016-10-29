@@ -29,21 +29,6 @@ namespace SeaBattleTrophy.WPF
             InitializeComponent();
         }
 
-        private void ForwardButtonClicked(object sender, RoutedEventArgs e)
-        {
-            _shipOrderViewModel.ForwardButton();
-        }
-
-        private void CWButtonClicked(object sender, RoutedEventArgs e)
-        {
-            _shipOrderViewModel.TurnCW();
-        }
-
-        private void CCWButtonClicked(object sender, RoutedEventArgs e)
-        {
-            _shipOrderViewModel.TurnCCW();
-        }
-
         private void HandleDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             var shipOrderViewModel = DataContext as ShipOrderViewModel;
@@ -59,10 +44,6 @@ namespace SeaBattleTrophy.WPF
             _shipOrderViewModel.SendShipOrders();
         }
 
-        private void SendLastOrderAgainButtonClicked(object sender, RoutedEventArgs e)
-        {
-        }
-
         private void HandleRemoveMovementOrderButtonClicked(object sender, RoutedEventArgs e)
         {
             var dataContext = ((FrameworkElement)sender).DataContext;
@@ -71,6 +52,21 @@ namespace SeaBattleTrophy.WPF
 
             _shipOrderViewModel.RemoveMovementOrder(movementOrder);
             
+        }
+
+        private void HandleForwardMovementOrderAdded(float distance)
+        {
+            _shipOrderViewModel.AddMovementOrder(Direction.Forward, distance);
+        }
+
+        private void HandlePortMovementOrderAdded(float distance)
+        {
+            _shipOrderViewModel.AddMovementOrder(Direction.Port, distance);
+        }
+
+        private void HandleStarboardMovementOrderAdded(float distance)
+        {
+            _shipOrderViewModel.AddMovementOrder(Direction.Starboard, distance);
         }
     }
 }

@@ -7,6 +7,7 @@ using SeaBattleTrophyGame;
 using System.ComponentModel;
 using Utilities;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 
 namespace SeaBattleTrophy.WPF.ViewModels
 {
@@ -20,9 +21,14 @@ namespace SeaBattleTrophy.WPF.ViewModels
         
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public double CurrentMaxSpeed
+        public float CurrentMaxSpeed
         {
             get { return _selectedShip.Value.CurrentSpeed; }
+        }
+
+        public float CurrentDistanceRemaining
+        {
+            get { return _selectedShip.Value.CurrentSpeed - _currentShipOrder.MovementOrders.Sum(order => order.Distance); }
         }
 
         public ReadOnlyObservableCollection<MovementOrder> CurrentMovementOrders
@@ -69,6 +75,25 @@ namespace SeaBattleTrophy.WPF.ViewModels
             HandleSelectedShipPropertyChanged(this, new PropertyChangedEventArgs(null));
         }
 
+        internal void AddMovementOrder(Direction direction, float distance)
+        {
+            MovementOrder movementOrder;
+            switch (direction)
+            {
+                case Direction.Forward:
+                    movementOrder = new ForwardMovementOrder { Distance = distance };
+                    break;
+                case Direction.Port:
+                case Direction.Starboard:
+                    movementOrder = new YawMovementOrder { Direction = direction, Distance = distance, YawRadius = 20 };
+                    break;
+                default:
+                    throw new InvalidEnumArgumentException("There is no support for this enum value");
+            }
+
+            _shipOrderManager.AddMovementOrder(_currentShip, movementOrder);
+        }
+
         private void HandleSelectedShipPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (_currentShip != null)
@@ -84,12 +109,22 @@ namespace SeaBattleTrophy.WPF.ViewModels
         {
             if(e.PropertyName == nameof(IShip.CurrentShipOrder) || e.PropertyName == null)
             {
+                if(_currentShipOrder != null)
+                    ((INotifyCollectionChanged)_currentShipOrder.MovementOrders).CollectionChanged -= HandleCurrentMovementOrdersChanged;
+
                 _currentShipOrder = _currentShip.CurrentShipOrder;
 
+                ((INotifyCollectionChanged)_currentShipOrder.MovementOrders).CollectionChanged += HandleCurrentMovementOrdersChanged;
+                HandleCurrentMovementOrdersChanged(this, null);
                 PropertyChanged.Raise(() => CurrentMaxSpeed);
                 PropertyChanged.Raise(() => CurrentMovementOrders);
                 PropertyChanged.Raise(() => RequestedSailLevelChange);
             }
+        }
+
+        private void HandleCurrentMovementOrdersChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            PropertyChanged.Raise(() => CurrentDistanceRemaining);
         }
 
         private void HandleShipOrderManagerPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -98,24 +133,6 @@ namespace SeaBattleTrophy.WPF.ViewModels
             {
                 PropertyChanged.Raise(() => AreShipOrdersReadyToSend);
             }
-        }
-
-        public void ForwardButton()
-        {
-            var partialOrder = ShipOrder.SingleMovementShipOrder(new ForwardMovementOrder { Distance = _selectedShip.Value.CurrentSpeed });
-            _shipOrderManager.UpdateWithPartialShipOrder(_selectedShip.Value, partialOrder);
-        }
-
-        public void TurnCCW()
-        {
-            var partialOrder = ShipOrder.SingleMovementShipOrder(new YawMovementOrder { Direction = Direction.Port, Distance = _selectedShip.Value.CurrentSpeed, YawRadius = 20 });
-            _shipOrderManager.UpdateWithPartialShipOrder(_selectedShip.Value, partialOrder);
-        }
-
-        public void TurnCW()
-        {
-            var partialOrder = ShipOrder.SingleMovementShipOrder(new YawMovementOrder { Direction = Direction.Starboard, Distance = _selectedShip.Value.CurrentSpeed, YawRadius = 20 });
-            _shipOrderManager.UpdateWithPartialShipOrder(_selectedShip.Value, partialOrder);
         }
     }
 }

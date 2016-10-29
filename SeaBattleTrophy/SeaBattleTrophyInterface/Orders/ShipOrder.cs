@@ -38,6 +38,7 @@ namespace SeaBattleTrophyGame
 
     public enum Direction
     {
+        Forward,
         Port,
         Starboard
     }
