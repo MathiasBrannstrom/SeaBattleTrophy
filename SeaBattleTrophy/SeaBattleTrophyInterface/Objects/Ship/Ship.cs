@@ -147,7 +147,7 @@ namespace SeaBattleTrophyGame
             var xChange = (float)(movementOrder.YawRadius * (1 - Math.Cos(angleChange/180*Math.PI)));
             var yChange = (float)(movementOrder.YawRadius * Math.Sin(angleChange/180*Math.PI));
 
-            var changeVector = new Vector2D(xChange, yChange);
+            var changeVector = new Vector2D(movementOrder.Direction == Direction.Starboard? xChange : -xChange, yChange);
             changeVector = changeVector.Rotate(_originalAngle.Value - 90);
 
             switch (movementOrder.Direction)
