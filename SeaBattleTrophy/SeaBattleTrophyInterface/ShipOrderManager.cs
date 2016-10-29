@@ -72,7 +72,6 @@ namespace SeaBattleTrophyGame
                 finalStepDone = isFinalChange;
                 t = Math.Min(1.0f, t + timeStep);
             }
-            
 
             foreach(var kvp in _shipsByIndex)
             {

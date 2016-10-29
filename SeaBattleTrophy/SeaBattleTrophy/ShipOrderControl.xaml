@@ -15,24 +15,57 @@
         <utilities:EnumToBooleanConverter x:Key="EnumToBoolConverter"/>
         <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
 
-        <DataTemplate x:Key="MovementOrderTemplate" DataType="{x:Type game:YawMovementOrder}">
+        <DataTemplate x:Key="YawMovementOrderTemplate" DataType="{x:Type game:YawMovementOrder}">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition SharedSizeGroup="MovementListDirection" Width="Auto"/>
+                    <ColumnDefinition SharedSizeGroup="MovementListDistance" Width="Auto"/>
+                    <ColumnDefinition SharedSizeGroup="MovementListYawRadius" Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" Content="{Binding Direction}" />
                 <Label Grid.Column="1" Content="{Binding Distance}" />
                 <Label Grid.Column="2" Content="{Binding YawRadius}" />
-                <Button IsEnabled="False" Grid.Column="3">Up</Button>
-                <Button IsEnabled="False" Grid.Column="4">Down</Button> <!--Buttons for future use-->
-                <Button Grid.Column="5" Click="HandleRemoveMovementOrderButtonClicked">Remove</Button>
+                <Grid Grid.Column="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button IsEnabled="False" Grid.Column="0">Up</Button> <!--Buttons for future use-->
+                    <Button IsEnabled="False" Grid.Column="1">Down</Button>
+                    <Button Grid.Column="2" Click="HandleRemoveMovementOrderButtonClicked">Remove</Button>
+                </Grid>
             </Grid>
         </DataTemplate>
+        <DataTemplate x:Key="ForwardMovementOrderTemplate" DataType="{x:Type game:YawMovementOrder}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition SharedSizeGroup="MovementListDirection" Width="Auto"/>
+                    <ColumnDefinition SharedSizeGroup="MovementListDistance" Width="Auto"/>
+                    <ColumnDefinition SharedSizeGroup="MovementListYawRadius" Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Content="Forward" />
+                <Label Grid.Column="1" Content="{Binding Distance}" />
+                <Label Grid.Column="2" Content="-" />
+                <Grid Grid.Column="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button IsEnabled="False" Grid.Column="0">Up</Button>
+                    <!--Buttons for future use-->
+                    <Button IsEnabled="False" Grid.Column="1">Down</Button>
+                    <Button Grid.Column="2" Click="HandleRemoveMovementOrderButtonClicked">Remove</Button>
+                </Grid>
+            </Grid>
+        </DataTemplate>
+
+        <local:MovementOrderTemplateSelector x:Key="MovementOrderTemplateSelector"
+            ForwardMovementOrderTemplate="{StaticResource ForwardMovementOrderTemplate}"
+            YawMovementOrderTemplate="{StaticResource YawMovementOrderTemplate}" />
     </UserControl.Resources>
     <StackPanel Width="300" Background="Gray">
         <Grid Margin="5">
@@ -52,7 +85,7 @@
                                         MinDistance="0" MaxDistance="{Binding CurrentDistanceRemaining}"
                                         OrderAdded="HandleStarboardMovementOrderAdded"/>
         </StackPanel>
-        <ListView MinHeight="160" Margin="5" ItemsSource="{Binding CurrentMovementOrders}" ItemTemplate="{StaticResource MovementOrderTemplate}" />
+        <ListView MinHeight="160" Margin="5" ItemsSource="{Binding CurrentMovementOrders}" ItemTemplateSelector="{StaticResource MovementOrderTemplateSelector}" Grid.IsSharedSizeScope="True"/>
 
         <Grid Margin="5">
             <Grid.ColumnDefinitions>

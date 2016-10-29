@@ -69,4 +69,22 @@ namespace SeaBattleTrophy.WPF
             _shipOrderViewModel.AddMovementOrder(Direction.Starboard, distance);
         }
     }
+
+    public class MovementOrderTemplateSelector : DataTemplateSelector
+    {
+        public DataTemplate ForwardMovementOrderTemplate { get; set; }
+        public DataTemplate YawMovementOrderTemplate { get; set; }
+
+        public override DataTemplate SelectTemplate(object item, DependencyObject container)
+        {
+            FrameworkElement element = container as FrameworkElement;
+            if (item is ForwardMovementOrder)
+                return ForwardMovementOrderTemplate;
+
+            if (item is YawMovementOrder)
+                return YawMovementOrderTemplate;
+
+            throw new InvalidOperationException("There is no template for this movement order");
+        }
+    }
 }
