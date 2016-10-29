@@ -15,32 +15,36 @@ namespace SeaBattleTrophyGame
         void SendShipOrders();
 
         bool DoesAllShipsHaveValidOrders { get; }
+
+        void RemoveMovementOrderFromShip(IShipReadOnly value, MovementOrder movementOrder);
     }
 
     public class ShipOrderManager : IShipOrderManager
     {
 
-        private Dictionary<int, IShipOrder> _shipOrdersByIndex = new Dictionary<int, IShipOrder>();
-        private IEnumerable<IShip> _ships;
+        private Dictionary<int, IShip> _shipsByIndex = new Dictionary<int, IShip>();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public ShipOrderManager(IEnumerable<IShip> ships)
         {
-            _ships = ships;
-            foreach(var ship in _ships)
+            foreach(var ship in ships)
             {
-                _shipOrdersByIndex.Add(ship.Index, new ShipOrder());
+                ship.SetShipOrder(new ShipOrder());
+                _shipsByIndex.Add(ship.Index, ship);
+
             }
         }
 
         public void SendShipOrders()
         {
             // For now we send them sequentially to each ship. Later we will step forward.
-            foreach(var ship in _ships)
+            foreach(var kvp in _shipsByIndex)
             {
-                ship.SendShipOrder(_shipOrdersByIndex[ship.Index]);
-                _shipOrdersByIndex[ship.Index] = new ShipOrder();
+                var ship = kvp.Value;
+
+                ship.ApplyCurrentShipOrder();
+                ship.SetShipOrder(new ShipOrder());
             }
 
             PropertyChanged.Raise(() => DoesAllShipsHaveValidOrders);
@@ -48,9 +52,16 @@ namespace SeaBattleTrophyGame
 
         public void UpdateWithPartialShipOrder(IShipReadOnly ship, IShipOrder newShipOrders)
         {
-            _shipOrdersByIndex[ship.Index].UpdateWithNewOrders(newShipOrders);
+            _shipsByIndex[ship.Index].CurrentShipOrder.UpdateWithNewOrders(newShipOrders);
 
             //TODO: This could be optimized to not have to recheck all ships each time one ship has it's orders updated.
+            // Well, now it has been optimized so that the ships store a bool on them whether or not it is updated, but I still would like to clean this up a bit.
+            PropertyChanged.Raise(() => DoesAllShipsHaveValidOrders);
+        }
+
+        public void RemoveMovementOrderFromShip(IShipReadOnly ship, MovementOrder movementOrder)
+        {
+            _shipsByIndex[ship.Index].CurrentShipOrder.MovementOrders.Remove(movementOrder);
             PropertyChanged.Raise(() => DoesAllShipsHaveValidOrders);
         }
 
@@ -58,7 +69,7 @@ namespace SeaBattleTrophyGame
         {
             get
             { 
-                return _ships.All(ship => ship.IsOrderValid(_shipOrdersByIndex[ship.Index]));
+                return _shipsByIndex.All(kvp => kvp.Value.HasValidShipOrder);
             }
         }
     }

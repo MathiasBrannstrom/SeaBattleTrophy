@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SeaBattleTrophyGame
 {
     public enum SailLevelChange
     {
+        StayAtCurrentSailSpeed,
         IncreaseSailLevel,
         DecreaseSailLevel,
-        StayAtCurrentSailSpeed
     }
 
     public static class IShipOrderExtensions
@@ -23,12 +21,18 @@ namespace SeaBattleTrophyGame
         }
     }
 
-    public interface IShipOrder
+    public interface IShipOrderReadOnly
     {
-        List<MovementOrder> MovementOrders { get; }
-
         SailLevelChange? ShipSailLevelIncrement { get; }
 
+        ReadOnlyObservableCollection<MovementOrder> MovementOrders { get; }
+    }
+    
+    public interface IShipOrder : IShipOrderReadOnly
+    {
+        new ObservableCollection<MovementOrder> MovementOrders { get; }
+
+        
         void UpdateWithNewOrders(IShipOrder newShipOrders);
     }
 
@@ -53,24 +57,39 @@ namespace SeaBattleTrophyGame
 
     public class ShipOrder : IShipOrder
     {
+        private ReadOnlyObservableCollection<MovementOrder> _movementOrdersReadOnly;
+
         public static ShipOrder SingleMovementShipOrder(MovementOrder movementOrder)
         {
-            var list = new List<MovementOrder>();
-            list.Add(movementOrder);
-            return new ShipOrder { MovementOrders = list };
+            var shipOrder = new ShipOrder();
+            shipOrder.MovementOrders.Add(movementOrder);
+
+            return shipOrder;
         }
 
         public void UpdateWithNewOrders(IShipOrder newShipOrders)
         {
-            if (newShipOrders.MovementOrders != null)
-                MovementOrders = newShipOrders.MovementOrders;
+            if (newShipOrders.MovementOrders.Any())
+            {
+                MovementOrders.Clear();
+                foreach (var movementOrder in newShipOrders.MovementOrders)
+                    MovementOrders.Add(movementOrder);
+            }
 
             if (newShipOrders.ShipSailLevelIncrement != null)
                 ShipSailLevelIncrement = newShipOrders.ShipSailLevelIncrement;
         }
 
-        public List<MovementOrder> MovementOrders { get; set; }
+        public ShipOrder()
+        {
+            MovementOrders = new ObservableCollection<MovementOrder>();
+            _movementOrdersReadOnly = new ReadOnlyObservableCollection<MovementOrder>(MovementOrders);
+        }
+
+        public ObservableCollection<MovementOrder> MovementOrders { get; private set; }
 
         public SailLevelChange? ShipSailLevelIncrement { get; set; }
+
+        ReadOnlyObservableCollection<MovementOrder> IShipOrderReadOnly.MovementOrders { get { return _movementOrdersReadOnly; } }
     }
 }

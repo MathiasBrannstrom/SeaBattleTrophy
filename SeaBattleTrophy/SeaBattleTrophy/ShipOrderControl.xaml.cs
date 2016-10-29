@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SeaBattleTrophy.WPF.ViewModels;
+using SeaBattleTrophyGame;
 
 namespace SeaBattleTrophy.WPF
 {
@@ -60,6 +61,16 @@ namespace SeaBattleTrophy.WPF
 
         private void SendLastOrderAgainButtonClicked(object sender, RoutedEventArgs e)
         {
+        }
+
+        private void HandleRemoveMovementOrderButtonClicked(object sender, RoutedEventArgs e)
+        {
+            var dataContext = ((FrameworkElement)sender).DataContext;
+
+            var movementOrder = (MovementOrder)dataContext;
+
+            _shipOrderViewModel.RemoveMovementOrder(movementOrder);
+            
         }
     }
 }

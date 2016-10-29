@@ -14,12 +14,54 @@
     <UserControl.Resources>
         <utilities:EnumToBooleanConverter x:Key="EnumToBoolConverter"/>
         <Style TargetType="{x:Type RadioButton}" BasedOn="{StaticResource {x:Type ToggleButton}}"/>
+
+        <DataTemplate x:Key="MovementOrderTemplate" DataType="{x:Type game:YawMovementOrder}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Content="{Binding Direction}" />
+                <Label Grid.Column="1" Content="{Binding Distance}" />
+                <Label Grid.Column="2" Content="{Binding YawRadius}" />
+                <Button IsEnabled="False" Grid.Column="3">Up</Button>
+                <Button IsEnabled="False" Grid.Column="4">Down</Button> <!--Buttons for future use-->
+                <Button Grid.Column="5" Click="HandleRemoveMovementOrderButtonClicked">Remove</Button>
+            </Grid>
+        </DataTemplate>
     </UserControl.Resources>
-    <StackPanel>
-        <Button Height="30" Click="ForwardButtonClicked">Straight ahead!</Button>
-        <Button Height="30" Click="CCWButtonClicked">Turn 15deg CCW</Button>
-        <Button Height="30" Click="CWButtonClicked">Turn 15deg CW</Button>
-        <Grid>
+    <StackPanel Width="300" Background="Gray">
+        <ProgressBar Height="80" Margin="5"/>
+        <Border BorderBrush="DarkGray" BorderThickness="1" Margin="5" IsEnabled="False"> <!--For future use-->
+            <Grid Margin="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Label Grid.RowSpan="2" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    Forward
+                </Label>
+                <Slider Grid.Row="0" Grid.Column="1" />
+                <TextBox Grid.Row="1" Grid.Column="1" />
+                <Button Grid.RowSpan="2" Grid.Column="2" Width="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}">+</Button>
+            </Grid>
+        </Border>
+
+        <ListView MinHeight="160" Margin="5" ItemsSource="{Binding CurrentMovementOrders}" ItemTemplate="{StaticResource MovementOrderTemplate}" />
+
+        <Button Height="30" Click="ForwardButtonClicked" Margin="5">Straight ahead!</Button>
+        <Button Height="30" Click="CCWButtonClicked" Margin="5">Turn 15deg CCW</Button>
+        <Button Height="30" Click="CWButtonClicked" Margin="5">Turn 15deg CW</Button>
+        <Grid Margin="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -32,7 +74,6 @@
             <RadioButton Grid.Column="2" IsChecked="{Binding RequestedSailLevelChange, Converter={StaticResource EnumToBoolConverter}, 
                 ConverterParameter={x:Static game:SailLevelChange.DecreaseSailLevel}}">Decrease sails</RadioButton>
         </Grid>
-        <Button Height="30" Click="SendOrderButtonClicked" IsEnabled="{Binding AreShipOrdersReadyToSend}">Send orders</Button>
-        <!--<Button Height="30" Click="SendLastOrderAgainButtonClicked" IsEnabled="{Binding IsLastOrderValidToSendAgain}">Send copy of last order</Button>-->
+        <Button Height="30" Click="SendOrderButtonClicked" IsEnabled="{Binding AreShipOrdersReadyToSend}" Margin="5">Send orders</Button>
     </StackPanel>
 </UserControl>

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Utilities;
 using System.ComponentModel;
+using System.Collections.Specialized;
 
 namespace SeaBattleTrophyGame
 {
@@ -32,11 +33,18 @@ namespace SeaBattleTrophyGame
 
         float CurrentSpeed { get; }
 
+        IShipOrderReadOnly CurrentShipOrder { get; }
+
+        bool HasValidShipOrder { get; }
     }
 
     public interface IShip : IShipReadOnly
     {
-        void SendShipOrder(IShipOrder shipOrder);
+        void ApplyCurrentShipOrder();
+
+        new IShipOrder CurrentShipOrder { get; }
+
+        void SetShipOrder(IShipOrder order);
     }
 
     internal class Ship : IShipReadOnly, IShip
@@ -58,36 +66,26 @@ namespace SeaBattleTrophyGame
 
         public int Index { get; set; }
 
+        public IShipOrder CurrentShipOrder { get; private set; }
+
+        public bool HasValidShipOrder { get { return CurrentShipOrder.GetTotalDistance().NearEquals(CurrentSpeed); } }
+
+        IShipOrderReadOnly IShipReadOnly.CurrentShipOrder { get { return CurrentShipOrder; } }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private static float SailLevelSpeedModifier(SailLevel sailLevel)
-        {
-            switch(sailLevel)
-            {
-                case SailLevel.LowSails:
-                    return 0.4f;
-                case SailLevel.CombatSails:
-                    return 0.6f;
-                case SailLevel.FullSails:
-                    return 0.8f;
-                case SailLevel.FullSailsWithLeadSail:
-                    return 1.0f;
-                default:
-                    throw new ArgumentOutOfRangeException("This sail speed is not supported!");
-            }
-        }
 
         private Vector2D GetDirection()
         {
             return new Vector2D { X = (float)Math.Cos(AngleInDegrees * Math.PI / 180.0), Y = (float)Math.Sin(AngleInDegrees * Math.PI / 180.0) };
         }
 
-        public void SendShipOrder(IShipOrder order)
+        public void ApplyCurrentShipOrder()
         {
-            if (!this.IsOrderValid(order))
+            if (!HasValidShipOrder)
                 throw new InvalidOperationException("The order is not complete enough to send to this ship.");
 
-            foreach(var movementOrder in order.MovementOrders)
+            foreach(var movementOrder in CurrentShipOrder.MovementOrders)
             {
                 if (movementOrder is ForwardMovementOrder)
                     ApplyMovementOrder((ForwardMovementOrder)movementOrder);
@@ -95,8 +93,8 @@ namespace SeaBattleTrophyGame
                     ApplyMovementOrder((YawMovementOrder)movementOrder);
             }
 
-            if (order.ShipSailLevelIncrement.HasValue && order.ShipSailLevelIncrement != SailLevelChange.StayAtCurrentSailSpeed)
-                ChangeSailLevel(order.ShipSailLevelIncrement.Value);
+            if (CurrentShipOrder.ShipSailLevelIncrement.HasValue && CurrentShipOrder.ShipSailLevelIncrement != SailLevelChange.StayAtCurrentSailSpeed)
+                ChangeSailLevel(CurrentShipOrder.ShipSailLevelIncrement.Value);
         }
 
         private void ChangeSailLevel(SailLevelChange sailLevelChange)
@@ -145,6 +143,22 @@ namespace SeaBattleTrophyGame
             OnPropertyChanged("AngleInDegrees");
         }
 
+        public void SetShipOrder(IShipOrder order)
+        {
+            if(CurrentShipOrder != null)
+                CurrentShipOrder.MovementOrders.CollectionChanged -= HandleCurrentMovementOrdersCollectionChanged;
+
+            CurrentShipOrder = order;
+            CurrentShipOrder.MovementOrders.CollectionChanged += HandleCurrentMovementOrdersCollectionChanged;
+            PropertyChanged.Raise(() => CurrentShipOrder);
+            PropertyChanged.Raise(() => HasValidShipOrder);
+        }
+
+        private void HandleCurrentMovementOrdersCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            PropertyChanged.Raise(() => HasValidShipOrder);
+        }
+
         // Create the OnPropertyChanged method to raise the event
         public void OnPropertyChanged(string name)
         {
@@ -152,6 +166,24 @@ namespace SeaBattleTrophyGame
             if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(name));
+            }
+        }
+
+        // This should be moved somewhere
+        private static float SailLevelSpeedModifier(SailLevel sailLevel)
+        {
+            switch (sailLevel)
+            {
+                case SailLevel.LowSails:
+                    return 0.4f;
+                case SailLevel.CombatSails:
+                    return 0.6f;
+                case SailLevel.FullSails:
+                    return 0.8f;
+                case SailLevel.FullSailsWithLeadSail:
+                    return 1.0f;
+                default:
+                    throw new ArgumentOutOfRangeException("This sail speed is not supported!");
             }
         }
     }
