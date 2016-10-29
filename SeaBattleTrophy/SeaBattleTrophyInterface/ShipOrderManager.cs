@@ -51,7 +51,7 @@ namespace SeaBattleTrophyGame
         public async void SendShipOrders()
         {
             // For now we send them sequentially to each ship. Later we will step forward.
-            var timeStep = 1.0f / 20;
+            var timeStep = 1.0f / 40;
             var t = timeStep;
             var finalStepDone = false;
             while (!finalStepDone)
@@ -67,7 +67,7 @@ namespace SeaBattleTrophyGame
                 // Check collisions etc.
                 var timeSpent = DateTime.UtcNow - time;
 
-                await Task.Delay(50 - (int)timeSpent.TotalMilliseconds);
+                await Task.Delay(Math.Max(20 - (int)timeSpent.TotalMilliseconds,0));
 
                 finalStepDone = isFinalChange;
                 t = Math.Min(1.0f, t + timeStep);

@@ -60,7 +60,7 @@ namespace SeaBattleTrophyGame
 
         public float CurrentSpeed
         {
-            get { return 15.0f * SailLevelSpeedModifier(SailLevel); }
+            get { return 30.0f * SailLevelSpeedModifier(SailLevel); }
         }
 
         public SailLevel SailLevel { get; set; }
