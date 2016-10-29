@@ -23,8 +23,8 @@ namespace SeaBattleTrophyGame
 
         public SeaBattleTrophyGameManager()
         {
-            _ships.Add(new Ship { Width = 10, Length = 40, Position = new Point2D { X = 0, Y = 0 }, AngleInDegrees = 90, Index = 0, SailLevel = SailLevel.FullSails });
-            _ships.Add(new Ship { Width = 10, Length = 40, Position = new Point2D { X = 50, Y = 50 }, AngleInDegrees = 40, Index = 1, SailLevel = SailLevel.FullSails });
+            _ships.Add(new Ship { Width = 10, Length = 40, Position = new Point2D { X = 20, Y = 30 }, AngleInDegrees = 90, Index = 0, SailLevel = SailLevel.LowSails });
+            _ships.Add(new Ship { Width = 10, Length = 40, Position = new Point2D { X = 50, Y = 30 }, AngleInDegrees = 90, Index = 1, SailLevel = SailLevel.FullSailsWithLeadSail });
 
             Ships = _ships;
 
