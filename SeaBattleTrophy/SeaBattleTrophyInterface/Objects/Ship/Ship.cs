@@ -34,14 +34,12 @@ namespace SeaBattleTrophyGame
 
     }
 
-    public interface IShipOrderReceiver
+    public interface IShip : IShipReadOnly
     {
         void SendShipOrder(IShipOrder shipOrder);
-
-        int Index { get; }
     }
 
-    internal class Ship : IShipReadOnly, IShipOrderReceiver
+    internal class Ship : IShipReadOnly, IShip
     {
         public float AngleInDegrees { get; set; }
 
@@ -86,8 +84,8 @@ namespace SeaBattleTrophyGame
 
         public void SendShipOrder(IShipOrder order)
         {
-            if (!order.GetTotalDistance().NearEquals(CurrentSpeed))
-                throw new InvalidOperationException("The sum of all movement order distances must be the current speed");
+            if (!this.IsOrderValid(order))
+                throw new InvalidOperationException("The order is not complete enough to send to this ship.");
 
             foreach(var movementOrder in order.MovementOrders)
             {

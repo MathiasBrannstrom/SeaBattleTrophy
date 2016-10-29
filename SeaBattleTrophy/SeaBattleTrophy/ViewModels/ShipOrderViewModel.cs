@@ -36,9 +36,9 @@ namespace SeaBattleTrophy.WPF.ViewModels
             }
         }
 
-        public bool IsShipOrderReadyToSend
+        public bool AreShipOrdersReadyToSend
         {
-            get { return _shipOrderManager.DoesAllShipsHaveFinishedOrders(); }
+            get { return _shipOrderManager.DoesAllShipsHaveValidOrders; }
         }
 
         public void SendShipOrders()
@@ -57,8 +57,17 @@ namespace SeaBattleTrophy.WPF.ViewModels
         {
             _ship = ship;
             _shipOrderManager = shipOrderManager;
+            _shipOrderManager.PropertyChanged += HandleShipOrderManagerPropertyChanged;
         }
-        
+
+        private void HandleShipOrderManagerPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if(e.PropertyName == nameof(ShipOrderManager.DoesAllShipsHaveValidOrders))
+            {
+                PropertyChanged.Raise(() => AreShipOrdersReadyToSend);
+            }
+        }
+
         public void ForwardButton()
         {
             var partialOrder = ShipOrder.SingleMovementShipOrder(new ForwardMovementOrder { Distance = _ship.Value.CurrentSpeed });

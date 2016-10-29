@@ -45,6 +45,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SeaBattleTrophyGame.cs" />
     <Compile Include="SeaMap.cs" />
+    <Compile Include="IShipExtensions.cs" />
     <Compile Include="ShipOrderManager.cs" />
   </ItemGroup>
   <ItemGroup>
