@@ -11,9 +11,9 @@ namespace SeaBattleTrophy.WPF.ViewModels
 {
     public class ShipOrderViewModel : INotifyPropertyChanged
     {
-        private IShip _ship;
-        ShipOrder _order = new ShipOrder();
-        ShipOrder? _lastOrder;
+        private IValueHolderReadOnly<IShipReadOnly> _ship;
+        private IShipOrderManager _shipOrderManager;
+
         private bool _isShipOrderReadyToSend;
         private SailLevelChange _requestedSailLevelChange;
 
@@ -27,6 +27,10 @@ namespace SeaBattleTrophy.WPF.ViewModels
                 if(_requestedSailLevelChange != value)
                 {
                     _requestedSailLevelChange = value;
+
+                    var partialOrder = new ShipOrder { ShipSailLevelIncrement = RequestedSailLevelChange };
+                    _shipOrderManager.UpdateWithPartialShipOrder(_ship.Value, partialOrder);
+
                     PropertyChanged.Raise(() => RequestedSailLevelChange);
                 }
             }
@@ -34,66 +38,49 @@ namespace SeaBattleTrophy.WPF.ViewModels
 
         public bool IsShipOrderReadyToSend
         {
-            get { return _isShipOrderReadyToSend; }
-            set
-            {
-                if(_isShipOrderReadyToSend != value)
-                {
-                    _isShipOrderReadyToSend = value;
-                    PropertyChanged.Raise(() => IsShipOrderReadyToSend);
-                }
-            }
+            get { return _shipOrderManager.DoesAllShipsHaveFinishedOrders(); }
         }
 
-        public bool IsLastOrderValidToSendAgain
+        public void SendShipOrders()
         {
-            get { return _lastOrder.HasValue && _lastOrder.Value.GetTotalDistance().NearEquals(_ship.CurrentSpeed); }
+            _shipOrderManager.SendShipOrders();
         }
 
+        //public bool IsLastOrderValidToSendAgain
+        //{
+        //    get { return _lastOrder.HasValue && _lastOrder.Value.GetTotalDistance().NearEquals(_ship.CurrentSpeed); }
+        //}
 
 
-        public ShipOrderViewModel(IShip ship)
+
+        public ShipOrderViewModel(IValueHolderReadOnly<IShipReadOnly> ship, IShipOrderManager shipOrderManager)
         {
             _ship = ship;
+            _shipOrderManager = shipOrderManager;
         }
         
         public void ForwardButton()
         {
-            _order = ShipOrder.SingleMovementShipOrder(new ForwardMovementOrder { Distance = _ship.CurrentSpeed });
-            IsShipOrderReadyToSend = true;
+            var partialOrder = ShipOrder.SingleMovementShipOrder(new ForwardMovementOrder { Distance = _ship.Value.CurrentSpeed });
+            _shipOrderManager.UpdateWithPartialShipOrder(_ship.Value, partialOrder);
         }
 
         public void TurnCCW()
         {
-            _order = ShipOrder.SingleMovementShipOrder(new YawMovementOrder { Direction = Direction.Port, Distance = _ship.CurrentSpeed, YawRadius = 20 });
-            IsShipOrderReadyToSend = true;
+            var partialOrder = ShipOrder.SingleMovementShipOrder(new YawMovementOrder { Direction = Direction.Port, Distance = _ship.Value.CurrentSpeed, YawRadius = 20 });
+            _shipOrderManager.UpdateWithPartialShipOrder(_ship.Value, partialOrder);
         }
 
         public void TurnCW()
         {
-            _order = ShipOrder.SingleMovementShipOrder(new YawMovementOrder { Direction = Direction.Starboard, Distance = _ship.CurrentSpeed, YawRadius = 20 });
-            IsShipOrderReadyToSend = true;
+            var partialOrder = ShipOrder.SingleMovementShipOrder(new YawMovementOrder { Direction = Direction.Starboard, Distance = _ship.Value.CurrentSpeed, YawRadius = 20 });
+            _shipOrderManager.UpdateWithPartialShipOrder(_ship.Value, partialOrder);
         }
 
-        public void Reset()
-        {
-            _order = new ShipOrder();
-            IsShipOrderReadyToSend = false;
-            RequestedSailLevelChange = SailLevelChange.StayAtCurrentSailSpeed;
-        }
 
-        public void SendOrder()
-        {
-            _order.ShipSailLevelIncrement = RequestedSailLevelChange;
-            _ship.ApplyShipOrder(_order);
-            _lastOrder = _order;
-            PropertyChanged.Raise(() => IsLastOrderValidToSendAgain);
-            Reset();
-        }
-
-        public void SendLastOrderAgain()
-        {
-            _ship.ApplyShipOrder(_lastOrder);
-        }
+        //public void SetLastOrderAgain()
+        //{
+        //    _shipOrderManager.SetShipOrderForShip(_ship, _lastOrder);
+        //}
     }
 }

@@ -7,7 +7,7 @@
              xmlns:shipVM="clr-namespace:SeaBattleTrophy.WPF.ViewModels"
              xmlns:utilities="clr-namespace:Utilities;assembly=Utilities"
              mc:Ignorable="d" d:DataContext="{d:DesignInstance shipVM:ShipViewModel}" x:Name="thisControl"
-             HorizontalAlignment="Left" VerticalAlignment="Top">
+             HorizontalAlignment="Left" VerticalAlignment="Top" DataContextChanged="HandleDataContextChanged">
     <UserControl.Resources>
         <utilities:DoubleConverter x:Key="DoubleConverter" />
     </UserControl.Resources>
@@ -15,7 +15,7 @@
         <TranslateTransform X="{Binding XPosInPixels}" Y="{Binding YPosInPixels}" />
     </UserControl.RenderTransform>
     
-    <Grid Width="{Binding LengthInPixels}" Height="{Binding WidthInPixels}">
+    <Grid Width="{Binding LengthInPixels}" Height="{Binding WidthInPixels}" MouseDown="HandleShipMouseDown" x:Name="ShipGrid">
         <Grid.RenderTransform>
             <TransformGroup>
                 <TranslateTransform X="{Binding ElementName=thisControl, Path=ActualWidth,  ConverterParameter=-0.5, Converter={StaticResource DoubleConverter}}"
@@ -23,13 +23,29 @@
                 <RotateTransform Angle="{Binding RotationAngle}" CenterX="0.5" CenterY="0.5"/>
             </TransformGroup>
         </Grid.RenderTransform>
-        <Border Background="BurlyWood" BorderBrush="BlanchedAlmond" BorderThickness="2">
-            <Grid>
-                <Rectangle Fill="Black" Height="3" Width="6" HorizontalAlignment="Right" VerticalAlignment="Center" />
-                <Ellipse Fill="Black" Height="3" Width="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                <Label Content="{Binding Speed}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 15"
+        <Border> <!--Selection border-->
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="BorderBrush" Value="Gold" />
+                            <Setter Property="BorderThickness" Value="3" />
+                        </Trigger>
+                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                            <Setter Property="BorderBrush" Value="Goldenrod" />
+                            <Setter Property="BorderThickness" Value="3" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <Border Background="BurlyWood" BorderBrush="BlanchedAlmond" BorderThickness="2">
+                <Grid>
+                    <Rectangle Fill="Black" Height="3" Width="6" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                    <Ellipse Fill="Black" Height="3" Width="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <Label Content="{Binding Speed}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 15"
                        FontSize="18"/>
-            </Grid>
+                </Grid>
+            </Border>
         </Border>
     </Grid>
 </UserControl>

@@ -11,31 +11,43 @@ namespace SeaBattleTrophy.WPF.ViewModels
 {
     public class ShipViewModel : INotifyPropertyChanged
     {
-        private IShip _ship;
+        private IShipReadOnly _ship;
         private float _metersPerPixel;
+        private IValueHolder<IShipReadOnly> _selectedShip;
 
-
-        public ShipViewModel(IShip ship, float metersPerPixel)
+        public ShipViewModel(IShipReadOnly ship, float metersPerPixel)
         {
             _ship = ship;
             _ship.PropertyChanged += HandleShipPropertyChanged;
             _metersPerPixel = metersPerPixel;
         }
 
+        public ShipViewModel(IShipReadOnly ship, float metersPerPixel, IValueHolder<IShipReadOnly> selectedShip) 
+            : this(ship, metersPerPixel)
+        {
+            _selectedShip = selectedShip;
+            _selectedShip.PropertyChanged += HandleSelectedShipPropertyChanged;
+        }
+
+        private void HandleSelectedShipPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            PropertyChanged.Raise(() => IsSelected);
+        }
+
         private void HandleShipPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == nameof(IShip.Position))
+            if(e.PropertyName == nameof(IShipReadOnly.Position))
             {
                 PropertyChanged.Raise(() => XPosInPixels);
                 PropertyChanged.Raise(() => YPosInPixels);
             }
 
-            if(e.PropertyName == nameof(IShip.AngleInDegrees))
+            if(e.PropertyName == nameof(IShipReadOnly.AngleInDegrees))
             {
                 PropertyChanged.Raise(() => RotationAngle);
             }
 
-            if (e.PropertyName == nameof(IShip.CurrentSpeed))
+            if (e.PropertyName == nameof(IShipReadOnly.CurrentSpeed))
                 PropertyChanged.Raise(() => Speed);
         }
 
@@ -50,6 +62,13 @@ namespace SeaBattleTrophy.WPF.ViewModels
         public float RotationAngle { get { return -_ship.AngleInDegrees; } }
 
         public float Speed { get { return _ship.CurrentSpeed; } }
+
+        public bool IsSelected { get { return _selectedShip.Value == _ship; } }
+
+        public void SelectThisShip()
+        {
+            _selectedShip.Value = _ship;
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

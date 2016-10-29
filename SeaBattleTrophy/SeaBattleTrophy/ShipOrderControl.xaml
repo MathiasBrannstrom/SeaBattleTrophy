@@ -32,7 +32,7 @@
             <RadioButton Grid.Column="2" IsChecked="{Binding RequestedSailLevelChange, Converter={StaticResource EnumToBoolConverter}, 
                 ConverterParameter={x:Static game:SailLevelChange.DecreaseSailLevel}}">Decrease sails</RadioButton>
         </Grid>
-        <Button Height="30" Click="SendOrderButtonClicked" IsEnabled="{Binding IsShipOrderReadyToSend}">Send order</Button>
-        <Button Height="30" Click="SendLastOrderAgainButtonClicked" IsEnabled="{Binding IsLastOrderValidToSendAgain}">Send copy of last order</Button>
+        <Button Height="30" Click="SendOrderButtonClicked" IsEnabled="{Binding IsShipOrderReadyToSend}">Send orders</Button>
+        <!--<Button Height="30" Click="SendLastOrderAgainButtonClicked" IsEnabled="{Binding IsLastOrderValidToSendAgain}">Send copy of last order</Button>-->
     </StackPanel>
 </UserControl>

@@ -55,12 +55,11 @@ namespace SeaBattleTrophy.WPF
         
         private void SendOrderButtonClicked(object sender, RoutedEventArgs e)
         {
-            _shipOrderViewModel.SendOrder();
+            _shipOrderViewModel.SendShipOrders();
         }
 
         private void SendLastOrderAgainButtonClicked(object sender, RoutedEventArgs e)
         {
-            _shipOrderViewModel.SendLastOrderAgain();
         }
     }
 }

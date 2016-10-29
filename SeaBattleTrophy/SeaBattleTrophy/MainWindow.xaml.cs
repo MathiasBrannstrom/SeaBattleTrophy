@@ -22,21 +22,26 @@ namespace SeaBattleTrophy.WPF
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ISeaBattleTrophyGame _game;
+        private SeaBattleTrophyGameViewModel _gameViewModel;
 
         public MainWindow()
         {
             InitializeComponent();
-            SetupGame();
-            SeaMap.DataContext = _game;
-            var shipOrderViewModel = new ShipOrderViewModel(_game.Ships.First());
+            _gameViewModel = new SeaBattleTrophyGameViewModel();
+            SetupSeaMap();
+            SetupShipOrderControl();
+        }
+
+        private void SetupSeaMap()
+        {
+            SeaMap.DataContext = _gameViewModel;
+        }
+
+        private void SetupShipOrderControl()
+        {
+            var shipOrderViewModel = new ShipOrderViewModel(_gameViewModel.SelectedShip, _gameViewModel.ShipOrderManager);
             ShipOrderControl.DataContext = shipOrderViewModel;
         }
 
-        public void SetupGame()
-        {
-            _game = new SeaBattleTrophyGameManager();
-
-        }
     }
 }

@@ -8,18 +8,28 @@ namespace SeaBattleTrophyGame
 {
     public enum SailLevelChange
     {
-        StayAtCurrentSailSpeed,
         IncreaseSailLevel,
-        DecreaseSailLevel
+        DecreaseSailLevel,
+        StayAtCurrentSailSpeed
+    }
+
+    public static class IShipOrderExtensions
+    {
+        public static float GetTotalDistance(this IShipOrder order)
+        {
+            if (order.MovementOrders == null)
+                return 0;
+            else return order.MovementOrders.Sum(movementOrder => movementOrder.Distance);
+        }
     }
 
     public interface IShipOrder
     {
-        float GetTotalDistance();
-
         List<MovementOrder> MovementOrders { get; }
 
-        SailLevelChange ShipSailLevelIncrement { get; }
+        SailLevelChange? ShipSailLevelIncrement { get; }
+
+        void UpdateWithNewOrders(IShipOrder newShipOrders);
     }
 
     public enum Direction
@@ -41,7 +51,7 @@ namespace SeaBattleTrophyGame
         public float YawRadius { get; set; }
     }
 
-    public struct ShipOrder : IShipOrder
+    public class ShipOrder : IShipOrder
     {
         public static ShipOrder SingleMovementShipOrder(MovementOrder movementOrder)
         {
@@ -50,15 +60,17 @@ namespace SeaBattleTrophyGame
             return new ShipOrder { MovementOrders = list };
         }
 
-        public float GetTotalDistance()
+        public void UpdateWithNewOrders(IShipOrder newShipOrders)
         {
-            if (MovementOrders == null)
-                return 0;
-            else return MovementOrders.Sum(movementOrder => movementOrder.Distance);
+            if (newShipOrders.MovementOrders != null)
+                MovementOrders = newShipOrders.MovementOrders;
+
+            if (newShipOrders.ShipSailLevelIncrement != null)
+                ShipSailLevelIncrement = newShipOrders.ShipSailLevelIncrement;
         }
 
         public List<MovementOrder> MovementOrders { get; set; }
 
-        public SailLevelChange ShipSailLevelIncrement { get; set; }
+        public SailLevelChange? ShipSailLevelIncrement { get; set; }
     }
 }

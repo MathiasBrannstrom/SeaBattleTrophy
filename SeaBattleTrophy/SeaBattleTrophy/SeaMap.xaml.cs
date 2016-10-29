@@ -22,7 +22,7 @@ namespace SeaBattleTrophy.WPF
     /// </summary>
     public partial class SeaMap : UserControl
     {
-        ISeaBattleTrophyGame _game;
+        SeaBattleTrophyGameViewModel _game;
 
         public const int SeaMapSizeInPixels = 1000;
 
@@ -45,7 +45,7 @@ namespace SeaBattleTrophy.WPF
         {
             foreach(var ship in _game.Ships)
             {
-                var shipVM = new ShipViewModel(ship, _metersPerPixel);
+                var shipVM = new ShipViewModel(ship, _metersPerPixel, _game.SelectedShip);
 
                 var shipControl = new Ship();
                 shipControl.DataContext = shipVM;
@@ -55,9 +55,9 @@ namespace SeaBattleTrophy.WPF
 
         private void HandleDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            var game = DataContext as ISeaBattleTrophyGame;
+            var game = DataContext as SeaBattleTrophyGameViewModel;
             if (game == null)
-                throw new InvalidCastException("The data context should be of typ ISeaBattleTrophyGame");
+                throw new InvalidCastException("The data context should be of correct type");
 
             _game = game;
             _metersPerPixel = _game.SeaMap.SizeInMeters / SeaMapSizeInPixels;

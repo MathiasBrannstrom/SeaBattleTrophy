@@ -18,6 +18,7 @@ namespace SeaBattleTrophyGame
 
     public interface IShipReadOnly : INotifyPropertyChanged
     {
+        int Index { get; }
         // [0, 360[   0 angle points east, increasing angle turns CCW.
         float AngleInDegrees { get; }
 
@@ -32,12 +33,15 @@ namespace SeaBattleTrophyGame
         float CurrentSpeed { get; }
 
     }
-    public interface IShip : IShipReadOnly
+
+    public interface IShipOrderReceiver
     {
-        void ApplyShipOrder(IShipOrder order);
+        void SendShipOrder(IShipOrder shipOrder);
+
+        int Index { get; }
     }
 
-    internal class Ship : IShip
+    internal class Ship : IShipReadOnly, IShipOrderReceiver
     {
         public float AngleInDegrees { get; set; }
 
@@ -53,6 +57,8 @@ namespace SeaBattleTrophyGame
         }
 
         public SailLevel SailLevel { get; set; }
+
+        public int Index { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -78,7 +84,7 @@ namespace SeaBattleTrophyGame
             return new Vector2D { X = (float)Math.Cos(AngleInDegrees * Math.PI / 180.0), Y = (float)Math.Sin(AngleInDegrees * Math.PI / 180.0) };
         }
 
-        public void ApplyShipOrder(IShipOrder order)
+        public void SendShipOrder(IShipOrder order)
         {
             if (!order.GetTotalDistance().NearEquals(CurrentSpeed))
                 throw new InvalidOperationException("The sum of all movement order distances must be the current speed");
@@ -91,8 +97,8 @@ namespace SeaBattleTrophyGame
                     ApplyMovementOrder((YawMovementOrder)movementOrder);
             }
 
-            if (order.ShipSailLevelIncrement != SailLevelChange.StayAtCurrentSailSpeed)
-                ChangeSailLevel(order.ShipSailLevelIncrement);
+            if (order.ShipSailLevelIncrement.HasValue && order.ShipSailLevelIncrement != SailLevelChange.StayAtCurrentSailSpeed)
+                ChangeSailLevel(order.ShipSailLevelIncrement.Value);
         }
 
         private void ChangeSailLevel(SailLevelChange sailLevelChange)

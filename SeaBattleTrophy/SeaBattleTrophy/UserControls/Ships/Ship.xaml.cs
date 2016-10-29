@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using SeaBattleTrophy.WPF.ViewModels;
 
 namespace SeaBattleTrophy.WPF.UserControls.Ships
 {
@@ -20,9 +21,25 @@ namespace SeaBattleTrophy.WPF.UserControls.Ships
     /// </summary>
     public partial class Ship : UserControl
     {
+        private ShipViewModel _shipViewModel;
+
         public Ship()
         {
             InitializeComponent();
+        }
+
+        private void HandleShipMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            _shipViewModel.SelectThisShip();
+        }
+
+        private void HandleDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            var shipViewModel = DataContext as ShipViewModel;
+            if (shipViewModel == null)
+                throw new InvalidCastException("DataContext for Ship should be correct type");
+
+            _shipViewModel = shipViewModel;
         }
     }
 }

@@ -80,6 +80,7 @@
     <Compile Include="UserControls\Ships\Ship.xaml.cs">
       <DependentUpon>Ship.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\SeaBattleTrophyGameViewModel.cs" />
     <Compile Include="ViewModels\ShipOrderViewModel.cs" />
     <Compile Include="ViewModels\ShipViewModel.cs" />
     <Page Include="MainWindow.xaml">
