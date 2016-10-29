@@ -31,6 +31,11 @@ namespace SeaBattleTrophy.WPF.ViewModels
             get { return _selectedShip.Value.CurrentSpeed - _currentShipOrder.MovementOrders.Sum(order => order.Distance); }
         }
 
+        public bool AnyDistanceRemaining
+        {
+            get { return CurrentDistanceRemaining > float.Epsilon; }
+        }
+
         public ReadOnlyObservableCollection<MovementOrder> CurrentMovementOrders
         {
             get { return _currentShipOrder.MovementOrders; }
@@ -125,6 +130,7 @@ namespace SeaBattleTrophy.WPF.ViewModels
         private void HandleCurrentMovementOrdersChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             PropertyChanged.Raise(() => CurrentDistanceRemaining);
+            PropertyChanged.Raise(() => AnyDistanceRemaining);
         }
 
         private void HandleShipOrderManagerPropertyChanged(object sender, PropertyChangedEventArgs e)

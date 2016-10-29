@@ -72,7 +72,7 @@
             <ProgressBar Height="80" Maximum="{Binding CurrentMaxSpeed}" Value="{Binding CurrentDistanceRemaining, Mode=OneWay}" />
             <Label Content="{Binding CurrentMaxSpeed}" HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Grid>
-        <StackPanel Grid.IsSharedSizeScope="True">
+        <StackPanel Grid.IsSharedSizeScope="True" IsEnabled="{Binding AnyDistanceRemaining}">
             <local:MovementOrderControl Label="Forward" 
                                         MinDistance="0" MaxDistance="{Binding CurrentDistanceRemaining}"
                                         OrderAdded="HandleForwardMovementOrderAdded"/>
