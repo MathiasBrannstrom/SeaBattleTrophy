@@ -117,11 +117,20 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="DecreaseSailLevel" xml:space="preserve">
+    <value>Minska segelnivå</value>
+  </data>
   <data name="Down" xml:space="preserve">
     <value>Ner</value>
   </data>
   <data name="Forward" xml:space="preserve">
     <value>Framåt</value>
+  </data>
+  <data name="IncreaseSailLevel" xml:space="preserve">
+    <value>Öka segelnivå</value>
+  </data>
+  <data name="KeepSailLevel" xml:space="preserve">
+    <value>Behåll segelnivå</value>
   </data>
   <data name="Port" xml:space="preserve">
     <value>Babord</value>

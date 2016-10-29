@@ -109,11 +109,11 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <RadioButton Grid.Column="0" IsChecked="{Binding RequestedSailLevelChange, Converter={StaticResource EnumToBoolConverter}, 
-                ConverterParameter={x:Static game:SailLevelChange.IncreaseSailLevel}}">Increase sails</RadioButton>
+                ConverterParameter={x:Static game:SailLevelChange.DecreaseSailLevel}}" Content="{x:Static properties:Strings.DecreaseSailLevel}" />
             <RadioButton Grid.Column="1" IsChecked="{Binding RequestedSailLevelChange, Converter={StaticResource EnumToBoolConverter}, 
-                ConverterParameter={x:Static game:SailLevelChange.StayAtCurrentSailSpeed}}">Keep sails</RadioButton>
+                ConverterParameter={x:Static game:SailLevelChange.StayAtCurrentSailSpeed}}" Content="{x:Static properties:Strings.KeepSailLevel}" />
             <RadioButton Grid.Column="2" IsChecked="{Binding RequestedSailLevelChange, Converter={StaticResource EnumToBoolConverter}, 
-                ConverterParameter={x:Static game:SailLevelChange.DecreaseSailLevel}}">Decrease sails</RadioButton>
+                ConverterParameter={x:Static game:SailLevelChange.IncreaseSailLevel}}"  Content="{x:Static properties:Strings.IncreaseSailLevel}"/>
         </Grid>
         <Button Height="30" Click="SendOrderButtonClicked" IsEnabled="{Binding AreShipOrdersReadyToSend}" Margin="5" Content="{x:Static properties:Strings.SendOrders}"/>
     </StackPanel>
