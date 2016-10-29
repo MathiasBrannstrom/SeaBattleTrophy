@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Utilities;
 
@@ -47,14 +48,36 @@ namespace SeaBattleTrophyGame
             }
         }
 
-        public void SendShipOrders()
+        public async void SendShipOrders()
         {
             // For now we send them sequentially to each ship. Later we will step forward.
+            var timeStep = 1.0f / 20;
+            var t = timeStep;
+            var finalStepDone = false;
+            while (!finalStepDone)
+            {
+                var isFinalChange = t.NearEquals(1.0f);
+                foreach (var kvp in _shipsByIndex)
+                {
+                    var ship = kvp.Value;
+                    ship.ApplyCurrentShipOrder(t, isFinalChange);
+                }
+
+                var time = DateTime.UtcNow;
+                // Check collisions etc.
+                var timeSpent = DateTime.UtcNow - time;
+
+                await Task.Delay(50 - (int)timeSpent.TotalMilliseconds);
+
+                finalStepDone = isFinalChange;
+                t = Math.Min(1.0f, t + timeStep);
+            }
+            
+
             foreach(var kvp in _shipsByIndex)
             {
                 var ship = kvp.Value;
 
-                ship.ApplyCurrentShipOrder();
                 ship.SetShipOrder(new ShipOrder());
             }
         }

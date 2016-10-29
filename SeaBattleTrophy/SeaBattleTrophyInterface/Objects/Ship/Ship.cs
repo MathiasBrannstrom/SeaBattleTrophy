@@ -40,11 +40,12 @@ namespace SeaBattleTrophyGame
 
     public interface IShip : IShipReadOnly
     {
-        void ApplyCurrentShipOrder();
+        void ApplyCurrentShipOrder(float t, bool isFinalChange);
 
         new IShipOrder CurrentShipOrder { get; }
 
         void SetShipOrder(IShipOrder order);
+
     }
 
     internal class Ship : IShipReadOnly, IShip
@@ -79,22 +80,43 @@ namespace SeaBattleTrophyGame
         {
             return new Vector2D { X = (float)Math.Cos(AngleInDegrees * Math.PI / 180.0), Y = (float)Math.Sin(AngleInDegrees * Math.PI / 180.0) };
         }
+        
+        private Point2D? _originalPosition = null;
+        private float? _originalAngle = null;
 
-        public void ApplyCurrentShipOrder()
+        public void ApplyCurrentShipOrder(float t, bool isFinalChange)
         {
             if (!HasValidShipOrder)
                 throw new InvalidOperationException("The order is not complete enough to send to this ship.");
 
-            foreach(var movementOrder in CurrentShipOrder.MovementOrders)
+            if (_originalPosition == null)
             {
-                if (movementOrder is ForwardMovementOrder)
-                    ApplyMovementOrder((ForwardMovementOrder)movementOrder);
-                else if (movementOrder is YawMovementOrder)
-                    ApplyMovementOrder((YawMovementOrder)movementOrder);
+                _originalPosition = Position;
+                _originalAngle = AngleInDegrees;
             }
 
-            if (CurrentShipOrder.ShipSailLevelIncrement.HasValue && CurrentShipOrder.ShipSailLevelIncrement != SailLevelChange.StayAtCurrentSailSpeed)
-                ChangeSailLevel(CurrentShipOrder.ShipSailLevelIncrement.Value);
+            var distanceLeftToTravel = t * CurrentSpeed;
+            foreach (var movementOrder in CurrentShipOrder.MovementOrders)
+            {
+                var distanceToTravel = Math.Min(movementOrder.Distance, distanceLeftToTravel);
+                if (movementOrder is ForwardMovementOrder)
+                    ApplyMovementOrder((ForwardMovementOrder)movementOrder, distanceToTravel);
+                else if (movementOrder is YawMovementOrder)
+                    ApplyMovementOrder((YawMovementOrder)movementOrder, distanceToTravel);
+
+                distanceLeftToTravel -= distanceToTravel;
+                if (distanceLeftToTravel.NearEquals(0f))
+                    break;
+            }
+
+            if (isFinalChange)
+            {
+                _originalAngle = null;
+                _originalPosition = null;
+
+                if (CurrentShipOrder.ShipSailLevelIncrement.HasValue && CurrentShipOrder.ShipSailLevelIncrement != SailLevelChange.StayAtCurrentSailSpeed)
+                    ChangeSailLevel(CurrentShipOrder.ShipSailLevelIncrement.Value);
+            }
         }
 
         private void ChangeSailLevel(SailLevelChange sailLevelChange)
@@ -113,31 +135,31 @@ namespace SeaBattleTrophyGame
             OnPropertyChanged("SailLevel");
         }
 
-        private void ApplyMovementOrder(ForwardMovementOrder movementOrder)
+        private void ApplyMovementOrder(ForwardMovementOrder movementOrder, float distanceToTravel)
         {
-            Position = Position + GetDirection() * movementOrder.Distance;
+            Position = _originalPosition.Value + GetDirection() * distanceToTravel;
             OnPropertyChanged("Position");
         }
 
-        private void ApplyMovementOrder(YawMovementOrder movementOrder)
+        private void ApplyMovementOrder(YawMovementOrder movementOrder, float distanceToTravel)
         {
-            var angleChange = (float)(movementOrder.Distance * 180 / (movementOrder.YawRadius * Math.PI));
+            var angleChange = (float)(distanceToTravel * 180 / (movementOrder.YawRadius * Math.PI));
             var xChange = (float)(movementOrder.YawRadius * (1 - Math.Cos(angleChange/180*Math.PI)));
             var yChange = (float)(movementOrder.YawRadius * Math.Sin(angleChange/180*Math.PI));
 
             var changeVector = new Vector2D(xChange, yChange);
-            changeVector = changeVector.Rotate(AngleInDegrees - 90);
+            changeVector = changeVector.Rotate(_originalAngle.Value - 90);
 
             switch (movementOrder.Direction)
             {
                 case Direction.Port:
-                    AngleInDegrees += angleChange;
+                    AngleInDegrees = _originalAngle.Value + angleChange;
                     break;
                 case Direction.Starboard:
-                    AngleInDegrees -= angleChange;
+                    AngleInDegrees = _originalAngle.Value - angleChange;
                     break;
             }
-            Position = Position + changeVector;
+            Position = _originalPosition.Value + changeVector;
 
             OnPropertyChanged("Position");
             OnPropertyChanged("AngleInDegrees");
@@ -149,6 +171,7 @@ namespace SeaBattleTrophyGame
                 CurrentShipOrder.MovementOrders.CollectionChanged -= HandleCurrentMovementOrdersCollectionChanged;
 
             CurrentShipOrder = order;
+
             CurrentShipOrder.MovementOrders.CollectionChanged += HandleCurrentMovementOrdersCollectionChanged;
             PropertyChanged.Raise(() => CurrentShipOrder);
             PropertyChanged.Raise(() => HasValidShipOrder);
