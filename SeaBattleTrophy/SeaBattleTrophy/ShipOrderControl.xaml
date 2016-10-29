@@ -35,7 +35,10 @@
         </DataTemplate>
     </UserControl.Resources>
     <StackPanel Width="300" Background="Gray">
-        <ProgressBar Height="80" Margin="5"/>
+        <Grid Margin="5">
+            <ProgressBar Height="80" />
+            <Label Content="{Binding CurrentMaxSpeed}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Grid>
         <Border BorderBrush="DarkGray" BorderThickness="1" Margin="5" IsEnabled="False"> <!--For future use-->
             <Grid Margin="2">
                 <Grid.RowDefinitions>

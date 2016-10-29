@@ -42,8 +42,6 @@
                 <Grid>
                     <Rectangle Fill="Black" Height="3" Width="6" HorizontalAlignment="Right" VerticalAlignment="Center" />
                     <Ellipse Fill="Black" Height="3" Width="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <Label Content="{Binding Speed}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0 0 0 15"
-                       FontSize="18"/>
                 </Grid>
             </Border>
         </Border>
