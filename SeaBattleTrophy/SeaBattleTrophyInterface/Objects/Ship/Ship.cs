@@ -95,6 +95,9 @@ namespace SeaBattleTrophyGame
                 _originalAngle = AngleInDegrees;
             }
 
+            Position = _originalPosition.Value;
+            AngleInDegrees = _originalAngle.Value;
+
             var distanceLeftToTravel = t * CurrentSpeed;
             foreach (var movementOrder in CurrentShipOrder.MovementOrders)
             {
@@ -137,7 +140,7 @@ namespace SeaBattleTrophyGame
 
         private void ApplyMovementOrder(ForwardMovementOrder movementOrder, float distanceToTravel)
         {
-            Position = _originalPosition.Value + GetDirection() * distanceToTravel;
+            Position += GetDirection() * distanceToTravel;
             OnPropertyChanged("Position");
         }
 
@@ -148,18 +151,18 @@ namespace SeaBattleTrophyGame
             var yChange = (float)(movementOrder.YawRadius * Math.Sin(angleChange/180*Math.PI));
 
             var changeVector = new Vector2D(movementOrder.Direction == Direction.Starboard? xChange : -xChange, yChange);
-            changeVector = changeVector.Rotate(_originalAngle.Value - 90);
+            changeVector = changeVector.Rotate(AngleInDegrees - 90);
 
             switch (movementOrder.Direction)
             {
                 case Direction.Port:
-                    AngleInDegrees = _originalAngle.Value + angleChange;
+                    AngleInDegrees += angleChange;
                     break;
                 case Direction.Starboard:
-                    AngleInDegrees = _originalAngle.Value - angleChange;
+                    AngleInDegrees -= angleChange;
                     break;
             }
-            Position = _originalPosition.Value + changeVector;
+            Position += changeVector;
 
             OnPropertyChanged("Position");
             OnPropertyChanged("AngleInDegrees");
