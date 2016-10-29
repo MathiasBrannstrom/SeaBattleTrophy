@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeaBattleTrophy.WPF"
         mc:Ignorable="d"
-        Title="MainWindow" WindowState="Maximized" Height="350" Width="525">
+        Title="Sea Battle Trophy" WindowState="Maximized" Height="350" Width="525">
     <Grid Background="DarkBlue">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />

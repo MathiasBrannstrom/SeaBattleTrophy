@@ -7,6 +7,7 @@
              xmlns:viewmodels="clr-namespace:SeaBattleTrophy.WPF.ViewModels"
              xmlns:utilities="clr-namespace:Utilities;assembly=Utilities"
              xmlns:game="clr-namespace:SeaBattleTrophyGame;assembly=SeaBattleTrophyGame"
+             xmlns:properties="clr-namespace:SeaBattleTrophy.WPF.Properties"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              DataContextChanged="HandleDataContextChanged"
@@ -23,7 +24,20 @@
                     <ColumnDefinition SharedSizeGroup="MovementListYawRadius" Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Label Grid.Column="0" Content="{Binding Direction}" />
+                <Label Grid.Column="0" Content="{Binding Direction}">
+                    <Label.Style>
+                        <Style TargetType="Label">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Direction}" Value="{x:Static game:Direction.Starboard}">
+                                    <Setter Property="Content" Value="{x:Static properties:Strings.Starboard}"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Direction}" Value="{x:Static game:Direction.Port}">
+                                    <Setter Property="Content" Value="{x:Static properties:Strings.Port}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Label.Style>
+                </Label>
                 <Label Grid.Column="1" Content="{Binding Distance}" />
                 <Label Grid.Column="2" Content="{Binding YawRadius}" />
                 <Grid Grid.Column="3">
@@ -32,9 +46,10 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Button IsEnabled="False" Grid.Column="0">Up</Button> <!--Buttons for future use-->
-                    <Button IsEnabled="False" Grid.Column="1">Down</Button>
-                    <Button Grid.Column="2" Click="HandleRemoveMovementOrderButtonClicked">Remove</Button>
+                    <Button IsEnabled="False" Grid.Column="0" Content="{x:Static properties:Strings.Up}"/>
+                    <!--Buttons for future use-->
+                    <Button IsEnabled="False" Grid.Column="1" Content="{x:Static properties:Strings.Down}"/>
+                    <Button Grid.Column="2" Click="HandleRemoveMovementOrderButtonClicked" Content="{x:Static properties:Strings.Remove}"/>
                 </Grid>
             </Grid>
         </DataTemplate>
@@ -46,7 +61,7 @@
                     <ColumnDefinition SharedSizeGroup="MovementListYawRadius" Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Label Grid.Column="0" Content="Forward" />
+                <Label Grid.Column="0" Content="{x:Static properties:Strings.Forward}" />
                 <Label Grid.Column="1" Content="{Binding Distance}" />
                 <Label Grid.Column="2" Content="-" />
                 <Grid Grid.Column="3">
@@ -55,10 +70,10 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Button IsEnabled="False" Grid.Column="0">Up</Button>
+                    <Button IsEnabled="False" Grid.Column="0" Content="{x:Static properties:Strings.Up}"/>
                     <!--Buttons for future use-->
-                    <Button IsEnabled="False" Grid.Column="1">Down</Button>
-                    <Button Grid.Column="2" Click="HandleRemoveMovementOrderButtonClicked">Remove</Button>
+                    <Button IsEnabled="False" Grid.Column="1" Content="{x:Static properties:Strings.Down}"/>
+                    <Button Grid.Column="2" Click="HandleRemoveMovementOrderButtonClicked" Content="{x:Static properties:Strings.Remove}"/>
                 </Grid>
             </Grid>
         </DataTemplate>
@@ -73,15 +88,15 @@
             <Label Content="{Binding CurrentMaxSpeed}" HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Grid>
         <StackPanel Grid.IsSharedSizeScope="True" IsEnabled="{Binding AnyDistanceRemaining}">
-            <local:MovementOrderControl Label="Forward" 
+            <local:MovementOrderControl Label="{x:Static properties:Strings.Forward}" 
                                         MinDistance="0" MaxDistance="{Binding CurrentDistanceRemaining}"
                                         OrderAdded="HandleForwardMovementOrderAdded"/>
 
-            <local:MovementOrderControl  Label="Port" 
+            <local:MovementOrderControl  Label="{x:Static properties:Strings.Port}" 
                                         MinDistance="0" MaxDistance="{Binding CurrentDistanceRemaining}"
                                         OrderAdded="HandlePortMovementOrderAdded"/>
 
-            <local:MovementOrderControl Label="Starboard" 
+            <local:MovementOrderControl Label="{x:Static properties:Strings.Starboard}" 
                                         MinDistance="0" MaxDistance="{Binding CurrentDistanceRemaining}"
                                         OrderAdded="HandleStarboardMovementOrderAdded"/>
         </StackPanel>
@@ -100,6 +115,6 @@
             <RadioButton Grid.Column="2" IsChecked="{Binding RequestedSailLevelChange, Converter={StaticResource EnumToBoolConverter}, 
                 ConverterParameter={x:Static game:SailLevelChange.DecreaseSailLevel}}">Decrease sails</RadioButton>
         </Grid>
-        <Button Height="30" Click="SendOrderButtonClicked" IsEnabled="{Binding AreShipOrdersReadyToSend}" Margin="5">Send orders</Button>
+        <Button Height="30" Click="SendOrderButtonClicked" IsEnabled="{Binding AreShipOrdersReadyToSend}" Margin="5" Content="{x:Static properties:Strings.SendOrders}"/>
     </StackPanel>
 </UserControl>

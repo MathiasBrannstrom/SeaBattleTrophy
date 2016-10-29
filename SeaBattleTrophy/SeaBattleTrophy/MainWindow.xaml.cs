@@ -14,6 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using SeaBattleTrophyGame;
 using SeaBattleTrophy.WPF.ViewModels;
+using System.Threading;
+using System.Globalization;
 
 namespace SeaBattleTrophy.WPF
 {
@@ -26,6 +28,7 @@ namespace SeaBattleTrophy.WPF
 
         public MainWindow()
         {
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("sv-SV");
             InitializeComponent();
             _gameViewModel = new SeaBattleTrophyGameViewModel();
             SetupSeaMap();
