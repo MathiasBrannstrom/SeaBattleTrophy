@@ -40,6 +40,8 @@ namespace Utilities
             _value = val;
         }
 
+        public ValueHolder() { }
+
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }

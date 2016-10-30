@@ -12,21 +12,31 @@ namespace SeaBattleTrophy.WPF.ViewModels
     public class ShipViewModel : INotifyPropertyChanged
     {
         private IShipReadOnly _ship;
-        private float _metersPerPixel;
+        private IValueHolderReadOnly<float> _metersPerPixel;
+        private IValueHolderReadOnly<float> _seaMapSizeInPixels;
         private IValueHolder<IShipReadOnly> _selectedShip;
 
-        public ShipViewModel(IShipReadOnly ship, float metersPerPixel)
+
+        public ShipViewModel(IShipReadOnly ship, IValueHolderReadOnly<float> metersPerPixel, 
+            IValueHolderReadOnly<float> seaMapSizeInPixels, IValueHolder<IShipReadOnly> selectedShip)
         {
             _ship = ship;
             _ship.PropertyChanged += HandleShipPropertyChanged;
-            _metersPerPixel = metersPerPixel;
-        }
 
-        public ShipViewModel(IShipReadOnly ship, float metersPerPixel, IValueHolder<IShipReadOnly> selectedShip) 
-            : this(ship, metersPerPixel)
-        {
+            _metersPerPixel = metersPerPixel;
+            _metersPerPixel.PropertyChanged += HandleMetersPerPixelPropertyChanged;
+            _seaMapSizeInPixels = seaMapSizeInPixels;
+
             _selectedShip = selectedShip;
             _selectedShip.PropertyChanged += HandleSelectedShipPropertyChanged;
+        }
+
+        private void HandleMetersPerPixelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            PropertyChanged.Raise(() => WidthInPixels);
+            PropertyChanged.Raise(() => LengthInPixels);
+            PropertyChanged.Raise(() => XPosInPixels);
+            PropertyChanged.Raise(() => YPosInPixels);
         }
 
         private void HandleSelectedShipPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -51,13 +61,13 @@ namespace SeaBattleTrophy.WPF.ViewModels
                 PropertyChanged.Raise(() => Speed);
         }
 
-        public float WidthInPixels { get { return _ship.Width / _metersPerPixel; } }
+        public float WidthInPixels { get { return _ship.Width / _metersPerPixel.Value; } }
 
-        public float LengthInPixels { get { return _ship.Length / _metersPerPixel; } }
+        public float LengthInPixels { get { return _ship.Length / _metersPerPixel.Value; } }
 
-        public float XPosInPixels { get { return _ship.Position.X / _metersPerPixel; } }
+        public float XPosInPixels { get { return _ship.Position.X / _metersPerPixel.Value; } }
 
-        public float YPosInPixels { get { return SeaMap.SeaMapSizeInPixels - _ship.Position.Y / _metersPerPixel; } }
+        public float YPosInPixels { get { return _seaMapSizeInPixels.Value - _ship.Position.Y / _metersPerPixel.Value; } }
 
         public float RotationAngle { get { return -_ship.AngleInDegrees; } }
 

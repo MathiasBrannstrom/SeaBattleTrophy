@@ -22,8 +22,11 @@ namespace SeaBattleTrophy.WPF.ViewModels
         {
             _game = new SeaBattleTrophyGameManager();
             SelectedShip = new ValueHolder<IShipReadOnly>(_game.Ships.First());
+            SeaMapSizeInPixels = new ValueHolder<float>(1000);
         }
 
+        public IValueHolder<float> SeaMapSizeInPixels { get; private set; }
+        
         public IValueHolder<IShipReadOnly> SelectedShip { get; private set; }
 
         public IEnumerable<IShipReadOnly> Ships { get { return _game.Ships; } }

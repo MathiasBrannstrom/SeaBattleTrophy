@@ -15,6 +15,8 @@ using SeaBattleTrophyGame;
 using SeaBattleTrophy.WPF.UserControls.Ships;
 using SeaBattleTrophy.WPF.UserControls;
 using SeaBattleTrophy.WPF.ViewModels;
+using Utilities;
+using System.ComponentModel;
 
 namespace SeaBattleTrophy.WPF
 {
@@ -25,19 +27,34 @@ namespace SeaBattleTrophy.WPF
     {
         SeaBattleTrophyGameViewModel _game;
 
-        public const int SeaMapSizeInPixels = 1000;
 
-        float _metersPerPixel;
+        private ValueHolder<float> _metersPerPixel = new ValueHolder<float>();
 
         public SeaMap()
         {
             InitializeComponent();
-            Width = SeaMapSizeInPixels;
-            Height = SeaMapSizeInPixels;
+        }
+
+        private void HandleSeaMapSizeInPixelsPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            Width = _game.SeaMapSizeInPixels.Value;
+            Height = _game.SeaMapSizeInPixels.Value;
+
+            UpdateMetersPerPixel();
+        }
+
+        private void UpdateMetersPerPixel()
+        {
+            if (_game == null) return;
+
+            _metersPerPixel.Value = _game.SeaMap.SizeInMeters / _game.SeaMapSizeInPixels.Value;
         }
 
         private void Reset()
         {
+            if(_game != null)
+                _game.SeaMapSizeInPixels.PropertyChanged -= HandleSeaMapSizeInPixelsPropertyChanged;
+
             ShipGrid.Children.Clear();
             LandMassGrid.Children.Clear();
             _game = null;
@@ -47,7 +64,7 @@ namespace SeaBattleTrophy.WPF
         {
             foreach(var ship in _game.Ships)
             {
-                var shipVM = new ShipViewModel(ship, _metersPerPixel, _game.SelectedShip);
+                var shipVM = new ShipViewModel(ship, _metersPerPixel, _game.SeaMapSizeInPixels, _game.SelectedShip);
 
                 var shipControl = new Ship();
                 shipControl.DataContext = shipVM;
@@ -59,7 +76,7 @@ namespace SeaBattleTrophy.WPF
         {
             foreach(var landMass in _game.SeaMap.LandMasses)
             {
-                var landMassVM = new LandMassViewModel(landMass, _metersPerPixel);
+                var landMassVM = new LandMassViewModel(landMass, _metersPerPixel, _game.SeaMapSizeInPixels);
 
                 var landMassControl = new UserControls.LandMass();
                 landMassControl.DataContext = landMassVM;
@@ -76,8 +93,9 @@ namespace SeaBattleTrophy.WPF
             Reset();
 
             _game = game;
-            _metersPerPixel = _game.SeaMap.SizeInMeters / SeaMapSizeInPixels;
+            _game.SeaMapSizeInPixels.PropertyChanged += HandleSeaMapSizeInPixelsPropertyChanged;
 
+            UpdateMetersPerPixel();
             AddShips();
             AddLandMasses();
         }

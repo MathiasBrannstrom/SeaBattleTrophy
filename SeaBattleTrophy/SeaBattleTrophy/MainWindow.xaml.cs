@@ -53,5 +53,9 @@ namespace SeaBattleTrophy.WPF
             ShipOrderControl.DataContext = shipOrderViewModel;
         }
 
+        private void HandleMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            _gameViewModel.SeaMapSizeInPixels.Value = Math.Max(10, _gameViewModel.SeaMapSizeInPixels.Value + e.Delta);
+        }
     }
 }
