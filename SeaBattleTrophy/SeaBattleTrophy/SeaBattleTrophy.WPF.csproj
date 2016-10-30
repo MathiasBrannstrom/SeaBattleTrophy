@@ -25,7 +25,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationRevision>1</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -61,7 +61,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>false</SignManifests>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -95,14 +95,22 @@
     <Compile Include="ShipOrderControl.xaml.cs">
       <DependentUpon>ShipOrderControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\LandMass.xaml.cs">
+      <DependentUpon>LandMass.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\MovementOrderControl.xaml.cs">
       <DependentUpon>MovementOrderControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ShipStatusControl.xaml.cs">
+      <DependentUpon>ShipStatusControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\Ships\Ship.xaml.cs">
       <DependentUpon>Ship.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\LandMassViewModel.cs" />
     <Compile Include="ViewModels\SeaBattleTrophyGameViewModel.cs" />
     <Compile Include="ViewModels\ShipOrderViewModel.cs" />
+    <Compile Include="ViewModels\ShipStatusViewModel.cs" />
     <Compile Include="ViewModels\ShipViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -124,7 +132,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\LandMass.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControls\MovementOrderControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\ShipStatusControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

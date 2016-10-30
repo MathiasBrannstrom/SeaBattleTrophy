@@ -123,6 +123,9 @@
   <data name="DecreaseSailLevel" xml:space="preserve">
     <value>Minska segelnivå</value>
   </data>
+  <data name="DistanceToLand" xml:space="preserve">
+    <value>Avstånd till land</value>
+  </data>
   <data name="Down" xml:space="preserve">
     <value>Ner</value>
   </data>

@@ -36,6 +36,8 @@ namespace SeaBattleTrophyGame
         IShipOrderReadOnly CurrentShipOrder { get; }
 
         bool HasValidShipOrder { get; }
+
+        IShipStatusReadOnly ShipStatus { get; }
     }
 
     public interface IShip : IShipReadOnly
@@ -46,9 +48,10 @@ namespace SeaBattleTrophyGame
 
         void SetShipOrder(IShipOrder order);
 
+        new IShipStatus ShipStatus { get; }
     }
 
-    internal class Ship : IShipReadOnly, IShip
+    internal class Ship : IShip
     {
         public float AngleInDegrees { get; set; }
 
@@ -72,6 +75,24 @@ namespace SeaBattleTrophyGame
         public bool HasValidShipOrder { get { return CurrentShipOrder.GetTotalDistance().NearEquals(CurrentSpeed); } }
 
         IShipOrderReadOnly IShipReadOnly.CurrentShipOrder { get { return CurrentShipOrder; } }
+
+        private ShipStatus _shipStatus = new ShipStatus();
+
+        public IShipStatus ShipStatus
+        {
+            get
+            {
+                return _shipStatus;
+            }
+        }
+
+        IShipStatusReadOnly IShipReadOnly.ShipStatus
+        {
+            get
+            {
+                return _shipStatus;
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

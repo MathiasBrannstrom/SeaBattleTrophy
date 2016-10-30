@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using SeaBattleTrophyGame;
 using SeaBattleTrophy.WPF.UserControls.Ships;
+using SeaBattleTrophy.WPF.UserControls;
 using SeaBattleTrophy.WPF.ViewModels;
 
 namespace SeaBattleTrophy.WPF
@@ -38,6 +39,7 @@ namespace SeaBattleTrophy.WPF
         private void Reset()
         {
             ShipGrid.Children.Clear();
+            LandMassGrid.Children.Clear();
             _game = null;
         }
 
@@ -53,16 +55,31 @@ namespace SeaBattleTrophy.WPF
             }
         }
 
+        public void AddLandMasses()
+        {
+            foreach(var landMass in _game.SeaMap.LandMasses)
+            {
+                var landMassVM = new LandMassViewModel(landMass, _metersPerPixel);
+
+                var landMassControl = new UserControls.LandMass();
+                landMassControl.DataContext = landMassVM;
+                LandMassGrid.Children.Add(landMassControl);
+            }
+        }
+
         private void HandleDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             var game = DataContext as SeaBattleTrophyGameViewModel;
             if (game == null)
                 throw new InvalidCastException("The data context should be of correct type");
 
+            Reset();
+
             _game = game;
             _metersPerPixel = _game.SeaMap.SizeInMeters / SeaMapSizeInPixels;
 
             AddShips();
+            AddLandMasses();
         }
     }
 }
