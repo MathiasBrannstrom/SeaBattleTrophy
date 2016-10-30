@@ -25,12 +25,13 @@ namespace SeaBattleTrophyGame
         {
             _ships.Add(new Ship { Width = 10, Length = 40, Position = new Point2D { X = 20, Y = 30 }, AngleInDegrees = 90, Index = 0, SailLevel = SailLevel.LowSails });
             _ships.Add(new Ship { Width = 10, Length = 40, Position = new Point2D { X = 50, Y = 30 }, AngleInDegrees = 90, Index = 1, SailLevel = SailLevel.FullSailsWithLeadSail });
+            //_ships.Add(new Ship { Width = 20, Length = 30, Position = new Point2D { X = 70, Y = 30 }, AngleInDegrees = 90, Index = 2, SailLevel = SailLevel.FullSailsWithLeadSail });
 
             Ships = _ships;
 
             ShipOrderManager = new ShipOrderManager(_ships);
 
-            SeaMap = new SeaMap { SizeInMeters = 200 };
+            SeaMap = new SeaMap { SizeInMeters = 300 };
         }
 
         public ISeaMap SeaMap { get; private set; }
