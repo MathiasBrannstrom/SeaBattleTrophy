@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Utilities;
 
 namespace SeaBattleTrophyGame
 {
     public class Land
     {
-        IEnumerable<Point2D> CornerCoordinates { get { return _cornerCoordinates; } }
+        public IEnumerable<Point2D> CornerCoordinates { get { return _cornerCoordinates; } }
         private List<Point2D> _cornerCoordinates;
 
         public Land(IEnumerable<Point2D> cornerCoordinates)

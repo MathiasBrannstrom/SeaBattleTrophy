@@ -20,7 +20,7 @@ namespace SeaBattleTrophyGame
     public class SeaBattleTrophyGameManager : ISeaBattleTrophyGame
     {
         private List<Ship> _ships = new List<Ship>();
-
+        
         public SeaBattleTrophyGameManager()
         {
             _ships.Add(new Ship { Width = 10, Length = 40, Position = new Point2D { X = 20, Y = 30 }, AngleInDegrees = 90, Index = 0, SailLevel = SailLevel.LowSails });
@@ -31,7 +31,16 @@ namespace SeaBattleTrophyGame
 
             ShipOrderManager = new ShipOrderManager(_ships);
 
-            SeaMap = new SeaMap { SizeInMeters = 300 };
+            SetupSeaMap();
+        }
+
+        public void SetupSeaMap()
+        {
+            var landMasses = new List<Land>();
+
+            landMasses.Add(new Land(new[] { new Point2D(100, 100), new Point2D(150, 200), new Point2D(200, 100) }));
+            landMasses.Add(new Land(new[] { new Point2D(50, 200), new Point2D(60, 210), new Point2D(60, 260), new Point2D(24, 240), new Point2D(20,210)}));
+            SeaMap = new SeaMap { SizeInMeters = 300, LandMasses = landMasses };
         }
 
         public ISeaMap SeaMap { get; private set; }

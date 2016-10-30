@@ -95,12 +95,16 @@
     <Compile Include="ShipOrderControl.xaml.cs">
       <DependentUpon>ShipOrderControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\LandMass.xaml.cs">
+      <DependentUpon>LandMass.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\MovementOrderControl.xaml.cs">
       <DependentUpon>MovementOrderControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\Ships\Ship.xaml.cs">
       <DependentUpon>Ship.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\LandMassViewModel.cs" />
     <Compile Include="ViewModels\SeaBattleTrophyGameViewModel.cs" />
     <Compile Include="ViewModels\ShipOrderViewModel.cs" />
     <Compile Include="ViewModels\ShipViewModel.cs" />
@@ -121,6 +125,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ShipOrderControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\LandMass.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
