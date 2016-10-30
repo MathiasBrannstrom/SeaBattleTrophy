@@ -123,6 +123,9 @@
   <data name="DecreaseSailLevel" xml:space="preserve">
     <value>Decrease sail level</value>
   </data>
+  <data name="DistanceToLand" xml:space="preserve">
+    <value>Distance to land</value>
+  </data>
   <data name="Down" xml:space="preserve">
     <value>Down</value>
   </data>

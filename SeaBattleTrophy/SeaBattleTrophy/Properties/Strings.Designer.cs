@@ -79,6 +79,15 @@ namespace SeaBattleTrophy.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Distance to land.
+        /// </summary>
+        public static string DistanceToLand {
+            get {
+                return ResourceManager.GetString("DistanceToLand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Down.
         /// </summary>
         public static string Down {

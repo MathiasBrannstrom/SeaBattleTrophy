@@ -11,7 +11,7 @@ namespace SeaBattleTrophy.WPF.ViewModels
 {
     public class LandMassViewModel
     {
-        public LandMassViewModel(Land land, float metersPerPixel)
+        public LandMassViewModel(LandMass land, float metersPerPixel)
         {
             PixelCoordinates = new PointCollection(land.CornerCoordinates.Select(p => new Point(p.X / metersPerPixel, SeaMap.SeaMapSizeInPixels - p.Y/metersPerPixel)));
         }

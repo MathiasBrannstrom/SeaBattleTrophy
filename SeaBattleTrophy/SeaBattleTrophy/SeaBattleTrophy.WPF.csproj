@@ -101,12 +101,16 @@
     <Compile Include="UserControls\MovementOrderControl.xaml.cs">
       <DependentUpon>MovementOrderControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\ShipStatusControl.xaml.cs">
+      <DependentUpon>ShipStatusControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\Ships\Ship.xaml.cs">
       <DependentUpon>Ship.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\LandMassViewModel.cs" />
     <Compile Include="ViewModels\SeaBattleTrophyGameViewModel.cs" />
     <Compile Include="ViewModels\ShipOrderViewModel.cs" />
+    <Compile Include="ViewModels\ShipStatusViewModel.cs" />
     <Compile Include="ViewModels\ShipViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -133,6 +137,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\MovementOrderControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\ShipStatusControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

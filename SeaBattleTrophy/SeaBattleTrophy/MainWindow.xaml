@@ -4,17 +4,19 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SeaBattleTrophy.WPF"
+        xmlns:controls="clr-namespace:SeaBattleTrophy.WPF.UserControls"
         mc:Ignorable="d"
         Title="Sea Battle Trophy" WindowState="Maximized" Height="350" Width="525">
     <Grid Background="DarkBlue">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         <local:ShipOrderControl x:Name="ShipOrderControl"/>
         <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Visible">
             <local:SeaMap x:Name="SeaMap"/>
         </ScrollViewer>
-        
+        <controls:ShipStatusControl Grid.Column="2" x:Name="ShipStatusControl"/>
     </Grid>
 </Window>

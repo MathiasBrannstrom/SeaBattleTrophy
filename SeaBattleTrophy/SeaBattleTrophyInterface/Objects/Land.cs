@@ -4,12 +4,12 @@ using Utilities;
 
 namespace SeaBattleTrophyGame
 {
-    public class Land
+    public class LandMass
     {
         public IEnumerable<Point2D> CornerCoordinates { get { return _cornerCoordinates; } }
         private List<Point2D> _cornerCoordinates;
 
-        public Land(IEnumerable<Point2D> cornerCoordinates)
+        public LandMass(IEnumerable<Point2D> cornerCoordinates)
         {
             _cornerCoordinates = new List<Point2D>(cornerCoordinates);
         }

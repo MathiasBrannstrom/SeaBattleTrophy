@@ -61,7 +61,7 @@ namespace SeaBattleTrophy.WPF
             {
                 var landMassVM = new LandMassViewModel(landMass, _metersPerPixel);
 
-                var landMassControl = new LandMass();
+                var landMassControl = new UserControls.LandMass();
                 landMassControl.DataContext = landMassVM;
                 LandMassGrid.Children.Add(landMassControl);
             }

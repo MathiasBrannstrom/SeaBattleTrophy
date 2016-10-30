@@ -12,7 +12,7 @@ namespace SeaBattleTrophyGame.Tests
         {
             var points = new[] { new Point2D(0, 0), new Point2D(0, 1), new Point2D(1, 1), new Point2D(1, 0) };
 
-            var land = new Land(points);
+            var land = new LandMass(points);
 
             Assert.AreEqual(0, land.DistanceToPoint(new Point2D(0, 1)));
             Assert.AreEqual(1, land.DistanceToPoint(new Point2D(2, 1)));

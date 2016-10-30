@@ -26,11 +26,14 @@ namespace SeaBattleTrophyGame
     {
 
         private Dictionary<int, IShip> _shipsByIndex = new Dictionary<int, IShip>();
+        private IEnumerable<LandMass> _landMasses;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ShipOrderManager(IEnumerable<IShip> ships)
+        public ShipOrderManager(IEnumerable<IShip> ships, IEnumerable<LandMass> landMasses)
         {
+            _landMasses = landMasses;
+
             foreach(var ship in ships)
             {
                 ship.PropertyChanged += HandleShipPropertyChanged;
@@ -57,14 +60,25 @@ namespace SeaBattleTrophyGame
             while (!finalStepDone)
             {
                 var isFinalChange = t.NearEquals(1.0f);
-                foreach (var kvp in _shipsByIndex)
-                {
-                    var ship = kvp.Value;
+                foreach (var ship in _shipsByIndex.Values)
                     ship.ApplyCurrentShipOrder(t, isFinalChange);
-                }
 
                 var time = DateTime.UtcNow;
                 // Check collisions etc.
+                foreach(var ship in _shipsByIndex.Values)
+                {
+                    var closestDistance = double.MaxValue;
+                    foreach(var landMass in _landMasses)
+                    {
+                        var distance = landMass.DistanceToPoint(ship.Position);
+
+                        if (distance < closestDistance)
+                            closestDistance = distance;
+                    }
+
+                    ship.ShipStatus.DistanceFromLand = (float)closestDistance;
+                }
+
                 var timeSpent = DateTime.UtcNow - time;
 
                 await Task.Delay(Math.Max(20 - (int)timeSpent.TotalMilliseconds,0));

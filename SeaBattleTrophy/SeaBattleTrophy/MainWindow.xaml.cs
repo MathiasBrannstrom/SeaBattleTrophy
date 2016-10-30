@@ -33,6 +33,13 @@ namespace SeaBattleTrophy.WPF
             _gameViewModel = new SeaBattleTrophyGameViewModel();
             SetupSeaMap();
             SetupShipOrderControl();
+            SetupShipStatusControl();
+        }
+
+        private void SetupShipStatusControl()
+        {
+            var shipStatusViewModel = new ShipStatusViewModel(_gameViewModel.SelectedShip);
+            ShipStatusControl.DataContext = shipStatusViewModel;
         }
 
         private void SetupSeaMap()

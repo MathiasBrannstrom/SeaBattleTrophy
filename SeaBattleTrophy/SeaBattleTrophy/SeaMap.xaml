@@ -10,7 +10,7 @@
             <ImageBrush ImageSource="pack://application:,,,/SeaBattleTrophy.WPF;component/Images/MapBackground.png"
                         Stretch="Fill"/>
         </Grid.Background>
-        <Grid x:Name="ShipGrid" />
         <Grid x:Name="LandMassGrid" />
+        <Grid x:Name="ShipGrid" />
     </Grid>
 </UserControl>

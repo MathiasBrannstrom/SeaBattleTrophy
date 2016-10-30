@@ -10,12 +10,12 @@ namespace SeaBattleTrophyGame
     {
         float SizeInMeters { get; }
 
-        IEnumerable<Land> LandMasses {get;}
+        IEnumerable<LandMass> LandMasses {get;}
     }
 
     internal class SeaMap : ISeaMap
     {
-        public IEnumerable<Land> LandMasses { get; set; }
+        public IEnumerable<LandMass> LandMasses { get; set; }
 
         // Currently only square maps
         public float SizeInMeters { get; set; }
