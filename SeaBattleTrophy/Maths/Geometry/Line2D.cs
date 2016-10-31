@@ -15,6 +15,12 @@
             PointB = pointB;
         }
 
+        public Line2D(LineSegment2D lineSegment)
+        {
+            PointA = lineSegment.PointA;
+            PointB = lineSegment.PointB;
+        }
+
         public Vector2D Direction { get { return PointB - PointA; } }
     }
 }

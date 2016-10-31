@@ -30,5 +30,38 @@ namespace Maths.Geometry
 
             return (pointOnSegment - point).SquaredLength();
         }
+
+        public static bool IntersectsOtherLineSegment(this LineSegment2D lineSegment, LineSegment2D otherLineSegment)
+        {
+            Point2D? intersectionPoint;
+            return IntersectsOtherLineSegment(lineSegment, otherLineSegment, out intersectionPoint);
+        }
+
+        public static bool IntersectsOtherLineSegment(this LineSegment2D lineSegment, LineSegment2D otherLineSegment, out Point2D? intersectionPoint)
+        {
+            var line0 = new Line2D(lineSegment);
+            var line1 = new Line2D(otherLineSegment);
+            
+            if(line0.IntersectsOtherLine(line1, out intersectionPoint))
+            {
+                var intersectionPointRatio0 = (intersectionPoint.Value - line0.PointA).SquaredLength() / lineSegment.SquaredLength();
+
+                if(intersectionPointRatio0 < 0 || intersectionPointRatio0 > 1)
+                {
+                    intersectionPoint = null;
+                    return false;
+                }
+                var intersectionPointRatio1 = (intersectionPoint.Value - line1.PointA).SquaredLength() / otherLineSegment.SquaredLength();
+                if (intersectionPointRatio1 < 0 || intersectionPointRatio1 > 1)
+                {
+                    intersectionPoint = null;
+                    return false;
+                }
+
+                return true;
+            }
+
+            return false;
+        }
     }
 }
