@@ -7,6 +7,7 @@ using SeaBattleTrophyGame;
 using System.Windows.Media;
 using System.Windows;
 using Utilities;
+using Maths.Geometry;
 using System.ComponentModel;
 
 namespace SeaBattleTrophy.WPF.ViewModels

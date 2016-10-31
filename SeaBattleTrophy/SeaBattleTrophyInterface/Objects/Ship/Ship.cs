@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Maths.Geometry;
+using Maths;
 using Utilities;
 using System.ComponentModel;
 using System.Collections.Specialized;

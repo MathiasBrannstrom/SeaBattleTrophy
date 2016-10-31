@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Utilities;
+using Maths.Geometry;
 
 namespace SeaBattleTrophyGame
 {

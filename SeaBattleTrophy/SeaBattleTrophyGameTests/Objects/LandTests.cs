@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using Utilities;
+using Maths.Geometry;
 
 namespace SeaBattleTrophyGame.Tests
 {

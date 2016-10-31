@@ -55,6 +55,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Maths\Maths.csproj">
+      <Project>{b31c1d8f-4815-4c16-a6d6-4f50773c82da}</Project>
+      <Name>Maths</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SeaBattleTrophyInterface\SeaBattleTrophyGame.csproj">
       <Project>{46FBF003-825C-496E-AFBA-52EEF8B7BE1D}</Project>
       <Name>SeaBattleTrophyGame</Name>
