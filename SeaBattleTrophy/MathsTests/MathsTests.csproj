@@ -51,7 +51,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="GeometryExtensions\Line2DExtensionsTests.cs" />
     <Compile Include="GeometryExtensions\PolygonExtensionsTests.cs" />
+    <Compile Include="GeometryExtensions\Vector2DExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

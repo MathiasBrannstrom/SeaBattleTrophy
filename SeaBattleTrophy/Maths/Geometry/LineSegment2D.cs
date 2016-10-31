@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace Maths.Geometry
 {
-    public struct LineSegment
+    public struct LineSegment2D
     {
-        public LineSegment(Point2D pointA, Point2D pointB)
+        public Point2D PointA { get; }
+
+        public Point2D PointB { get; }
+
+        public LineSegment2D(Point2D pointA, Point2D pointB)
         {
             PointA = pointA;
             PointB = pointB;
         }
-
-        public Point2D PointA { get; }
-
-        public Point2D PointB { get; }
 
         public float SquaredLength()
         {

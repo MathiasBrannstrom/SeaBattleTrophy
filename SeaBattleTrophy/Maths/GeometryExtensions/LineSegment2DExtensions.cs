@@ -2,15 +2,15 @@
 
 namespace Maths.Geometry
 {
-    public static class LineSegmentExtensions
+    public static class LineSegment2DExtensions
     {
-        public static double ShortestSquaredDistanceToPoint(this LineSegment lineSegment, Point2D point)
+        public static double ShortestSquaredDistanceToPoint(this LineSegment2D lineSegment, Point2D point)
         {
             Point2D pointOnSegment;
             return ShortestSquaredDistanceToPoint(lineSegment, point, out pointOnSegment);
         }
 
-        public static double ShortestSquaredDistanceToPoint(this LineSegment lineSegment, Point2D point, out Point2D pointOnSegment)
+        public static double ShortestSquaredDistanceToPoint(this LineSegment2D lineSegment, Point2D point, out Point2D pointOnSegment)
         {
             var lineSegmentSquaredLength = lineSegment.SquaredLength();
             var pA = lineSegment.PointA;

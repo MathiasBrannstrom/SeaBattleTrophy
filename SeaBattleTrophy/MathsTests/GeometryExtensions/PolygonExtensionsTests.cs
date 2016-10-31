@@ -11,7 +11,7 @@ namespace Maths.Geometry.Tests
         {
             var points = new[] { new Point2D(0, 0), new Point2D(0, 1), new Point2D(1, 1), new Point2D(1, 0) };
 
-            var polygon = new Polygon(points);
+            var polygon = new Polygon2D(points);
             Point2D pointOnPolygon;
             double distance;
 

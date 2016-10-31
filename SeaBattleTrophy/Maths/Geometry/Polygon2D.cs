@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Maths.Geometry
 {
-    public struct Polygon : IReadOnlyList<Point2D>
+    public struct Polygon2D : IReadOnlyList<Point2D>
     {
         public IReadOnlyList<Point2D> Points { get; }
 
-        public Polygon(IReadOnlyList<Point2D> points)
+        public Polygon2D(IReadOnlyList<Point2D> points)
         {
             Points = points;
         }

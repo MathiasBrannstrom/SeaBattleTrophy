@@ -41,11 +41,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FloatExtensions.cs" />
-    <Compile Include="GeometryExtensions\LineSegmentExtensions.cs" />
-    <Compile Include="GeometryExtensions\PolygonExtensions.cs" />
-    <Compile Include="Geometry\LineSegment.cs" />
+    <Compile Include="GeometryExtensions\Line2DExtensions.cs" />
+    <Compile Include="GeometryExtensions\LineSegment2DExtensions.cs" />
+    <Compile Include="GeometryExtensions\Polygon2DExtensions.cs" />
+    <Compile Include="GeometryExtensions\Vector2DExtensions.cs" />
+    <Compile Include="Geometry\Line2D.cs" />
+    <Compile Include="Geometry\LineSegment2D.cs" />
     <Compile Include="Geometry\Point2D.cs" />
-    <Compile Include="Geometry\Polygon.cs" />
+    <Compile Include="Geometry\Polygon2D.cs" />
     <Compile Include="Geometry\Vector2D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
