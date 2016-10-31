@@ -101,7 +101,7 @@ namespace SeaBattleTrophyGame
 
         private Vector2D GetDirection()
         {
-            return new Vector2D { X = (float)Math.Cos(AngleInDegrees * Math.PI / 180.0), Y = (float)Math.Sin(AngleInDegrees * Math.PI / 180.0) };
+            return new Vector2D((float)Math.Cos(AngleInDegrees * Math.PI / 180.0), (float)Math.Sin(AngleInDegrees * Math.PI / 180.0));
         }
         
         private Point2D? _originalPosition = null;

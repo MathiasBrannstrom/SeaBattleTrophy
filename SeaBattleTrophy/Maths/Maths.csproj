@@ -41,6 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FloatExtensions.cs" />
+    <Compile Include="GeometryExtensions\LineSegmentExtensions.cs" />
+    <Compile Include="Geometry\LineSegment.cs" />
     <Compile Include="Geometry\Point2D.cs" />
     <Compile Include="Geometry\Vector2D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
