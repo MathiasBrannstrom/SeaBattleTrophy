@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Utilities;
+using Maths.Geometry;
 using Maths;
 
 namespace SeaBattleTrophyGame
@@ -69,7 +70,7 @@ namespace SeaBattleTrophyGame
                     var closestDistance = double.MaxValue;
                     foreach(var landMass in _landMasses)
                     {
-                        var distance = landMass.DistanceToPoint(ship.Position);
+                        var distance = landMass.LandPolygon.ShortestDistanceToPoint(ship.Position);
 
                         if (distance < closestDistance)
                             closestDistance = distance;

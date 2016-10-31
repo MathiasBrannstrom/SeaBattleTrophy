@@ -37,7 +37,7 @@ namespace SeaBattleTrophy.WPF.ViewModels
 
         private void UpdatePixelCoordinates()
         {
-            PixelCoordinates = new PointCollection(_landMass.CornerCoordinates.Select(p => 
+            PixelCoordinates = new PointCollection(_landMass.LandPolygon.Select(p => 
             new Point(p.X / _metersPerPixel.Value, _seaMapSizeInPixels.Value - p.Y / _metersPerPixel.Value)));
             PropertyChanged.Raise(() => PixelCoordinates);
         }

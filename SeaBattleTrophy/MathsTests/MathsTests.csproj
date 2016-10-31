@@ -3,11 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E3DF8D40-9094-4CB0-867F-500545C07619}</ProjectGuid>
+    <ProjectGuid>{4B01288F-188F-436E-86E5-C9D8E89E42E6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SeaBattleTrophyGameTests</RootNamespace>
-    <AssemblyName>SeaBattleTrophyGameTests</AssemblyName>
+    <RootNamespace>MathsTests</RootNamespace>
+    <AssemblyName>MathsTests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -51,20 +51,13 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="GeometryExtensions\PolygonExtensionsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Maths\Maths.csproj">
-      <Project>{b31c1d8f-4815-4c16-a6d6-4f50773c82da}</Project>
+      <Project>{B31C1D8F-4815-4C16-A6D6-4F50773C82DA}</Project>
       <Name>Maths</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SeaBattleTrophyInterface\SeaBattleTrophyGame.csproj">
-      <Project>{46FBF003-825C-496E-AFBA-52EEF8B7BE1D}</Project>
-      <Name>SeaBattleTrophyGame</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Utilities\Utilities.csproj">
-      <Project>{346b5139-46fc-456c-a8f2-738fd5e1023c}</Project>
-      <Name>Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

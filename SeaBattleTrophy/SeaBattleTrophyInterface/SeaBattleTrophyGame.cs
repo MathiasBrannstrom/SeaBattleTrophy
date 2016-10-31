@@ -35,8 +35,8 @@ namespace SeaBattleTrophyGame
         {
             var landMasses = new List<LandMass>();
 
-            landMasses.Add(new LandMass(new[] { new Point2D(100, 0), new Point2D(110, 180), new Point2D(150, 200), new Point2D(190,180), new Point2D(200, 0) }));
-            landMasses.Add(new LandMass(new[] { new Point2D(50, 200), new Point2D(60, 210), new Point2D(60, 260), new Point2D(24, 240), new Point2D(20,210)}));
+            landMasses.Add(new LandMass(new Polygon(new[] { new Point2D(100, 0), new Point2D(110, 180), new Point2D(150, 200), new Point2D(190,180), new Point2D(200, 0) })));
+            landMasses.Add(new LandMass(new Polygon(new[] { new Point2D(50, 200), new Point2D(60, 210), new Point2D(60, 260), new Point2D(24, 240), new Point2D(20,210)})));
             SeaMap = new SeaMap { SizeInMeters = 300, LandMasses = landMasses };
         }
 
