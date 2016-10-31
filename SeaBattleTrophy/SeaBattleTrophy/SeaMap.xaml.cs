@@ -95,7 +95,7 @@ namespace SeaBattleTrophy.WPF
             _game = game;
             _game.SeaMapSizeInPixels.PropertyChanged += HandleSeaMapSizeInPixelsPropertyChanged;
 
-            UpdateMetersPerPixel();
+            HandleSeaMapSizeInPixelsPropertyChanged(this, new PropertyChangedEventArgs(null));
             AddShips();
             AddLandMasses();
         }
