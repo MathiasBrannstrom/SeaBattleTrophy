@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Maths.Geometry
 {
-    public struct Vector2D
+    public struct Vector2D : IEquatable<Vector2D>
     {
         public float X { get; }
         public float Y { get; }
@@ -54,6 +50,11 @@ namespace Maths.Geometry
             var y = X * Math.Sin(radian) + Y * Math.Cos(radian);
 
             return new Vector2D((float)x, (float)y);
+        }
+
+        public bool Equals(Vector2D other)
+        {
+            return X.Equals(other.X) && Y.Equals(other.Y);
         }
     }
 }

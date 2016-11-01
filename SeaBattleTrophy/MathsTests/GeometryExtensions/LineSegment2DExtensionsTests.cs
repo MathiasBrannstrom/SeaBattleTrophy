@@ -45,5 +45,32 @@ namespace Maths.Geometry.Tests
             Assert.IsFalse(hasIntersection);
             Assert.IsNull(intersectionPoint);
         }
+
+        [TestMethod()]
+        public void ShortestDistanceToOtherLineSegmentTest()
+        {
+            // Scenario 1
+            var ls0 = new LineSegment2D(new Point2D(-1, 0), new Point2D(1, 0));
+            var ls1 = new LineSegment2D(new Point2D(0, -1), new Point2D(0, 1));
+            LineSegment2D shortestDistanceSegment;
+            var shortestDistance = ls0.ShortestDistanceToOtherLineSegment(ls1, out shortestDistanceSegment);
+            Assert.AreEqual(0, shortestDistance);
+            Assert.AreEqual(new LineSegment2D(), shortestDistanceSegment);
+
+            // Scenario 3
+            ls0 = new LineSegment2D(new Point2D(0, 0), new Point2D(1, 0));
+            ls1 = new LineSegment2D(new Point2D(0, 1), new Point2D(1, 1));
+            shortestDistance = ls0.ShortestDistanceToOtherLineSegment(ls1, out shortestDistanceSegment);
+            Assert.AreEqual(1, shortestDistance);
+            Assert.AreEqual(0, shortestDistanceSegment.PointA.Y);
+            Assert.AreEqual(1, shortestDistanceSegment.PointB.Y);
+
+            // Scenario 4
+            ls0 = new LineSegment2D(new Point2D(0, 0), new Point2D(2, 0));
+            ls1 = new LineSegment2D(new Point2D(1, 3), new Point2D(1, 2));
+            shortestDistance = ls0.ShortestDistanceToOtherLineSegment(ls1, out shortestDistanceSegment);
+            Assert.AreEqual(2, shortestDistance);
+            Assert.AreEqual(new LineSegment2D(new Point2D(1,0), new Point2D(1,2)), shortestDistanceSegment);
+        }
     }
 }

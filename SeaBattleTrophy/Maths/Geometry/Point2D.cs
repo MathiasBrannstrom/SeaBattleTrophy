@@ -1,6 +1,8 @@
-﻿namespace Maths.Geometry
+﻿using System;
+
+namespace Maths.Geometry
 {
-    public struct Point2D
+    public struct Point2D : IEquatable<Point2D>
     {
         public float X { get; }
         public float Y { get; }
@@ -29,6 +31,11 @@
         public static Vector2D operator -(Point2D point0, Point2D point1)
         {
             return new Vector2D(point0.X - point1.X, point0.Y - point1.Y);
+        }
+
+        public bool Equals(Point2D other)
+        {
+            return X.Equals(other.X) && Y.Equals(other.Y);
         }
     }
 }

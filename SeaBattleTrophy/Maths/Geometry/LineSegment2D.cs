@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Maths.Geometry
 {
-    public struct LineSegment2D
+    public struct LineSegment2D : IEquatable<LineSegment2D>
     {
         public Point2D PointA { get; }
 
@@ -26,6 +22,11 @@ namespace Maths.Geometry
         public float Length()
         {
             return (float)Math.Sqrt(SquaredLength());
+        }
+
+        public bool Equals(LineSegment2D other)
+        {
+            return PointA.Equals(other.PointA) && PointB.Equals(other.PointB);
         }
     }
 }
