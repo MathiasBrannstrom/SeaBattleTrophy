@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Maths.Geometry
 {
-    public struct Polygon2D : IReadOnlyList<Point2D>
+    public struct Polygon2D : IReadOnlyList<Point2D>, IEquatable<Polygon2D>
     {
         public IReadOnlyList<Point2D> Points { get; }
 
@@ -34,6 +31,18 @@ namespace Maths.Geometry
         IEnumerator IEnumerable.GetEnumerator()
         {
             return Points.GetEnumerator();
+        }
+
+        public bool Equals(Polygon2D other)
+        {
+            if (Count != other.Count)
+                return false;
+
+            for (int i = 0; i < Count; i++)
+                if (!this[i].Equals(other[i]))
+                    return false;
+
+            return true;
         }
     }
 }

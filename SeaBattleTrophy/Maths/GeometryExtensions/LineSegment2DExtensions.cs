@@ -44,15 +44,17 @@ namespace Maths.Geometry
             
             if(line0.IntersectsOtherLine(line1, out intersectionPoint))
             {
-                var intersectionPointRatio0 = (intersectionPoint.Value - line0.PointA).SquaredLength() / lineSegment.SquaredLength();
-
-                if(intersectionPointRatio0 < 0 || intersectionPointRatio0 > 1)
+                var lineSegmentSquaredLength = lineSegment.SquaredLength();
+                if ((intersectionPoint.Value - line0.PointA).SquaredLength() > lineSegmentSquaredLength ||
+                    (intersectionPoint.Value - line0.PointB).SquaredLength() > lineSegmentSquaredLength)
                 {
                     intersectionPoint = null;
                     return false;
                 }
-                var intersectionPointRatio1 = (intersectionPoint.Value - line1.PointA).SquaredLength() / otherLineSegment.SquaredLength();
-                if (intersectionPointRatio1 < 0 || intersectionPointRatio1 > 1)
+
+                var lineSegmentSquaredLength1 = otherLineSegment.SquaredLength();
+                if ((intersectionPoint.Value - line1.PointA).SquaredLength() > lineSegmentSquaredLength1 ||
+                    (intersectionPoint.Value - line1.PointB).SquaredLength() > lineSegmentSquaredLength1)
                 {
                     intersectionPoint = null;
                     return false;

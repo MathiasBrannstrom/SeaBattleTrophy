@@ -1,10 +1,15 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Maths.Geometry;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Maths.Geometry.Tests
 {
     [TestClass()]
-    public class PolygonExtensionsTests
+    public class Polygon2DExtensionsTests
     {
         [TestMethod()]
         public void ShortestDistanceToPointTest()
@@ -36,6 +41,23 @@ namespace Maths.Geometry.Tests
             Assert.AreEqual(new Point2D(1, 1), pointOnPolygon);
 
             // Test scenario for when it's inside the square.
+        }
+
+        [TestMethod()]
+        public void ShortestSquaredDistanceToOtherPolygonTest()
+        {
+            var points = new[] { new Point2D(0, 0), new Point2D(0, 1), new Point2D(1, 1), new Point2D(1, 0) };
+            var points2 = new[] { new Point2D(0.2f, 1.4f), new Point2D(0, 2), new Point2D(2, 2) };
+
+            var polygon = new Polygon2D(points);
+            var polygon2 = new Polygon2D(points2);
+
+            LineSegment2D shortestDistanceSegment;
+
+            var shortestDistance = polygon.ShortestDistanceToOtherPolygon(polygon2, out shortestDistanceSegment);
+
+            Assert.AreEqual(0.4, shortestDistance, 0.000001);
+            Assert.AreEqual(new LineSegment2D(new Point2D(0.2f, 1), new Point2D(0.2f, 1.4f)), shortestDistanceSegment);
         }
     }
 }

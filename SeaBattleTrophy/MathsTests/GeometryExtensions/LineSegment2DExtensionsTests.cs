@@ -44,6 +44,14 @@ namespace Maths.Geometry.Tests
             hasIntersection = ls0.IntersectsOtherLineSegment(ls1, out intersectionPoint);
             Assert.IsFalse(hasIntersection);
             Assert.IsNull(intersectionPoint);
+
+            // Scenario 5
+            ls0 = new LineSegment2D(new Point2D(0, 0), new Point2D(2, 0));
+            ls1 = new LineSegment2D(new Point2D(0, 1), new Point2D(0, 3));
+            hasIntersection = ls0.IntersectsOtherLineSegment(ls1, out intersectionPoint);
+            Assert.IsFalse(hasIntersection);
+            Assert.IsNull(intersectionPoint);
+
         }
 
         [TestMethod()]
