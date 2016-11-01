@@ -14,16 +14,38 @@
     <UserControl.RenderTransform>
         <TranslateTransform X="{Binding XPosInPixels}" Y="{Binding YPosInPixels}" />
     </UserControl.RenderTransform>
-    
-    <Grid Width="{Binding LengthInPixels}" Height="{Binding WidthInPixels}" MouseDown="HandleShipMouseDown" x:Name="ShipGrid">
+
+    <Grid>
         <Grid.RenderTransform>
             <TransformGroup>
-                <TranslateTransform X="{Binding ElementName=thisControl, Path=ActualWidth,  ConverterParameter=-0.5, Converter={StaticResource DoubleConverter}}"
-                            Y="{Binding ElementName=thisControl, Path=ActualHeight,  ConverterParameter=-0.5, Converter={StaticResource DoubleConverter}}"/>
+                <!--<TranslateTransform X="{Binding ElementName=thisControl, Path=ActualWidth,  ConverterParameter=-0.5, Converter={StaticResource DoubleConverter}}"
+                            Y="{Binding ElementName=thisControl, Path=ActualHeight,  ConverterParameter=-0.5, Converter={StaticResource DoubleConverter}}"/>-->
                 <RotateTransform Angle="{Binding RotationAngle}" CenterX="0.5" CenterY="0.5"/>
             </TransformGroup>
         </Grid.RenderTransform>
-        <Border> <!--Selection border-->
+
+        <Polygon Points="{Binding ShapeInPixels}" Fill="BurlyWood" MouseDown="HandleShipMouseDown">
+            <Polygon.Style>
+                <Style TargetType="Polygon">
+                    <Setter Property="StrokeThickness" Value="3" />
+                    <Setter Property="Stroke" Value="BlanchedAlmond" />
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Stroke" Value="Gold" />
+                            <Setter Property="StrokeThickness" Value="4" />
+                        </Trigger>
+                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                            <Setter Property="Stroke" Value="Goldenrod" />
+                            <Setter Property="StrokeThickness" Value="4" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Polygon.Style>
+        </Polygon>
+
+        <!--<Rectangle Fill="Black" Height="3" Width="6"/>
+        <Ellipse Fill="Black" Height="3" Width="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Border>
             <Border.Style>
                 <Style TargetType="Border">
                     <Style.Triggers>
@@ -38,12 +60,10 @@
                     </Style.Triggers>
                 </Style>
             </Border.Style>
-            <Border Background="BurlyWood" BorderBrush="BlanchedAlmond" BorderThickness="2">
+            <Border >
                 <Grid>
-                    <Rectangle Fill="Black" Height="3" Width="6" HorizontalAlignment="Right" VerticalAlignment="Center" />
-                    <Ellipse Fill="Black" Height="3" Width="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Grid>
             </Border>
-        </Border>
+        </Border>-->
     </Grid>
 </UserControl>

@@ -54,7 +54,7 @@ namespace SeaBattleTrophyGame
         public async void SendShipOrders()
         {
             // For now we send them sequentially to each ship. Later we will step forward.
-            var timeStep = 1.0f / 40;
+            var timeStep = 1.0f / 20;
             var t = timeStep;
             var finalStepDone = false;
             while (!finalStepDone)
@@ -67,10 +67,12 @@ namespace SeaBattleTrophyGame
                 // Check collisions etc.
                 foreach(var ship in _shipsByIndex.Values)
                 {
+                    //
+                    var adjustedShipPolygon = ship.Shape.Transform(Transformations.Rotation2D(ship.AngleInDegrees - 90), new Vector2D(ship.Position.X, ship.Position.Y));
                     var closestDistance = double.MaxValue;
                     foreach(var landMass in _landMasses)
                     {
-                        var distance = landMass.LandPolygon.ShortestDistanceToPoint(ship.Position);
+                        var distance = landMass.LandPolygon.ShortestDistanceToOtherPolygon(adjustedShipPolygon);
 
                         if (distance < closestDistance)
                             closestDistance = distance;
@@ -81,7 +83,7 @@ namespace SeaBattleTrophyGame
 
                 var timeSpent = DateTime.UtcNow - time;
 
-                await Task.Delay(Math.Max(20 - (int)timeSpent.TotalMilliseconds,0));
+                await Task.Delay(Math.Max(50 - (int)timeSpent.TotalMilliseconds,0));
 
                 finalStepDone = isFinalChange;
                 t = Math.Min(1.0f, t + timeStep);

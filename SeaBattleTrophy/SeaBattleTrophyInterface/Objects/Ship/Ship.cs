@@ -27,9 +27,7 @@ namespace SeaBattleTrophyGame
 
         Point2D Position { get; }
 
-        float Length { get; }
-
-        float Width { get; }
+        Polygon2D Shape { get; }
 
         SailLevel SailLevel { get; }
 
@@ -59,10 +57,8 @@ namespace SeaBattleTrophyGame
 
         public Point2D Position { get; set; }
 
-        public float Length { get; set; }
-
-        public float Width { get; set; }
-
+        public Polygon2D Shape { get; set; }
+        
         public float CurrentSpeed
         {
             get { return 30.0f * SailLevelSpeedModifier(SailLevel); }

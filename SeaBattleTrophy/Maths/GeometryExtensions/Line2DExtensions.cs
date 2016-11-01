@@ -8,7 +8,7 @@
 
             var denominator = 
                 (line.PointA.X - line.PointB.X) * (otherLine.PointA.Y - otherLine.PointB.Y) - 
-                (line.PointA.Y - line.PointB.Y) * (otherLine.PointA.X - otherLine.PointB.Y);
+                (line.PointA.Y - line.PointB.Y) * (otherLine.PointA.X - otherLine.PointB.X);
 
             if (denominator.NearEquals(0))
                 return false;
