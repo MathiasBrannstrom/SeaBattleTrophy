@@ -54,7 +54,7 @@ namespace SeaBattleTrophyGame
         public async void SendShipOrders()
         {
             // For now we send them sequentially to each ship. Later we will step forward.
-            var timeStep = 1.0f / 20;
+            var timeStep = 1.0f / 40;
             var t = timeStep;
             var finalStepDone = false;
             while (!finalStepDone)
@@ -67,7 +67,9 @@ namespace SeaBattleTrophyGame
                 // Check collisions etc.
                 foreach(var ship in _shipsByIndex.Values)
                 {
-                    //
+                    // if ever relevant the polygons can be cached (since later ships will be checked against other ships later)
+                    // Even more importantly, the polygons can have a lazily created bounding box that will be checked first. Should
+                    // give a big speed improvment.
                     var adjustedShipPolygon = ship.Shape.Transform(Transformations.Rotation2D(ship.AngleInDegrees - 90), new Vector2D(ship.Position.X, ship.Position.Y));
                     var closestDistance = double.MaxValue;
                     foreach(var landMass in _landMasses)
@@ -83,7 +85,7 @@ namespace SeaBattleTrophyGame
 
                 var timeSpent = DateTime.UtcNow - time;
 
-                await Task.Delay(Math.Max(50 - (int)timeSpent.TotalMilliseconds,0));
+                await Task.Delay(Math.Max(20 - (int)timeSpent.TotalMilliseconds,0));
 
                 finalStepDone = isFinalChange;
                 t = Math.Min(1.0f, t + timeStep);
