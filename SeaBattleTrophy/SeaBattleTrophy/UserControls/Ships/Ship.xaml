@@ -43,9 +43,9 @@
 
         <Polygon Fill="Black">
             <Polygon.Points>
-                <Point X="5" Y="4"/>
-                <Point X="15" Y="0"/>
-                <Point X="5" Y="-4"/>
+                <Point X="4" Y="-5"/>
+                <Point X="0" Y="-15"/>
+                <Point X="-4" Y="-5"/>
             </Polygon.Points>
         </Polygon>
         <Ellipse Fill="Black" Height="4" Width="4" Canvas.Left="-2" Canvas.Top="-2"/>

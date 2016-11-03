@@ -22,7 +22,7 @@ namespace SeaBattleTrophyGame
             //var smallPolygon = new Polygon2D(new[] { new Point2D(-0.1f, -0.1f), new Point2D(-0.1f, 0.1f), new Point2D(0.1f, 0.1f), new Point2D(0.1f, -0.1f) });
 
             var rectanglePolygon = new Polygon2D(new[] { new Point2D(-5, -20), new Point2D(-5, 20), new Point2D(5, 20), new Point2D(5, -20) });
-            _ships.Add(new Ship { Shape = rectanglePolygon, Position = new Point2D(20, 80), AngleInDegrees = 60, Index = 0, SailLevel = SailLevel.LowSails });
+            _ships.Add(new Ship { Shape = rectanglePolygon, Position = new Point2D(20, 80), AngleInDegrees = -30, Index = 0, SailLevel = SailLevel.LowSails });
             _ships.Add(new Ship { Shape = rectanglePolygon, Position = new Point2D(20, 40), AngleInDegrees = 0, Index = 1, SailLevel = SailLevel.FullSailsWithLeadSail });
             //_ships.Add(new Ship { Width = 20, Length = 30, Position = new Point2D { X = 70, Y = 30 }, AngleInDegrees = 90, Index = 2, SailLevel = SailLevel.FullSailsWithLeadSail });
 

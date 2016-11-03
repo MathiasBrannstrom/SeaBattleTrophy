@@ -67,7 +67,7 @@ namespace SeaBattleTrophy.WPF.ViewModels
 
         private void UpdateShape()
         {
-            ShapeInPixels = new PointCollection(_ship.Shape.Select(p => new Point(p.Y / _metersPerPixel.Value, p.X / _metersPerPixel.Value)));
+            ShapeInPixels = new PointCollection(_ship.Shape.Select(p => new Point(p.X / _metersPerPixel.Value, p.Y / _metersPerPixel.Value)));
             PropertyChanged.Raise(() => ShapeInPixels);
 
         }

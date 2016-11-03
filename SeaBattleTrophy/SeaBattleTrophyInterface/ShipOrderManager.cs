@@ -70,7 +70,7 @@ namespace SeaBattleTrophyGame
                     // if ever relevant the polygons can be cached (since later ships will be checked against other ships later)
                     // Even more importantly, the polygons can have a lazily created bounding box that will be checked first. Should
                     // give a big speed improvment.
-                    var adjustedShipPolygon = ship.Shape.Transform(Transformations.Rotation2D(ship.AngleInDegrees - 90), new Vector2D(ship.Position.X, ship.Position.Y));
+                    var adjustedShipPolygon = ship.Shape.Transform(Transformations.Rotation2D(ship.AngleInDegrees), new Vector2D(ship.Position.X, ship.Position.Y));
                     var closestDistance = double.MaxValue;
                     foreach(var landMass in _landMasses)
                     {
