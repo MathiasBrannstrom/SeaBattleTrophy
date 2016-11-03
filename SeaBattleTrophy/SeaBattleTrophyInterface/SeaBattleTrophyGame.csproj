@@ -48,6 +48,8 @@
     <Compile Include="SeaBattleTrophyGame.cs" />
     <Compile Include="SeaMap.cs" />
     <Compile Include="ShipOrderManager.cs" />
+    <Compile Include="TurnManager.cs" />
+    <Compile Include="WindManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Maths\Maths.csproj">

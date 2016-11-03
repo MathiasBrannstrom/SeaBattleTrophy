@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Maths.Geometry;
 
 namespace SeaBattleTrophyGame
@@ -10,7 +11,11 @@ namespace SeaBattleTrophyGame
 
         ISeaMap SeaMap { get; }
 
-        IShipOrderManager ShipOrderManager { get; }
+        IShipOrderEditor ShipOrderEditor { get; }
+
+        ITurnManager TurnManager { get; }
+
+        IWindManager WindManager { get; }
     }
 
     public class SeaBattleTrophyGameManager : ISeaBattleTrophyGame
@@ -28,9 +33,14 @@ namespace SeaBattleTrophyGame
 
             Ships = _ships;
 
+            WindManager = new WindManager();
+
             SetupSeaMap();
 
-            ShipOrderManager = new ShipOrderManager(_ships, SeaMap.LandMasses);
+            var shipOrderManager = new ShipOrderManager(_ships, SeaMap.LandMasses);
+            ShipOrderEditor = shipOrderManager;
+
+            TurnManager = new TurnManager(_ships, SeaMap, shipOrderManager, WindManager);
         }
 
         public void SetupSeaMap()
@@ -44,9 +54,12 @@ namespace SeaBattleTrophyGame
 
         public ISeaMap SeaMap { get; private set; }
 
-        public IShipOrderManager ShipOrderManager { get; set; }
-
+        public IShipOrderEditor ShipOrderEditor { get; set; }
 
         public IEnumerable<IShipReadOnly> Ships { get; private set; }
+
+        public IWindManager WindManager { get; private set; }
+
+        public ITurnManager TurnManager { get; private set; }
     }
 }

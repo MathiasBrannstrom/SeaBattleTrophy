@@ -31,7 +31,9 @@ namespace SeaBattleTrophy.WPF.ViewModels
 
         public IEnumerable<IShipReadOnly> Ships { get { return _game.Ships; } }
 
-        public IShipOrderManager ShipOrderManager { get { return _game.ShipOrderManager; } }
+        public IShipOrderEditor ShipOrderEditor { get { return _game.ShipOrderEditor; } }
+
+        public ITurnManager TurnManager { get { return _game.TurnManager; } }
 
         public ISeaMap SeaMap { get { return _game.SeaMap; } }
     }
