@@ -15,14 +15,12 @@
         <TranslateTransform X="{Binding XPosInPixels}" Y="{Binding YPosInPixels}" />
     </UserControl.RenderTransform>
 
-    <Grid>
-        <Grid.RenderTransform>
+    <Canvas>
+        <Canvas.RenderTransform>
             <TransformGroup>
-                <!--<TranslateTransform X="{Binding ElementName=thisControl, Path=ActualWidth,  ConverterParameter=-0.5, Converter={StaticResource DoubleConverter}}"
-                            Y="{Binding ElementName=thisControl, Path=ActualHeight,  ConverterParameter=-0.5, Converter={StaticResource DoubleConverter}}"/>-->
                 <RotateTransform Angle="{Binding RotationAngle}" CenterX="0.5" CenterY="0.5"/>
             </TransformGroup>
-        </Grid.RenderTransform>
+        </Canvas.RenderTransform>
 
         <Polygon Points="{Binding ShapeInPixels}" Fill="BurlyWood" MouseDown="HandleShipMouseDown">
             <Polygon.Style>
@@ -43,27 +41,13 @@
             </Polygon.Style>
         </Polygon>
 
-        <!--<Rectangle Fill="Black" Height="3" Width="6"/>
-        <Ellipse Fill="Black" Height="3" Width="3" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <Border>
-            <Border.Style>
-                <Style TargetType="Border">
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="BorderBrush" Value="Gold" />
-                            <Setter Property="BorderThickness" Value="3" />
-                        </Trigger>
-                        <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                            <Setter Property="BorderBrush" Value="Goldenrod" />
-                            <Setter Property="BorderThickness" Value="3" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Border.Style>
-            <Border >
-                <Grid>
-                </Grid>
-            </Border>
-        </Border>-->
-    </Grid>
+        <Polygon Fill="Black">
+            <Polygon.Points>
+                <Point X="5" Y="4"/>
+                <Point X="15" Y="0"/>
+                <Point X="5" Y="-4"/>
+            </Polygon.Points>
+        </Polygon>
+        <Ellipse Fill="Black" Height="4" Width="4" Canvas.Left="-2" Canvas.Top="-2"/>
+    </Canvas>
 </UserControl>

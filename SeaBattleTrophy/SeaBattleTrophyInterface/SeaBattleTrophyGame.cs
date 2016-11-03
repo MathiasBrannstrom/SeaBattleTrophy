@@ -30,7 +30,6 @@ namespace SeaBattleTrophyGame
 
             SetupSeaMap();
 
-
             ShipOrderManager = new ShipOrderManager(_ships, SeaMap.LandMasses);
         }
 

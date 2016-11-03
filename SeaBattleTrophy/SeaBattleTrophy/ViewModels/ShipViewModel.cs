@@ -37,6 +37,7 @@ namespace SeaBattleTrophy.WPF.ViewModels
 
         private void HandleMetersPerPixelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            UpdateShape();
             PropertyChanged.Raise(() => ShapeInPixels);
             PropertyChanged.Raise(() => XPosInPixels);
             PropertyChanged.Raise(() => YPosInPixels);
