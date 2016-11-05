@@ -99,46 +99,61 @@ namespace SeaBattleTrophyGame
         {
             return new Vector2D((float)-Math.Sin(AngleInDegrees * Math.PI / 180.0), (float)Math.Cos(AngleInDegrees * Math.PI / 180.0));
         }
-        
-        private Point2D? _originalPosition = null;
-        private float? _originalAngle = null;
+
+        private static Stack<MovementOrder> CreateMovementOrderStack(IShipOrderReadOnly shipOrder)
+        {
+            var copiedMovementOrders = shipOrder.MovementOrders.Select(order => order.Copy()).Reverse();
+
+            return new Stack<MovementOrder>(copiedMovementOrders);
+        }
+
+        private Stack<MovementOrder> _movementOrderStack;
+        private float _lastTimePoint;
 
         public void ApplyCurrentShipOrder(float t, bool isFinalChange)
         {
             if (!HasValidShipOrder)
                 throw new InvalidOperationException("The order is not complete enough to send to this ship.");
 
-            if (_originalPosition == null)
-            {
-                _originalPosition = Position;
-                _originalAngle = AngleInDegrees;
-            }
+            if(_movementOrderStack == null)
+                _movementOrderStack = CreateMovementOrderStack(CurrentShipOrder);
 
-            Position = _originalPosition.Value;
-            AngleInDegrees = _originalAngle.Value;
-
-            var distanceLeftToTravel = t * CurrentSpeed;
-            foreach (var movementOrder in CurrentShipOrder.MovementOrders)
+            var distanceToTravelThisTimeStep = (t-_lastTimePoint) * CurrentSpeed;
+            while(_movementOrderStack.Any())
             {
-                var distanceToTravel = Math.Min(movementOrder.Distance, distanceLeftToTravel);
+                var movementOrder = _movementOrderStack.Pop();
+
+                var distanceToTravelForThisMovementOrder = Math.Min(movementOrder.Distance, distanceToTravelThisTimeStep);
+
+                // If we don't manage to finish the movement order this time step we subtract the travelled distance and put it back
+                // on the stack.
+                if (distanceToTravelThisTimeStep < movementOrder.Distance)
+                {
+                    movementOrder.Distance -= distanceToTravelThisTimeStep;
+                    _movementOrderStack.Push(movementOrder); 
+                }
+
                 if (movementOrder is ForwardMovementOrder)
-                    ApplyMovementOrder((ForwardMovementOrder)movementOrder, distanceToTravel);
+                    ApplyMovementOrder((ForwardMovementOrder)movementOrder, distanceToTravelForThisMovementOrder);
                 else if (movementOrder is YawMovementOrder)
-                    ApplyMovementOrder((YawMovementOrder)movementOrder, distanceToTravel);
+                    ApplyMovementOrder((YawMovementOrder)movementOrder, distanceToTravelForThisMovementOrder);
 
-                distanceLeftToTravel -= distanceToTravel;
-                if (distanceLeftToTravel.NearEquals(0f))
+                distanceToTravelThisTimeStep -= distanceToTravelForThisMovementOrder;
+                if (distanceToTravelThisTimeStep.NearEquals(0f))
                     break;
             }
 
+            _lastTimePoint = t;
+
             if (isFinalChange)
             {
-                _originalAngle = null;
-                _originalPosition = null;
+                _movementOrderStack = null;
+                _lastTimePoint = 0;
 
                 if (CurrentShipOrder.ShipSailLevelIncrement.HasValue && CurrentShipOrder.ShipSailLevelIncrement != SailLevelChange.StayAtCurrentSailSpeed)
                     ChangeSailLevel(CurrentShipOrder.ShipSailLevelIncrement.Value);
             }
+
         }
 
         private void ChangeSailLevel(SailLevelChange sailLevelChange)
