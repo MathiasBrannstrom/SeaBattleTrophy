@@ -47,6 +47,7 @@
     <Compile Include="Converters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyChangedEventHandlerExtensions.cs" />
+    <Compile Include="TimeSpanExtensions.cs" />
     <Compile Include="ValueHolder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

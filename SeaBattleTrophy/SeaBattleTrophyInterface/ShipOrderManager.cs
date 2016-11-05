@@ -2,29 +2,25 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading.Tasks;
 using Utilities;
-using Maths.Geometry;
-using Maths;
 
 namespace SeaBattleTrophyGame
 {
     public interface IShipOrderEditor : INotifyPropertyChanged
     {
-        void UpdateWithPartialShipOrder(IShipReadOnly ship, IShipOrder shipOrder);
-
         void RemoveMovementOrderFromShip(IShipReadOnly value, MovementOrder movementOrder);
 
         void AddMovementOrder(IShipReadOnly value, MovementOrder movementOrder);
+        void SetRequestedSailLevel(IShipReadOnly value1, SailLevelChange value2);
     }
 
     public interface IShipOrderMovementPhaseManager : INotifyPropertyChanged
     {
-        void ClearShipOrders();
+        void ResetShipOrdersForNewTurn(TimeSpan turnTimeSpan);
 
         bool DoesAllShipsHaveValidOrders { get; }
 
-        void ApplyShipOrders(float t, bool isFinalChange, IWind currentWind);
+        void ApplyShipOrders(TimeSpan t, bool isFinalChange, IWind currentWind);
     }
 
     public interface IShipOrderManager : IShipOrderMovementPhaseManager, IShipOrderEditor { }
@@ -41,9 +37,7 @@ namespace SeaBattleTrophyGame
             foreach(var ship in ships)
             {
                 ship.PropertyChanged += HandleShipPropertyChanged;
-                ship.SetShipOrder(new ShipOrder());
                 _shipsByIndex.Add(ship.Index, ship);
-
             }
         }
 
@@ -55,21 +49,16 @@ namespace SeaBattleTrophyGame
             }
         }
 
-        public void ApplyShipOrders(float t, bool isFinalChange, IWind currentWind)
+        public void ApplyShipOrders(TimeSpan t, bool isFinalChange, IWind currentWind)
         {
             foreach (var ship in _shipsByIndex.Values)
                 ship.ApplyCurrentShipOrder(t, isFinalChange, currentWind);
         }
 
-        public void ClearShipOrders()
+        public void ResetShipOrdersForNewTurn(TimeSpan turnTimeSpan)
         {
             foreach (var ship in _shipsByIndex.Values)
-                ship.SetShipOrder(new ShipOrder());
-        }
-
-        public void UpdateWithPartialShipOrder(IShipReadOnly ship, IShipOrder newShipOrders)
-        {
-            _shipsByIndex[ship.Index].CurrentShipOrder.UpdateWithNewOrders(newShipOrders);
+                ship.SetShipOrder(new ShipOrder(turnTimeSpan));
         }
 
         public void RemoveMovementOrderFromShip(IShipReadOnly ship, MovementOrder movementOrder)
@@ -80,6 +69,11 @@ namespace SeaBattleTrophyGame
         public void AddMovementOrder(IShipReadOnly ship, MovementOrder movementOrder)
         {
             _shipsByIndex[ship.Index].CurrentShipOrder.MovementOrders.Add(movementOrder);
+        }
+
+        public void SetRequestedSailLevel(IShipReadOnly ship, SailLevelChange sailLevelChange)
+        {
+            _shipsByIndex[ship.Index].CurrentShipOrder.SetSailLevelChange(sailLevelChange);
         }
 
         public bool DoesAllShipsHaveValidOrders

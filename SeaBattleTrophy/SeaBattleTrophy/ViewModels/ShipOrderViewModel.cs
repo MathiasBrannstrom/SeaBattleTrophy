@@ -17,19 +17,19 @@ namespace SeaBattleTrophy.WPF.ViewModels
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public float CurrentMaxSpeed
+        public double TotalTimeForOrder
         {
-            get { return _selectedShip.Value.CurrentSpeed; }
+            get { return _currentShipOrder.TotalTimeSpanForOrder.TotalSeconds; }
         }
 
-        public float CurrentDistanceRemaining
+        public double CurrentTimeRemaining
         {
-            get { return _selectedShip.Value.CurrentSpeed - _currentShipOrder.MovementOrders.Sum(order => order.Distance); }
+            get { return _currentShipOrder.TotalTimeSpanForOrder.TotalSeconds - _currentShipOrder.MovementOrders.Sum(order => order.TimeSpan.TotalSeconds); }
         }
 
         public bool AnyDistanceRemaining
         {
-            get { return CurrentDistanceRemaining > float.Epsilon; }
+            get { return CurrentTimeRemaining > float.Epsilon; }
         }
 
         public ReadOnlyObservableCollection<MovementOrder> CurrentMovementOrders
@@ -44,9 +44,9 @@ namespace SeaBattleTrophy.WPF.ViewModels
             {
                 if(_currentShipOrder.ShipSailLevelIncrement != value)
                 {
-                    var partialOrder = new ShipOrder { ShipSailLevelIncrement = value };
-                    _shipOrderManager.UpdateWithPartialShipOrder(_selectedShip.Value, partialOrder);
 
+                    _shipOrderManager.SetRequestedSailLevel(_selectedShip.Value, value);
+                    
                     PropertyChanged.Raise(() => RequestedSailLevelChange);
                 }
             }
@@ -65,17 +65,18 @@ namespace SeaBattleTrophy.WPF.ViewModels
             HandleSelectedShipPropertyChanged(this, new PropertyChangedEventArgs(null));
         }
 
-        internal void AddMovementOrder(Direction direction, float distance)
+        internal void AddMovementOrder(Direction direction, double timeInSeconds)
         {
+            var timeSpan = TimeSpan.FromSeconds(timeInSeconds);
             MovementOrder movementOrder;
             switch (direction)
             {
                 case Direction.Forward:
-                    movementOrder = new ForwardMovementOrder { Distance = distance };
+                    movementOrder = new ForwardMovementOrder { TimeSpan = timeSpan };
                     break;
                 case Direction.Port:
                 case Direction.Starboard:
-                    movementOrder = new YawMovementOrder { Direction = direction, Distance = distance, YawRadius = 20 };
+                    movementOrder = new YawMovementOrder { Direction = direction, TimeSpan = timeSpan, YawRadius = 40 };
                     break;
                 default:
                     throw new InvalidEnumArgumentException("There is no support for this enum value");
@@ -106,7 +107,7 @@ namespace SeaBattleTrophy.WPF.ViewModels
 
                 ((INotifyCollectionChanged)_currentShipOrder.MovementOrders).CollectionChanged += HandleCurrentMovementOrdersChanged;
                 HandleCurrentMovementOrdersChanged(this, null);
-                PropertyChanged.Raise(() => CurrentMaxSpeed);
+                PropertyChanged.Raise(() => TotalTimeForOrder);
                 PropertyChanged.Raise(() => CurrentMovementOrders);
                 PropertyChanged.Raise(() => RequestedSailLevelChange);
             }
@@ -114,7 +115,7 @@ namespace SeaBattleTrophy.WPF.ViewModels
 
         private void HandleCurrentMovementOrdersChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            PropertyChanged.Raise(() => CurrentDistanceRemaining);
+            PropertyChanged.Raise(() => CurrentTimeRemaining);
             PropertyChanged.Raise(() => AnyDistanceRemaining);
         }
     }

@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Maths.Geometry;
-using Maths;
 using Utilities;
 using System.ComponentModel;
-using System.Collections.Specialized;
 
 namespace SeaBattleTrophyGame
 {
@@ -42,7 +38,7 @@ namespace SeaBattleTrophyGame
 
     public interface IShip : IShipReadOnly
     {
-        void ApplyCurrentShipOrder(float t, bool isFinalChange, IWind currentWind);
+        void ApplyCurrentShipOrder(TimeSpan t, bool isFinalChange, IWind currentWind);
 
         new IShipOrder CurrentShipOrder { get; }
 
@@ -61,12 +57,12 @@ namespace SeaBattleTrophyGame
         
         public float CurrentSpeed
         {
-            get { return 30.0f * SailLevelSpeedModifier(SailLevel); }
+            get { return 10.0f * SailLevelSpeedModifier(SailLevel); }
         }
 
         public float DriftMultiplier
         {
-            get { return 1.0f; }
+            get { return 0.1f; }
         }
 
         public SailLevel SailLevel { get; set; }
@@ -74,28 +70,13 @@ namespace SeaBattleTrophyGame
         public int Index { get; set; }
 
         public IShipOrder CurrentShipOrder { get; private set; }
-
-        public bool HasValidShipOrder { get { return CurrentShipOrder.GetTotalDistance().NearEquals(CurrentSpeed); } }
-
         IShipOrderReadOnly IShipReadOnly.CurrentShipOrder { get { return CurrentShipOrder; } }
+        public bool HasValidShipOrder { get { return CurrentShipOrder.IsValid; } }
+
 
         private ShipStatus _shipStatus = new ShipStatus();
-
-        public IShipStatus ShipStatus
-        {
-            get
-            {
-                return _shipStatus;
-            }
-        }
-
-        IShipStatusReadOnly IShipReadOnly.ShipStatus
-        {
-            get
-            {
-                return _shipStatus;
-            }
-        }
+        public IShipStatus ShipStatus { get { return _shipStatus; } }
+        IShipStatusReadOnly IShipReadOnly.ShipStatus { get { return _shipStatus; } }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -107,51 +88,47 @@ namespace SeaBattleTrophyGame
         }
 
         private Stack<MovementOrder> _movementOrderStack;
-        private float _lastTimePoint;
 
-        public void ApplyCurrentShipOrder(float t, bool isFinalChange, IWind currentWind)
+        public void ApplyCurrentShipOrder(TimeSpan timeStep, bool isFinalChange, IWind currentWind)
         {
             if (!HasValidShipOrder)
                 throw new InvalidOperationException("The order is not complete enough to send to this ship.");
 
-            if(_movementOrderStack == null)
+            if (_movementOrderStack == null)
                 _movementOrderStack = CreateMovementOrderStack(CurrentShipOrder);
 
-            var timeStep = (t - _lastTimePoint);
+            var timeLeftToTravel = timeStep;
 
-            var distanceToTravelThisTimeStep =  timeStep * CurrentSpeed;
             while(_movementOrderStack.Any())
             {
                 var movementOrder = _movementOrderStack.Pop();
 
-                var distanceToTravelForThisMovementOrder = Math.Min(movementOrder.Distance, distanceToTravelThisTimeStep);
-
-                // If we don't manage to finish the movement order this time step we subtract the travelled distance and put it back
-                // on the stack.
-                if (distanceToTravelThisTimeStep < movementOrder.Distance)
+                // If we don't manage to finish the movement order this time step we subtract the spent time and put it back on the stack.
+                if (timeStep < movementOrder.TimeSpan)
                 {
-                    movementOrder.Distance -= distanceToTravelThisTimeStep;
+                    movementOrder.TimeSpan -= timeStep;
                     _movementOrderStack.Push(movementOrder); 
                 }
-                
+
+                var timeSpentForThisMovementOrder = new TimeSpan(Math.Min(timeLeftToTravel.Ticks, movementOrder.TimeSpan.Ticks));
+
+                var distanceToTravelForThisMovementOrder = (float)timeSpentForThisMovementOrder.TotalSeconds * CurrentSpeed;
+
                 if (movementOrder is ForwardMovementOrder)
                     ApplyMovementOrder((ForwardMovementOrder)movementOrder, distanceToTravelForThisMovementOrder);
                 else if (movementOrder is YawMovementOrder)
                     ApplyMovementOrder((YawMovementOrder)movementOrder, distanceToTravelForThisMovementOrder);
 
-                distanceToTravelThisTimeStep -= distanceToTravelForThisMovementOrder;
-                if (distanceToTravelThisTimeStep.NearEquals(0f))
+                timeLeftToTravel -= timeSpentForThisMovementOrder;
+                if (timeLeftToTravel.Ticks==0)
                     break;
             }
 
             ApplyWindDrift(currentWind, timeStep);
 
-            _lastTimePoint = t;
-
             if (isFinalChange)
             {
                 _movementOrderStack = null;
-                _lastTimePoint = 0;
 
                 if (CurrentShipOrder.ShipSailLevelIncrement.HasValue && CurrentShipOrder.ShipSailLevelIncrement != SailLevelChange.StayAtCurrentSailSpeed)
                     ChangeSailLevel(CurrentShipOrder.ShipSailLevelIncrement.Value);
@@ -159,11 +136,11 @@ namespace SeaBattleTrophyGame
 
         }
 
-        private void ApplyWindDrift(IWind wind, float timeStep)
+        private void ApplyWindDrift(IWind wind, TimeSpan timeStep)
         {
             var direction = Vector2D.DirectionFromAngle(wind.Angle);
 
-            Position += direction * wind.Velocity * timeStep * DriftMultiplier;
+            Position += direction * (float)(wind.Velocity * timeStep.TotalSeconds * DriftMultiplier);
         }
 
         private void ChangeSailLevel(SailLevelChange sailLevelChange)
@@ -215,18 +192,19 @@ namespace SeaBattleTrophyGame
         public void SetShipOrder(IShipOrder order)
         {
             if(CurrentShipOrder != null)
-                CurrentShipOrder.MovementOrders.CollectionChanged -= HandleCurrentMovementOrdersCollectionChanged;
+                CurrentShipOrder.PropertyChanged -= HandleCurrentMovementOrdersCollectionChanged;
 
             CurrentShipOrder = order;
 
-            CurrentShipOrder.MovementOrders.CollectionChanged += HandleCurrentMovementOrdersCollectionChanged;
+            CurrentShipOrder.PropertyChanged += HandleCurrentMovementOrdersCollectionChanged;
             PropertyChanged.Raise(() => CurrentShipOrder);
             PropertyChanged.Raise(() => HasValidShipOrder);
         }
 
-        private void HandleCurrentMovementOrdersCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void HandleCurrentMovementOrdersCollectionChanged(object sender, PropertyChangedEventArgs e)
         {
-            PropertyChanged.Raise(() => HasValidShipOrder);
+            if(e.PropertyName == nameof(IShipOrderReadOnly.IsValid))
+                PropertyChanged.Raise(() => HasValidShipOrder);
         }
 
         // Create the OnPropertyChanged method to raise the event

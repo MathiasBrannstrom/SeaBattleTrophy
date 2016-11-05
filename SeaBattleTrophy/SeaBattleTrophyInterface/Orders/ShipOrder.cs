@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
+using Utilities;
 
 namespace SeaBattleTrophyGame
 {
@@ -13,27 +16,30 @@ namespace SeaBattleTrophyGame
 
     public static class IShipOrderExtensions
     {
-        public static float GetTotalDistance(this IShipOrder order)
+        public static TimeSpan GetTotalTime(this IShipOrder order)
         {
             if (order.MovementOrders == null)
-                return 0;
-            else return order.MovementOrders.Sum(movementOrder => movementOrder.Distance);
+                return new TimeSpan();
+            else return new TimeSpan(order.MovementOrders.Sum(movementOrder => movementOrder.TimeSpan.Ticks));
         }
     }
 
-    public interface IShipOrderReadOnly
+    public interface IShipOrderReadOnly : INotifyPropertyChanged
     {
         SailLevelChange? ShipSailLevelIncrement { get; }
 
         ReadOnlyObservableCollection<MovementOrder> MovementOrders { get; }
+
+        TimeSpan TotalTimeSpanForOrder { get; }
+
+        bool IsValid { get; }
     }
     
     public interface IShipOrder : IShipOrderReadOnly
     {
         new ObservableCollection<MovementOrder> MovementOrders { get; }
 
-        
-        void UpdateWithNewOrders(IShipOrder newShipOrders);
+        void SetSailLevelChange(SailLevelChange sailLevelChange);
     }
 
     public enum Direction
@@ -45,7 +51,7 @@ namespace SeaBattleTrophyGame
 
     public abstract class MovementOrder
     {
-        public float Distance { get; set; }
+        public TimeSpan TimeSpan { get; set; }
 
         public abstract MovementOrder Copy();
     }
@@ -54,7 +60,7 @@ namespace SeaBattleTrophyGame
     {
         public override MovementOrder Copy()
         {
-            return new ForwardMovementOrder { Distance = Distance };
+            return new ForwardMovementOrder { TimeSpan = TimeSpan };
         }
     }
 
@@ -65,7 +71,7 @@ namespace SeaBattleTrophyGame
 
         public override MovementOrder Copy()
         {
-            return new YawMovementOrder { Distance = Distance, Direction = Direction, YawRadius = YawRadius };
+            return new YawMovementOrder { TimeSpan = TimeSpan, Direction = Direction, YawRadius = YawRadius };
         }
     }
 
@@ -73,31 +79,24 @@ namespace SeaBattleTrophyGame
     {
         private ReadOnlyObservableCollection<MovementOrder> _movementOrdersReadOnly;
 
-        public static ShipOrder SingleMovementShipOrder(MovementOrder movementOrder)
-        {
-            var shipOrder = new ShipOrder();
-            shipOrder.MovementOrders.Add(movementOrder);
+        public event PropertyChangedEventHandler PropertyChanged;
 
-            return shipOrder;
-        }
-
-        public void UpdateWithNewOrders(IShipOrder newShipOrders)
-        {
-            if (newShipOrders.MovementOrders.Any())
-            {
-                MovementOrders.Clear();
-                foreach (var movementOrder in newShipOrders.MovementOrders)
-                    MovementOrders.Add(movementOrder);
-            }
-
-            if (newShipOrders.ShipSailLevelIncrement != null)
-                ShipSailLevelIncrement = newShipOrders.ShipSailLevelIncrement;
-        }
-
-        public ShipOrder()
+        public ShipOrder(TimeSpan totalTimeSpanForOrder)
         {
             MovementOrders = new ObservableCollection<MovementOrder>();
             _movementOrdersReadOnly = new ReadOnlyObservableCollection<MovementOrder>(MovementOrders);
+            MovementOrders.CollectionChanged += HandleMovementOrdersCollectionChanged;
+            TotalTimeSpanForOrder = totalTimeSpanForOrder;
+        }
+
+        private void HandleMovementOrdersCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            PropertyChanged.Raise(() => IsValid);
+        }
+
+        public void SetSailLevelChange(SailLevelChange sailLevelChange)
+        {
+            ShipSailLevelIncrement = sailLevelChange;
         }
 
         public ObservableCollection<MovementOrder> MovementOrders { get; private set; }
@@ -105,5 +104,9 @@ namespace SeaBattleTrophyGame
         public SailLevelChange? ShipSailLevelIncrement { get; set; }
 
         ReadOnlyObservableCollection<MovementOrder> IShipOrderReadOnly.MovementOrders { get { return _movementOrdersReadOnly; } }
+
+        public TimeSpan TotalTimeSpanForOrder { get; private set; }
+
+        public bool IsValid { get { return MovementOrders.Sum(order => order.TimeSpan.Ticks) == TotalTimeSpanForOrder.Ticks; } }
     }
 }

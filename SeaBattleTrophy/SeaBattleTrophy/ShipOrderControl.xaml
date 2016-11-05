@@ -84,20 +84,20 @@
     </UserControl.Resources>
     <StackPanel Width="300" Background="Gray">
         <Grid Margin="5">
-            <ProgressBar Height="80" Maximum="{Binding CurrentMaxSpeed}" Value="{Binding CurrentDistanceRemaining, Mode=OneWay}" />
-            <Label Content="{Binding CurrentMaxSpeed}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <ProgressBar Height="80" Maximum="{Binding TotalTimeForOrder}" Value="{Binding CurrentTimeRemaining, Mode=OneWay}" />
+            <Label Content="{Binding TotalTimeForOrder}" HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Grid>
         <StackPanel Grid.IsSharedSizeScope="True" IsEnabled="{Binding AnyDistanceRemaining}">
             <local:MovementOrderControl Label="{x:Static properties:Strings.Forward}" 
-                                        MinDistance="0" MaxDistance="{Binding CurrentDistanceRemaining}"
+                                        MinDistance="0" MaxDistance="{Binding CurrentTimeRemaining}"
                                         OrderAdded="HandleForwardMovementOrderAdded"/>
 
             <local:MovementOrderControl  Label="{x:Static properties:Strings.Port}" 
-                                        MinDistance="0" MaxDistance="{Binding CurrentDistanceRemaining}"
+                                        MinDistance="0" MaxDistance="{Binding CurrentTimeRemaining}"
                                         OrderAdded="HandlePortMovementOrderAdded"/>
 
             <local:MovementOrderControl Label="{x:Static properties:Strings.Starboard}" 
-                                        MinDistance="0" MaxDistance="{Binding CurrentDistanceRemaining}"
+                                        MinDistance="0" MaxDistance="{Binding CurrentTimeRemaining}"
                                         OrderAdded="HandleStarboardMovementOrderAdded"/>
         </StackPanel>
         <ListView MinHeight="160" Margin="5" ItemsSource="{Binding CurrentMovementOrders}" ItemTemplateSelector="{StaticResource MovementOrderTemplateSelector}" Grid.IsSharedSizeScope="True"/>

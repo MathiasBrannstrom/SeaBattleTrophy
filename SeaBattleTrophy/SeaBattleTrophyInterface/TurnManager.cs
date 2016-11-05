@@ -15,6 +15,8 @@ namespace SeaBattleTrophyGame
         bool ReadyToFinishCurrentPhase { get; }
 
         void FinishCurrentPhase();
+
+        TimeSpan LengthOfTurn { get; } 
     }
     internal class TurnManager : ITurnManager
     {
@@ -22,6 +24,7 @@ namespace SeaBattleTrophyGame
         private IShipOrderMovementPhaseManager _shipOrderMovementPhaseManager;
         private IEnumerable<IShip> _ships;
         private IWindManager _windManager;
+        private TimeSpan _timeSinceStart = new TimeSpan();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -33,6 +36,8 @@ namespace SeaBattleTrophyGame
             _windManager = windManager;
             _seaMap = seaMap;
             _ships = ships;
+
+            _shipOrderMovementPhaseManager.ResetShipOrdersForNewTurn(LengthOfTurn);
         }
 
         private void HandleShipOrderMovementPhaseManagerChanged(object sender, PropertyChangedEventArgs e)
@@ -42,6 +47,15 @@ namespace SeaBattleTrophyGame
         }
 
         public bool ReadyToFinishCurrentPhase { get { return _shipOrderMovementPhaseManager.DoesAllShipsHaveValidOrders; } }
+
+        private TimeSpan _lengthOfTurn = TimeSpan.FromSeconds(5);
+        public TimeSpan LengthOfTurn
+        {
+            get
+            {
+                return _lengthOfTurn;
+            }
+        }
 
         public void CheckCollisions()
         {
@@ -73,13 +87,16 @@ namespace SeaBattleTrophyGame
 
         public async void MovementTurn()
         {
-            // For now we send them sequentially to each ship. Later we will step forward.
-            var timeStep = 1.0f / 40;
-            var t = timeStep;
-            var finalStepDone = false;
-            while (!finalStepDone)
+            var timeStep = LengthOfTurn.DivideBy(40);
+
+            var partialTime = new TimeSpan();
+            while(partialTime < LengthOfTurn)
             {
-                var isFinalChange = t.NearEquals(1.0f);
+                var t = new TimeSpan(Math.Min(timeStep.Ticks, (LengthOfTurn - partialTime).Ticks));
+                partialTime += t;
+
+                var isFinalChange = partialTime.Ticks == LengthOfTurn.Ticks;
+
                 _shipOrderMovementPhaseManager.ApplyShipOrders(t, isFinalChange, _windManager.CurrentWind);
 
                 var time = DateTime.UtcNow;
@@ -90,13 +107,15 @@ namespace SeaBattleTrophyGame
 
                 await Task.Delay(Math.Max(20 - (int)timeSpent.TotalMilliseconds, 0));
 
-                finalStepDone = isFinalChange;
-                t = Math.Min(1.0f, t + timeStep);
-
                 _windManager.UpdateWind(timeStep);
             }
 
-            _shipOrderMovementPhaseManager.ClearShipOrders();
+            _timeSinceStart += LengthOfTurn;
+
+            // for now all turns are equally long (maybe always like this?)
+            var lengthOfNextTurn = LengthOfTurn;
+
+            _shipOrderMovementPhaseManager.ResetShipOrdersForNewTurn(lengthOfNextTurn);
         }
 
     }

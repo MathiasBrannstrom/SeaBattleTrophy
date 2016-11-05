@@ -43,7 +43,7 @@ namespace SeaBattleTrophyGame
         /// Updates the wind. Change is based on how much time has passed since last update.
         /// </summary>
         /// <param name="timeStep">Time step in seconds.</param>
-        void UpdateWind(float timeStep);
+        void UpdateWind(TimeSpan timeStep);
     }
 
     public class WindManager : IWindManager
@@ -53,9 +53,9 @@ namespace SeaBattleTrophyGame
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void UpdateWind(float timeStep)
+        public void UpdateWind(TimeSpan timeStep)
         {
-            _wind = new Wind(_wind.Angle + 30*timeStep, _wind.Velocity);
+            _wind = new Wind(_wind.Angle + (float)(timeStep.TotalSeconds*4), _wind.Velocity);
             // Do nothing for now.
             PropertyChanged.Raise(() => CurrentWind);
         }
