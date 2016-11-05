@@ -46,14 +46,27 @@ namespace SeaBattleTrophyGame
     public abstract class MovementOrder
     {
         public float Distance { get; set; }
+
+        public abstract MovementOrder Copy();
     }
 
-    public class ForwardMovementOrder : MovementOrder { }
+    public class ForwardMovementOrder : MovementOrder
+    {
+        public override MovementOrder Copy()
+        {
+            return new ForwardMovementOrder { Distance = Distance };
+        }
+    }
 
     public class YawMovementOrder : MovementOrder
     {
         public Direction Direction { get; set; }
         public float YawRadius { get; set; }
+
+        public override MovementOrder Copy()
+        {
+            return new YawMovementOrder { Distance = Distance, Direction = Direction, YawRadius = YawRadius };
+        }
     }
 
     public class ShipOrder : IShipOrder
