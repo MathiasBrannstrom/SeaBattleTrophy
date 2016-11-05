@@ -38,17 +38,17 @@ namespace SeaBattleTrophy.WPF
             
         }
 
-        private void HandleForwardMovementOrderAdded(float distance)
+        private void HandleForwardMovementOrderAdded(double distance)
         {
             _shipOrderViewModel.AddMovementOrder(Direction.Forward, distance);
         }
 
-        private void HandlePortMovementOrderAdded(float distance)
+        private void HandlePortMovementOrderAdded(double distance)
         {
             _shipOrderViewModel.AddMovementOrder(Direction.Port, distance);
         }
 
-        private void HandleStarboardMovementOrderAdded(float distance)
+        private void HandleStarboardMovementOrderAdded(double distance)
         {
             _shipOrderViewModel.AddMovementOrder(Direction.Starboard, distance);
         }

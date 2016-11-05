@@ -28,7 +28,7 @@ namespace SeaBattleTrophy.WPF
         SeaBattleTrophyGameViewModel _game;
 
 
-        private ValueHolder<float> _metersPerPixel = new ValueHolder<float>();
+        private ValueHolder<double> _metersPerPixel = new ValueHolder<double>();
 
         public SeaMap()
         {

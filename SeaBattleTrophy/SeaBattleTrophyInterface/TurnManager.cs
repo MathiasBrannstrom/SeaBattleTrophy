@@ -76,7 +76,7 @@ namespace SeaBattleTrophyGame
                         closestDistance = distance;
                 }
 
-                ship.ShipStatus.DistanceFromLand = (float)closestDistance;
+                ship.ShipStatus.DistanceFromLand = closestDistance;
             }
         }
 

@@ -14,13 +14,13 @@ namespace SeaBattleTrophy.WPF.ViewModels
     public class ShipViewModel : INotifyPropertyChanged
     {
         private IShipReadOnly _ship;
-        private IValueHolderReadOnly<float> _metersPerPixel;
-        private IValueHolderReadOnly<float> _seaMapSizeInPixels;
+        private IValueHolderReadOnly<double> _metersPerPixel;
+        private IValueHolderReadOnly<double> _seaMapSizeInPixels;
         private IValueHolder<IShipReadOnly> _selectedShip;
 
 
-        public ShipViewModel(IShipReadOnly ship, IValueHolderReadOnly<float> metersPerPixel, 
-            IValueHolderReadOnly<float> seaMapSizeInPixels, IValueHolder<IShipReadOnly> selectedShip)
+        public ShipViewModel(IShipReadOnly ship, IValueHolderReadOnly<double> metersPerPixel, 
+            IValueHolderReadOnly<double> seaMapSizeInPixels, IValueHolder<IShipReadOnly> selectedShip)
         {
             _ship = ship;
             _ship.PropertyChanged += HandleShipPropertyChanged;
@@ -74,13 +74,13 @@ namespace SeaBattleTrophy.WPF.ViewModels
 
         public PointCollection ShapeInPixels { get; private set; } 
 
-        public float XPosInPixels { get { return _ship.Position.X / _metersPerPixel.Value; } }
+        public double XPosInPixels { get { return _ship.Position.X / _metersPerPixel.Value; } }
 
-        public float YPosInPixels { get { return _seaMapSizeInPixels.Value - _ship.Position.Y / _metersPerPixel.Value; } }
+        public double YPosInPixels { get { return _seaMapSizeInPixels.Value - _ship.Position.Y / _metersPerPixel.Value; } }
 
-        public float RotationAngle { get { return -_ship.AngleInDegrees; } }
+        public double RotationAngle { get { return -_ship.AngleInDegrees; } }
 
-        public float Speed { get { return _ship.CurrentSpeed; } }
+        public double Speed { get { return _ship.CurrentSpeed; } }
 
         public bool IsSelected { get { return _selectedShip.Value == _ship; } }
 

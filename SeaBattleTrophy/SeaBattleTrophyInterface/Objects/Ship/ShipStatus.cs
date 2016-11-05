@@ -10,18 +10,18 @@ namespace SeaBattleTrophyGame
 {
     public interface IShipStatusReadOnly : INotifyPropertyChanged
     {
-        float DistanceFromLand { get; }
+        double DistanceFromLand { get; }
     }
 
     public interface IShipStatus : IShipStatusReadOnly
     {
-        new float DistanceFromLand { get; set; }
+        new double DistanceFromLand { get; set; }
     }
 
     public class ShipStatus : IShipStatus
     {
-        private float _distanceFromLand;
-        public float DistanceFromLand
+        private double _distanceFromLand;
+        public double DistanceFromLand
         {
             get
             {
@@ -38,7 +38,7 @@ namespace SeaBattleTrophyGame
             }
         }
 
-        float IShipStatusReadOnly.DistanceFromLand
+        double IShipStatusReadOnly.DistanceFromLand
         {
             get
             {

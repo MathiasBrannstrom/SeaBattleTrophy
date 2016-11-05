@@ -22,6 +22,6 @@ namespace SeaBattleTrophy.WPF.ViewModels
                 PropertyChanged.Raise(() => CompassRotationAngle);
         }
 
-        public float CompassRotationAngle { get { return -_windManager.CurrentWind.Angle; } }
+        public double CompassRotationAngle { get { return -_windManager.CurrentWind.Angle; } }
     }
 }

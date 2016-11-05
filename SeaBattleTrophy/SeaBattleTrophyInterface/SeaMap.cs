@@ -8,7 +8,7 @@ namespace SeaBattleTrophyGame
 {
     public interface ISeaMap
     {
-        float SizeInMeters { get; }
+        double SizeInMeters { get; }
 
         IEnumerable<LandMass> LandMasses {get;}
     }
@@ -18,6 +18,6 @@ namespace SeaBattleTrophyGame
         public IEnumerable<LandMass> LandMasses { get; set; }
 
         // Currently only square maps
-        public float SizeInMeters { get; set; }
+        public double SizeInMeters { get; set; }
     }
 }

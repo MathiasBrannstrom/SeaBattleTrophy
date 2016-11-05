@@ -4,21 +4,21 @@ namespace Maths.Geometry
 {
     public struct Point2D : IEquatable<Point2D>
     {
-        public float X { get; }
-        public float Y { get; }
+        public double X { get; }
+        public double Y { get; }
 
-        public Point2D(float x, float y)
+        public Point2D(double x, double y)
         {
             X = x;
             Y = y;
         }
 
-        public static Point2D operator *(Point2D point, float val)
+        public static Point2D operator *(Point2D point, double val)
         {
             return new Point2D(point.X * val, point.Y * val);
         }
 
-        public static Point2D operator /(Point2D point, float val)
+        public static Point2D operator /(Point2D point, double val)
         {
             return new Point2D (point.X / val, point.Y / val);
         }

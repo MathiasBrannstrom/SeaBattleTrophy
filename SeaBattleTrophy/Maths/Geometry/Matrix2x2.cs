@@ -4,12 +4,12 @@ namespace Maths.Geometry
 {
     public struct Matrix2x2 : IEquatable<Matrix2x2>
     {
-        public float V00 { get; }
-        public float V10 { get; }
-        public float V01 { get; }
-        public float V11 { get; }
+        public double V00 { get; }
+        public double V10 { get; }
+        public double V01 { get; }
+        public double V11 { get; }
 
-        public Matrix2x2(float v00, float v01, float v10, float v11)
+        public Matrix2x2(double v00, double v01, double v10, double v11)
         {
             V00 = v00;
             V10 = v10;
@@ -26,7 +26,7 @@ namespace Maths.Geometry
                 matrixL.V10 * matrixR.V01 + matrixL.V11 * matrixR.V11);
         }
 
-        public float Determinant()
+        public double Determinant()
         {
             return V00 * V11 - V10 * V01;
         }

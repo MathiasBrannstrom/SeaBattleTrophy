@@ -29,7 +29,7 @@ namespace SeaBattleTrophy.WPF.ViewModels
 
         public bool AnyDistanceRemaining
         {
-            get { return CurrentTimeRemaining > float.Epsilon; }
+            get { return CurrentTimeRemaining > double.Epsilon; }
         }
 
         public ReadOnlyObservableCollection<MovementOrder> CurrentMovementOrders

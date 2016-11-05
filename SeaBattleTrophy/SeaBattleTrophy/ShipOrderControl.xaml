@@ -89,15 +89,15 @@
         </Grid>
         <StackPanel Grid.IsSharedSizeScope="True" IsEnabled="{Binding AnyDistanceRemaining}">
             <local:MovementOrderControl Label="{x:Static properties:Strings.Forward}" 
-                                        MinDistance="0" MaxDistance="{Binding CurrentTimeRemaining}"
+                                        MinTime="0" MaxTime="{Binding CurrentTimeRemaining}"
                                         OrderAdded="HandleForwardMovementOrderAdded"/>
 
             <local:MovementOrderControl  Label="{x:Static properties:Strings.Port}" 
-                                        MinDistance="0" MaxDistance="{Binding CurrentTimeRemaining}"
+                                        MinTime="0" MaxTime="{Binding CurrentTimeRemaining}"
                                         OrderAdded="HandlePortMovementOrderAdded"/>
 
             <local:MovementOrderControl Label="{x:Static properties:Strings.Starboard}" 
-                                        MinDistance="0" MaxDistance="{Binding CurrentTimeRemaining}"
+                                        MinTime="0" MaxTime="{Binding CurrentTimeRemaining}"
                                         OrderAdded="HandleStarboardMovementOrderAdded"/>
         </StackPanel>
         <ListView MinHeight="160" Margin="5" ItemsSource="{Binding CurrentMovementOrders}" ItemTemplateSelector="{StaticResource MovementOrderTemplateSelector}" Grid.IsSharedSizeScope="True"/>

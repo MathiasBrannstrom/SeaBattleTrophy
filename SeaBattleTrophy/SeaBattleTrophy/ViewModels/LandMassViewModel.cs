@@ -14,13 +14,13 @@ namespace SeaBattleTrophy.WPF.ViewModels
 {
     public class LandMassViewModel : INotifyPropertyChanged
     {
-        private IValueHolderReadOnly<float> _metersPerPixel;
-        private IValueHolderReadOnly<float> _seaMapSizeInPixels;
+        private IValueHolderReadOnly<double> _metersPerPixel;
+        private IValueHolderReadOnly<double> _seaMapSizeInPixels;
         private LandMass _landMass;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public LandMassViewModel(LandMass landMass, IValueHolderReadOnly<float> metersPerPixel, IValueHolderReadOnly<float> seaMapSizeInPixels)
+        public LandMassViewModel(LandMass landMass, IValueHolderReadOnly<double> metersPerPixel, IValueHolderReadOnly<double> seaMapSizeInPixels)
         {
             _landMass = landMass;
             _metersPerPixel = metersPerPixel;

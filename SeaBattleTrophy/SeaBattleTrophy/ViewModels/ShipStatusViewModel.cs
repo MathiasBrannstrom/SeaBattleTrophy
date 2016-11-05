@@ -23,7 +23,7 @@ namespace SeaBattleTrophy.WPF.ViewModels
             HandleSelectedShipPropertyChanged(this, new PropertyChangedEventArgs(null));
         }
 
-        public float DistanceToLand
+        public double DistanceToLand
         {
             get { return _currentShip.ShipStatus.DistanceFromLand; }
         }

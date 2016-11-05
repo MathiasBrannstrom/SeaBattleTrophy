@@ -19,7 +19,7 @@ namespace SeaBattleTrophyGame
     {
         int Index { get; }
         // [0, 360[   0 angle points north, increasing angle turns CCW.
-        float AngleInDegrees { get; }
+        double AngleInDegrees { get; }
 
         Point2D Position { get; }
 
@@ -27,7 +27,7 @@ namespace SeaBattleTrophyGame
 
         SailLevel SailLevel { get; }
 
-        float CurrentSpeed { get; }
+        double CurrentSpeed { get; }
 
         IShipOrderReadOnly CurrentShipOrder { get; }
 
@@ -49,20 +49,20 @@ namespace SeaBattleTrophyGame
 
     internal class Ship : IShip
     {
-        public float AngleInDegrees { get; set; }
+        public double AngleInDegrees { get; set; }
 
         public Point2D Position { get; set; }
 
         public Polygon2D Shape { get; set; }
         
-        public float CurrentSpeed
+        public double CurrentSpeed
         {
-            get { return 10.0f * SailLevelSpeedModifier(SailLevel); }
+            get { return 10.0 * SailLevelSpeedModifier(SailLevel); }
         }
 
-        public float DriftMultiplier
+        public double DriftMultiplier
         {
-            get { return 0.1f; }
+            get { return 0.1; }
         }
 
         public SailLevel SailLevel { get; set; }
@@ -112,7 +112,7 @@ namespace SeaBattleTrophyGame
 
                 var timeSpentForThisMovementOrder = new TimeSpan(Math.Min(timeLeftToTravel.Ticks, movementOrder.TimeSpan.Ticks));
 
-                var distanceToTravelForThisMovementOrder = (float)timeSpentForThisMovementOrder.TotalSeconds * CurrentSpeed;
+                var distanceToTravelForThisMovementOrder = timeSpentForThisMovementOrder.TotalSeconds * CurrentSpeed;
 
                 if (movementOrder is ForwardMovementOrder)
                     ApplyMovementOrder((ForwardMovementOrder)movementOrder, distanceToTravelForThisMovementOrder);
@@ -140,7 +140,7 @@ namespace SeaBattleTrophyGame
         {
             var direction = Vector2D.DirectionFromAngle(wind.Angle);
 
-            Position += direction * (float)(wind.Velocity * timeStep.TotalSeconds * DriftMultiplier);
+            Position += direction * wind.Velocity * timeStep.TotalSeconds * DriftMultiplier;
         }
 
         private void ChangeSailLevel(SailLevelChange sailLevelChange)
@@ -159,17 +159,17 @@ namespace SeaBattleTrophyGame
             OnPropertyChanged("SailLevel");
         }
 
-        private void ApplyMovementOrder(ForwardMovementOrder movementOrder, float distanceToTravel)
+        private void ApplyMovementOrder(ForwardMovementOrder movementOrder, double distanceToTravel)
         {
             Position += Vector2D.DirectionFromAngle(AngleInDegrees) * distanceToTravel;
             OnPropertyChanged("Position");
         }
 
-        private void ApplyMovementOrder(YawMovementOrder movementOrder, float distanceToTravel)
+        private void ApplyMovementOrder(YawMovementOrder movementOrder, double distanceToTravel)
         {
-            var angleChange = (float)(distanceToTravel * 180 / (movementOrder.YawRadius * Math.PI));
-            var xChange = (float)(movementOrder.YawRadius * (1 - Math.Cos(angleChange/180*Math.PI)));
-            var yChange = (float)(movementOrder.YawRadius * Math.Sin(angleChange/180*Math.PI));
+            var angleChange = distanceToTravel * 180 / (movementOrder.YawRadius * Math.PI);
+            var xChange = movementOrder.YawRadius * (1 - Math.Cos(angleChange/180*Math.PI));
+            var yChange = movementOrder.YawRadius * Math.Sin(angleChange/180*Math.PI);
 
             var changeVector = new Vector2D(movementOrder.Direction == Direction.Starboard? xChange : -xChange, yChange);
             changeVector = changeVector.Rotate(AngleInDegrees);
@@ -218,7 +218,7 @@ namespace SeaBattleTrophyGame
         }
 
         // This should be moved somewhere
-        private static float SailLevelSpeedModifier(SailLevel sailLevel)
+        private static double SailLevelSpeedModifier(SailLevel sailLevel)
         {
             switch (sailLevel)
             {

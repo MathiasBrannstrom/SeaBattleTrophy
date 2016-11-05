@@ -11,25 +11,25 @@ namespace SeaBattleTrophyGame
     public interface IWind
     {
         // In degrees. 0 is blowing towards the north, the same as the angle for a ship
-        float Angle { get; }
+        double Angle { get; }
 
         // in m/s
-        float Velocity { get; }
+        double Velocity { get; }
     }
 
     public struct Wind : IWind
     {
-        public Wind(float angle, float velocity)
+        public Wind(double angle, double velocity)
         {
             Angle = angle;
             Velocity = velocity;
         }
 
         // 0 is blowing towards the north, the same as the angle for a ship
-        public float Angle { get; }
+        public double Angle { get; }
 
         // in m/s
-        public float Velocity { get; }
+        public double Velocity { get; }
     }
     
     public interface IWindManagerReadOnly : INotifyPropertyChanged
@@ -55,7 +55,7 @@ namespace SeaBattleTrophyGame
 
         public void UpdateWind(TimeSpan timeStep)
         {
-            _wind = new Wind(_wind.Angle + (float)(timeStep.TotalSeconds*4), _wind.Velocity);
+            _wind = new Wind(_wind.Angle + timeStep.TotalSeconds*4, _wind.Velocity);
             // Do nothing for now.
             PropertyChanged.Raise(() => CurrentWind);
         }

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Maths
 {
-    public static class FloatExtensions
+    public static class doubleExtensions
     {
-        public static bool NearEquals(this float val, float otherVal, float acceptanceLevel = float.Epsilon)
+        public static bool NearEquals(this double val, double otherVal, double acceptanceLevel = double.Epsilon)
         {
             return Math.Abs(val - otherVal) < acceptanceLevel;
         }

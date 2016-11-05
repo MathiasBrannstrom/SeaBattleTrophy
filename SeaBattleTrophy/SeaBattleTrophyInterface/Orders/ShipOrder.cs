@@ -67,7 +67,7 @@ namespace SeaBattleTrophyGame
     public class YawMovementOrder : MovementOrder
     {
         public Direction Direction { get; set; }
-        public float YawRadius { get; set; }
+        public double YawRadius { get; set; }
 
         public override MovementOrder Copy()
         {

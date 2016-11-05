@@ -1,17 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace SeaBattleTrophy.WPF
 {
@@ -25,7 +14,7 @@ namespace SeaBattleTrophy.WPF
             InitializeComponent();
         }
 
-        public delegate void MovementOrderAdded(float distance);
+        public delegate void MovementOrderAdded(double distance);
 
         public event MovementOrderAdded OrderAdded;
 
@@ -37,60 +26,62 @@ namespace SeaBattleTrophy.WPF
             set { SetValue(LabelProperty, value); }
         }
 
-        public static readonly DependencyProperty DistanceProperty = DependencyProperty.Register("Distance", typeof(float), typeof(MovementOrderControl),
-            new PropertyMetadata(100f, new PropertyChangedCallback(HandleDistanceChanged), new CoerceValueCallback(CoerceDistance)));
+        public static readonly DependencyProperty TimeProperty = DependencyProperty.Register("Time", typeof(double), typeof(MovementOrderControl),
+            new PropertyMetadata(100.0, new PropertyChangedCallback(HandleTimeChanged), new CoerceValueCallback(CoerceTime)));
 
-        public float Distance
+        public double Time
         {
-            get { return (float)GetValue(DistanceProperty); }
-            set { SetValue(DistanceProperty, value); }
+            get { return (double)GetValue(TimeProperty); }
+            set { SetValue(TimeProperty, value); }
         }
 
-        private static object CoerceDistance(DependencyObject d, object value)
+        private static object CoerceTime(DependencyObject d, object value)
         {
             var control = (MovementOrderControl)d;
 
-            var distanceValue = (float)value;
+            var distanceValue = (double)value;
 
-            return (float)Math.Max(Math.Min(control.MaxDistance, distanceValue), control.MinDistance);
+            return Math.Max(Math.Min(control.MaxTime, distanceValue), control.MinTime);
         }
 
-        private static void HandleDistanceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void HandleTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            d.CoerceValue(MaxDistanceProperty);
-            d.CoerceValue(MinDistanceProperty);
+            d.CoerceValue(MaxTimeProperty);
+            d.CoerceValue(MinTimeProperty);
         }
 
-        public static readonly DependencyProperty MaxDistanceProperty = DependencyProperty.Register("MaxDistance", typeof(float), typeof(MovementOrderControl), new PropertyMetadata(1f, new PropertyChangedCallback(MaxDistanceChanged)));
+        public static readonly DependencyProperty MaxTimeProperty = DependencyProperty.Register("MaxTime", typeof(double), 
+            typeof(MovementOrderControl), new PropertyMetadata(1.0, new PropertyChangedCallback(MaxTimeChanged)));
 
-        private static void MaxDistanceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void MaxTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            d.SetValue(DistanceProperty, e.NewValue);
+            d.SetValue(TimeProperty, e.NewValue);
         }
 
-        public static readonly DependencyProperty MinDistanceProperty = DependencyProperty.Register("MinDistance", typeof(float), typeof(MovementOrderControl), new PropertyMetadata(0f, new PropertyChangedCallback(MinDistanceChanged)));
+        public static readonly DependencyProperty MinTimeProperty = DependencyProperty.Register("MinTime", typeof(double), 
+            typeof(MovementOrderControl), new PropertyMetadata(0.0, new PropertyChangedCallback(MinTimeChanged)));
 
-        private static void MinDistanceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        private static void MinTimeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            d.CoerceValue(DistanceProperty);
+            d.CoerceValue(TimeProperty);
         }
 
-        public float MaxDistance
+        public double MaxTime
         {
-            get { return (float)GetValue(MaxDistanceProperty); }
-            set { SetValue(MaxDistanceProperty, value); }
+            get { return (double)GetValue(MaxTimeProperty); }
+            set { SetValue(MaxTimeProperty, value); }
         }
 
-        public float MinDistance
+        public double MinTime
         {
-            get { return (float)GetValue(MinDistanceProperty); }
-            set { SetValue(MinDistanceProperty, value); }
+            get { return (double)GetValue(MinTimeProperty); }
+            set { SetValue(MinTimeProperty, value); }
         }
 
         private void HandleButtonClicked(object sender, RoutedEventArgs e)
         {
             if (OrderAdded != null)
-                OrderAdded(Distance);
+                OrderAdded(Time);
         }
     }
 }

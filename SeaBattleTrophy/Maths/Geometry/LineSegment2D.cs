@@ -14,14 +14,14 @@ namespace Maths.Geometry
             PointB = pointB;
         }
 
-        public float SquaredLength()
+        public double SquaredLength()
         {
             return (PointB - PointA).SquaredLength();
         }
 
-        public float Length()
+        public double Length()
         {
-            return (float)Math.Sqrt(SquaredLength());
+            return Math.Sqrt(SquaredLength());
         }
 
         public bool Equals(LineSegment2D other)
