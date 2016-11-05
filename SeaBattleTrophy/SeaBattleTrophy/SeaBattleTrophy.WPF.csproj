@@ -110,12 +110,16 @@
     <Compile Include="UserControls\TurnControl.xaml.cs">
       <DependentUpon>TurnControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\WindDisplay.xaml.cs">
+      <DependentUpon>WindDisplay.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\LandMassViewModel.cs" />
     <Compile Include="ViewModels\SeaBattleTrophyGameViewModel.cs" />
     <Compile Include="ViewModels\ShipOrderViewModel.cs" />
     <Compile Include="ViewModels\ShipStatusViewModel.cs" />
     <Compile Include="ViewModels\ShipViewModel.cs" />
     <Compile Include="ViewModels\TurnManagerViewModel.cs" />
+    <Compile Include="ViewModels\WindDisplayViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -153,6 +157,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\TurnControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\WindDisplay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -217,6 +225,9 @@
       <Project>{346b5139-46fc-456c-a8f2-738fd5e1023c}</Project>
       <Name>Utilities</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\compass.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

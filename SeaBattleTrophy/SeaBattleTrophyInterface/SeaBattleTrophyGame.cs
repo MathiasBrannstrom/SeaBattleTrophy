@@ -15,7 +15,7 @@ namespace SeaBattleTrophyGame
 
         ITurnManager TurnManager { get; }
 
-        IWindManager WindManager { get; }
+        IWindManagerReadOnly WindManager { get; }
     }
 
     public class SeaBattleTrophyGameManager : ISeaBattleTrophyGame
@@ -33,14 +33,15 @@ namespace SeaBattleTrophyGame
 
             Ships = _ships;
 
-            WindManager = new WindManager();
+            var windManager = new WindManager();
+            WindManager = windManager;
 
             SetupSeaMap();
 
             var shipOrderManager = new ShipOrderManager(_ships);
             ShipOrderEditor = shipOrderManager;
 
-            TurnManager = new TurnManager(_ships, SeaMap, shipOrderManager, WindManager);
+            TurnManager = new TurnManager(_ships, SeaMap, shipOrderManager, windManager);
         }
 
         public void SetupSeaMap()
@@ -58,7 +59,7 @@ namespace SeaBattleTrophyGame
 
         public IEnumerable<IShipReadOnly> Ships { get; private set; }
 
-        public IWindManager WindManager { get; private set; }
+        public IWindManagerReadOnly WindManager { get; private set; }
 
         public ITurnManager TurnManager { get; private set; }
     }

@@ -36,5 +36,7 @@ namespace SeaBattleTrophy.WPF.ViewModels
         public ITurnManager TurnManager { get { return _game.TurnManager; } }
 
         public ISeaMap SeaMap { get { return _game.SeaMap; } }
+
+        public IWindManagerReadOnly WindManager { get { return _game.WindManager; } }
     }
 }

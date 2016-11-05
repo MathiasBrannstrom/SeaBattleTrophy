@@ -92,6 +92,8 @@ namespace SeaBattleTrophyGame
 
                 finalStepDone = isFinalChange;
                 t = Math.Min(1.0f, t + timeStep);
+
+                _windManager.UpdateWind(timeStep);
             }
 
             _shipOrderMovementPhaseManager.ClearShipOrders();

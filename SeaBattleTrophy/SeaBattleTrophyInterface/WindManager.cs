@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities;
 
 namespace SeaBattleTrophyGame
 {
@@ -29,11 +31,14 @@ namespace SeaBattleTrophyGame
         // in m/s
         public float Velocity { get; }
     }
-
-    public interface IWindManager
+    
+    public interface IWindManagerReadOnly : INotifyPropertyChanged
     {
         IWind CurrentWind { get; }
+    }
 
+    public interface IWindManager : IWindManagerReadOnly
+    {
         /// <summary>
         /// Updates the wind. Change is based on how much time has passed since last update.
         /// </summary>
@@ -46,9 +51,13 @@ namespace SeaBattleTrophyGame
         private Wind _wind = new Wind(0, 10);
         public IWind CurrentWind { get { return _wind; } }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public void UpdateWind(float timeStep)
         {
+            _wind = new Wind(_wind.Angle + 30*timeStep, _wind.Velocity);
             // Do nothing for now.
+            PropertyChanged.Raise(() => CurrentWind);
         }
     }
 }

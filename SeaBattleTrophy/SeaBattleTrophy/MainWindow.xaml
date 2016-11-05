@@ -16,6 +16,7 @@
         <StackPanel>
             <local:ShipOrderControl x:Name="ShipOrderControl"/>
             <controls:TurnControl x:Name="TurnControl"/>
+            <controls:WindDisplay x:Name="WindDisplay" />
         </StackPanel>
         <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Visible" PreviewMouseWheel="HandleMouseWheel" CanContentScroll="False">
             <local:SeaMap x:Name="SeaMap"/>

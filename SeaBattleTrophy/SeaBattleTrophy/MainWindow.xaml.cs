@@ -35,6 +35,13 @@ namespace SeaBattleTrophy.WPF
             SetupShipOrderControl();
             SetupTurnControl();
             SetupShipStatusControl();
+            SetupWindDisplay();
+        }
+
+        private void SetupWindDisplay()
+        {
+            var windDisplayViewModel = new WindDisplayViewModel(_gameViewModel.WindManager);
+            WindDisplay.DataContext = windDisplayViewModel;
         }
 
         private void SetupTurnControl()

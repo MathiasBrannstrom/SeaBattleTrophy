@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="SeaBattleTrophy.WPF.UserControls.WindDisplay"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SeaBattleTrophy.WPF.UserControls"
+             xmlns:utils="clr-namespace:Utilities;assembly=Utilities"
+             xmlns:vms="clr-namespace:SeaBattleTrophy.WPF.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance vms:WindDisplayViewModel}">
+    <UserControl.Resources>
+        <utils:DoubleConverter x:Key="DoubleConverter" />
+    </UserControl.Resources>
+    <Grid x:Name="CompassGrid" Height="{Binding ActualWidth, RelativeSource={RelativeSource Self}}">
+        <Grid.Background>
+            <ImageBrush ImageSource="pack://application:,,,/SeaBattleTrophy.WPF;component/Images/compass.png" />
+        </Grid.Background>
+        <Grid x:Name="MarkerGrid" Width="5" Background="Red" HorizontalAlignment="Center" VerticalAlignment="Top" 
+              Height="{Binding ActualHeight, ElementName=CompassGrid, Converter={StaticResource DoubleConverter}, ConverterParameter=0.3}">
+            <Grid.RenderTransform>
+                <TransformGroup>
+                    <RotateTransform Angle="{Binding CompassRotationAngle}" CenterX="0" CenterY="{Binding ActualHeight, ElementName=MarkerGrid}"/>
+                    <TranslateTransform X="8" Y="{Binding ActualHeight, ElementName=CompassGrid, Converter={StaticResource DoubleConverter}, ConverterParameter=0.2}" />
+                    <!--The X=8 is just a correction for the image not being completely centered-->
+                </TransformGroup>
+            </Grid.RenderTransform>
+        </Grid>
+    </Grid>
+</UserControl>
