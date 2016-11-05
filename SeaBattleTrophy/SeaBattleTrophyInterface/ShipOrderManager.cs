@@ -9,18 +9,25 @@ using Maths;
 
 namespace SeaBattleTrophyGame
 {
-    public interface IShipOrderManager : INotifyPropertyChanged
+    public interface IShipOrderEditor : INotifyPropertyChanged
     {
         void UpdateWithPartialShipOrder(IShipReadOnly ship, IShipOrder shipOrder);
-
-        void SendShipOrders();
-
-        bool DoesAllShipsHaveValidOrders { get; }
 
         void RemoveMovementOrderFromShip(IShipReadOnly value, MovementOrder movementOrder);
 
         void AddMovementOrder(IShipReadOnly value, MovementOrder movementOrder);
     }
+
+    public interface IShipOrderMovementPhaseManager : INotifyPropertyChanged
+    {
+        void ApplyShipOrders(float t, bool isFinalChange);
+
+        void ClearShipOrders();
+
+        bool DoesAllShipsHaveValidOrders { get; }
+    }
+
+    public interface IShipOrderManager : IShipOrderMovementPhaseManager, IShipOrderEditor { }
 
     public class ShipOrderManager : IShipOrderManager
     {
@@ -51,49 +58,59 @@ namespace SeaBattleTrophyGame
             }
         }
 
-        public async void SendShipOrders()
+
+        public void ApplyShipOrders(float t, bool isFinalChange)
         {
-            // For now we send them sequentially to each ship. Later we will step forward.
-            var timeStep = 1.0f / 40;
-            var t = timeStep;
-            var finalStepDone = false;
-            while (!finalStepDone)
-            {
-                var isFinalChange = t.NearEquals(1.0f);
-                foreach (var ship in _shipsByIndex.Values)
-                    ship.ApplyCurrentShipOrder(t, isFinalChange);
-
-                var time = DateTime.UtcNow;
-                // Check collisions etc.
-                foreach(var ship in _shipsByIndex.Values)
-                {
-                    var closestDistance = double.MaxValue;
-                    foreach(var landMass in _landMasses)
-                    {
-                        var distance = landMass.LandPolygon.ShortestDistanceToPoint(ship.Position);
-
-                        if (distance < closestDistance)
-                            closestDistance = distance;
-                    }
-
-                    ship.ShipStatus.DistanceFromLand = (float)closestDistance;
-                }
-
-                var timeSpent = DateTime.UtcNow - time;
-
-                await Task.Delay(Math.Max(20 - (int)timeSpent.TotalMilliseconds,0));
-
-                finalStepDone = isFinalChange;
-                t = Math.Min(1.0f, t + timeStep);
-            }
-
-            foreach(var kvp in _shipsByIndex)
-            {
-                var ship = kvp.Value;
-
-                ship.SetShipOrder(new ShipOrder());
-            }
+            foreach (var ship in _shipsByIndex.Values)
+                ship.ApplyCurrentShipOrder(t, isFinalChange);
         }
+
+        public void ClearShipOrders()
+        {
+            foreach (var ship in _shipsByIndex.Values)
+                ship.SetShipOrder(new ShipOrder());
+        }
+
+        //public async void SendShipOrders()
+        //{
+        //    // For now we send them sequentially to each ship. Later we will step forward.
+        //    var timeStep = 1.0f / 40;
+        //    var t = timeStep;
+        //    var finalStepDone = false;
+        //    while (!finalStepDone)
+        //    {
+        //        var isFinalChange = t.NearEquals(1.0f);
+        //        //foreach (var ship in _shipsByIndex.Values)
+        //        //    ship.ApplyCurrentShipOrder(t, isFinalChange);
+
+        //        var time = DateTime.UtcNow;
+        //        // Check collisions etc.
+        //        foreach(var ship in _shipsByIndex.Values)
+        //        {
+        //            // if ever relevant the polygons can be cached (since later ships will be checked against other ships later)
+        //            // Even more importantly, the polygons can have a lazily created bounding box that will be checked first. Should
+        //            // give a big speed improvment.
+        //            var adjustedShipPolygon = ship.Shape.Transform(Transformations.Rotation2D(ship.AngleInDegrees), new Vector2D(ship.Position.X, ship.Position.Y));
+        //            var closestDistance = double.MaxValue;
+        //            foreach(var landMass in _landMasses)
+        //            {
+        //                var distance = landMass.LandPolygon.ShortestDistanceToOtherPolygon(adjustedShipPolygon);
+
+        //                if (distance < closestDistance)
+        //                    closestDistance = distance;
+        //            }
+
+        //            ship.ShipStatus.DistanceFromLand = (float)closestDistance;
+        //        }
+
+        //        var timeSpent = DateTime.UtcNow - time;
+
+        //        await Task.Delay(Math.Max(20 - (int)timeSpent.TotalMilliseconds,0));
+
+        //        finalStepDone = isFinalChange;
+        //        t = Math.Min(1.0f, t + timeStep);
+        //    }
+        //}
 
         public void UpdateWithPartialShipOrder(IShipReadOnly ship, IShipOrder newShipOrders)
         {

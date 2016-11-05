@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="SeaBattleTrophy.WPF.UserControls.TurnControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SeaBattleTrophy.WPF.UserControls"
+             xmlns:vms="clr-namespace:SeaBattleTrophy.WPF.ViewModels"
+             xmlns:properties="clr-namespace:SeaBattleTrophy.WPF.Properties"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" d:DataContext="{d:DesignInstance vms:TurnManagerViewModel}">
+    <Grid>
+        <Button Height="30" Command="{Binding FinishCurrentPhaseCommand}" Margin="5">
+            <Button.Style>
+                <Style TargetType="Button">
+                    <Setter Property="Content" Value="{x:Static properties:Strings.SendOrders}" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ReadyToFinishCurrentPhase}" Value="False">
+                            <Setter Property="IsEnabled" Value="False" />
+                            <Setter Property="Content">
+                                <Setter.Value>
+                                    <StackPanel Orientation="Vertical">
+                                        <Label Content="{x:Static properties:Strings.AllShipsDoNotHaveOrdersYet}" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+    </Grid>
+</UserControl>

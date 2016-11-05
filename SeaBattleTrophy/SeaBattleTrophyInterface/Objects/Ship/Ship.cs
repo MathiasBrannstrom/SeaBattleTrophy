@@ -22,14 +22,12 @@ namespace SeaBattleTrophyGame
     public interface IShipReadOnly : INotifyPropertyChanged
     {
         int Index { get; }
-        // [0, 360[   0 angle points east, increasing angle turns CCW.
+        // [0, 360[   0 angle points north, increasing angle turns CCW.
         float AngleInDegrees { get; }
 
         Point2D Position { get; }
 
-        float Length { get; }
-
-        float Width { get; }
+        Polygon2D Shape { get; }
 
         SailLevel SailLevel { get; }
 
@@ -59,10 +57,8 @@ namespace SeaBattleTrophyGame
 
         public Point2D Position { get; set; }
 
-        public float Length { get; set; }
-
-        public float Width { get; set; }
-
+        public Polygon2D Shape { get; set; }
+        
         public float CurrentSpeed
         {
             get { return 30.0f * SailLevelSpeedModifier(SailLevel); }
@@ -101,7 +97,7 @@ namespace SeaBattleTrophyGame
 
         private Vector2D GetDirection()
         {
-            return new Vector2D((float)Math.Cos(AngleInDegrees * Math.PI / 180.0), (float)Math.Sin(AngleInDegrees * Math.PI / 180.0));
+            return new Vector2D((float)-Math.Sin(AngleInDegrees * Math.PI / 180.0), (float)Math.Cos(AngleInDegrees * Math.PI / 180.0));
         }
         
         private Point2D? _originalPosition = null;
@@ -174,7 +170,7 @@ namespace SeaBattleTrophyGame
             var yChange = (float)(movementOrder.YawRadius * Math.Sin(angleChange/180*Math.PI));
 
             var changeVector = new Vector2D(movementOrder.Direction == Direction.Starboard? xChange : -xChange, yChange);
-            changeVector = changeVector.Rotate(AngleInDegrees - 90);
+            changeVector = changeVector.Rotate(AngleInDegrees);
 
             switch (movementOrder.Direction)
             {

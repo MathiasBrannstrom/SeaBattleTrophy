@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using SeaBattleTrophyGame;
 using System.ComponentModel;
 using Utilities;
+using System.Windows.Media;
+using System.Windows;
 
 namespace SeaBattleTrophy.WPF.ViewModels
 {
@@ -29,12 +31,14 @@ namespace SeaBattleTrophy.WPF.ViewModels
 
             _selectedShip = selectedShip;
             _selectedShip.PropertyChanged += HandleSelectedShipPropertyChanged;
+
+            UpdateShape();
         }
 
         private void HandleMetersPerPixelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            PropertyChanged.Raise(() => WidthInPixels);
-            PropertyChanged.Raise(() => LengthInPixels);
+            UpdateShape();
+            PropertyChanged.Raise(() => ShapeInPixels);
             PropertyChanged.Raise(() => XPosInPixels);
             PropertyChanged.Raise(() => YPosInPixels);
         }
@@ -61,9 +65,14 @@ namespace SeaBattleTrophy.WPF.ViewModels
                 PropertyChanged.Raise(() => Speed);
         }
 
-        public float WidthInPixels { get { return _ship.Width / _metersPerPixel.Value; } }
+        private void UpdateShape()
+        {
+            ShapeInPixels = new PointCollection(_ship.Shape.Select(p => new Point(p.X / _metersPerPixel.Value, p.Y / _metersPerPixel.Value)));
+            PropertyChanged.Raise(() => ShapeInPixels);
 
-        public float LengthInPixels { get { return _ship.Length / _metersPerPixel.Value; } }
+        }
+
+        public PointCollection ShapeInPixels { get; private set; } 
 
         public float XPosInPixels { get { return _ship.Position.X / _metersPerPixel.Value; } }
 

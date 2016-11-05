@@ -40,6 +40,13 @@ namespace Maths.Geometry.Tests
             Assert.AreEqual(0.5f, intersectionPoint.Value.X);
             Assert.AreEqual(0, intersectionPoint.Value.Y);
 
+            // Scenario 5 (based on in-use problem I encountered)
+            line0 = new Line2D(new Point2D(100, 180), new Point2D(100, 0));
+            line1 = new Line2D(new Point2D(43.5f, 35), new Point2D(83.5f, 35));
+            hasIntersection = line0.IntersectsOtherLine(line1, out intersectionPoint);
+            Assert.IsTrue(hasIntersection);
+            Assert.AreEqual(new Point2D(100, 35), intersectionPoint.Value);
+
         }
     }
 }

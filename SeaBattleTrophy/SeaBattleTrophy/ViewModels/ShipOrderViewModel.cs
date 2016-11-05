@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SeaBattleTrophyGame;
 using System.ComponentModel;
 using Utilities;
@@ -15,10 +12,9 @@ namespace SeaBattleTrophy.WPF.ViewModels
     {
         private IShipReadOnly _currentShip;
         private IValueHolderReadOnly<IShipReadOnly> _selectedShip;
-        private IShipOrderManager _shipOrderManager;
+        private IShipOrderEditor _shipOrderManager;
         private IShipOrderReadOnly _currentShipOrder;
 
-        
         public event PropertyChangedEventHandler PropertyChanged;
 
         public float CurrentMaxSpeed
@@ -56,27 +52,16 @@ namespace SeaBattleTrophy.WPF.ViewModels
             }
         }
 
-        public bool AreShipOrdersReadyToSend
-        {
-            get { return _shipOrderManager.DoesAllShipsHaveValidOrders; }
-        }
-
-        public void SendShipOrders()
-        {
-            _shipOrderManager.SendShipOrders();
-        }
-
         public void RemoveMovementOrder(MovementOrder movementOrder)
         {
             _shipOrderManager.RemoveMovementOrderFromShip(_selectedShip.Value, movementOrder);
         }
 
-        public ShipOrderViewModel(IValueHolderReadOnly<IShipReadOnly> selectedShip, IShipOrderManager shipOrderManager)
+        public ShipOrderViewModel(IValueHolderReadOnly<IShipReadOnly> selectedShip, IShipOrderEditor shipOrderManager)
         {
             _selectedShip = selectedShip;
             _selectedShip.PropertyChanged += HandleSelectedShipPropertyChanged;
             _shipOrderManager = shipOrderManager;
-            _shipOrderManager.PropertyChanged += HandleShipOrderManagerPropertyChanged;
             HandleSelectedShipPropertyChanged(this, new PropertyChangedEventArgs(null));
         }
 
@@ -131,14 +116,6 @@ namespace SeaBattleTrophy.WPF.ViewModels
         {
             PropertyChanged.Raise(() => CurrentDistanceRemaining);
             PropertyChanged.Raise(() => AnyDistanceRemaining);
-        }
-
-        private void HandleShipOrderManagerPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if(e.PropertyName == nameof(ShipOrderManager.DoesAllShipsHaveValidOrders))
-            {
-                PropertyChanged.Raise(() => AreShipOrdersReadyToSend);
-            }
         }
     }
 }

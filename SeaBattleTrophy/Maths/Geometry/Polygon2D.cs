@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Maths.Geometry
 {
@@ -19,6 +20,11 @@ namespace Maths.Geometry
             {
                 return Points[index];
             }
+        }
+
+        public Polygon2D Transform(Matrix2x2 matrix, Vector2D translation = new Vector2D())
+        {
+            return new Polygon2D(this.Select(p => p.Transform(matrix) + translation).ToList());
         }
 
         public int Count { get { return Points.Count; } }

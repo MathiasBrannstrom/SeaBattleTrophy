@@ -37,5 +37,10 @@ namespace Maths.Geometry
         {
             return X.Equals(other.X) && Y.Equals(other.Y);
         }
+
+        public Point2D Transform(Matrix2x2 matrix)
+        {
+            return new Point2D(matrix.V00 * X + matrix.V01 * Y, matrix.V10 * X + matrix.V11 * Y);
+        }
     }
 }

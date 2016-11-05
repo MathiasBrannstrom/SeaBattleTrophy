@@ -1,17 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using SeaBattleTrophy.WPF.ViewModels;
 using SeaBattleTrophyGame;
 
@@ -37,11 +26,6 @@ namespace SeaBattleTrophy.WPF
                 throw new InvalidCastException("The data context should be correct type");
 
             _shipOrderViewModel = shipOrderViewModel;
-        }
-        
-        private void SendOrderButtonClicked(object sender, RoutedEventArgs e)
-        {
-            _shipOrderViewModel.SendShipOrders();
         }
 
         private void HandleRemoveMovementOrderButtonClicked(object sender, RoutedEventArgs e)

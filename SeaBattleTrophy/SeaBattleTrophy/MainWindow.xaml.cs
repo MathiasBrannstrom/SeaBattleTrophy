@@ -33,7 +33,14 @@ namespace SeaBattleTrophy.WPF
             _gameViewModel = new SeaBattleTrophyGameViewModel();
             SetupSeaMap();
             SetupShipOrderControl();
+            SetupTurnControl();
             SetupShipStatusControl();
+        }
+
+        private void SetupTurnControl()
+        {
+            var turnManagerViewModel = new TurnManagerViewModel(_gameViewModel.TurnManager);
+            TurnControl.DataContext = turnManagerViewModel;
         }
 
         private void SetupShipStatusControl()
@@ -49,7 +56,7 @@ namespace SeaBattleTrophy.WPF
 
         private void SetupShipOrderControl()
         {
-            var shipOrderViewModel = new ShipOrderViewModel(_gameViewModel.SelectedShip, _gameViewModel.ShipOrderManager);
+            var shipOrderViewModel = new ShipOrderViewModel(_gameViewModel.SelectedShip, _gameViewModel.ShipOrderEditor);
             ShipOrderControl.DataContext = shipOrderViewModel;
         }
 

@@ -107,11 +107,15 @@
     <Compile Include="UserControls\Ships\Ship.xaml.cs">
       <DependentUpon>Ship.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\TurnControl.xaml.cs">
+      <DependentUpon>TurnControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\LandMassViewModel.cs" />
     <Compile Include="ViewModels\SeaBattleTrophyGameViewModel.cs" />
     <Compile Include="ViewModels\ShipOrderViewModel.cs" />
     <Compile Include="ViewModels\ShipStatusViewModel.cs" />
     <Compile Include="ViewModels\ShipViewModel.cs" />
+    <Compile Include="ViewModels\TurnManagerViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -145,6 +149,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserControls\Ships\Ship.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\TurnControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

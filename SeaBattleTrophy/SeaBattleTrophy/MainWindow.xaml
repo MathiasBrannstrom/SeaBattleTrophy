@@ -13,7 +13,10 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
-        <local:ShipOrderControl x:Name="ShipOrderControl"/>
+        <StackPanel>
+            <local:ShipOrderControl x:Name="ShipOrderControl"/>
+            <controls:TurnControl x:Name="TurnControl"/>
+        </StackPanel>
         <ScrollViewer Grid.Column="1" HorizontalScrollBarVisibility="Visible" PreviewMouseWheel="HandleMouseWheel" CanContentScroll="False">
             <local:SeaMap x:Name="SeaMap"/>
         </ScrollViewer>
