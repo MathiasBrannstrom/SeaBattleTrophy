@@ -42,7 +42,7 @@ namespace SeaBattleTrophyGame
 
     public interface IShip : IShipReadOnly
     {
-        void ApplyCurrentShipOrder(float t, bool isFinalChange);
+        void ApplyCurrentShipOrder(float t, bool isFinalChange, IWind currentWind);
 
         new IShipOrder CurrentShipOrder { get; }
 
@@ -62,6 +62,11 @@ namespace SeaBattleTrophyGame
         public float CurrentSpeed
         {
             get { return 30.0f * SailLevelSpeedModifier(SailLevel); }
+        }
+
+        public float DriftMultiplier
+        {
+            get { return 1.0f; }
         }
 
         public SailLevel SailLevel { get; set; }
@@ -94,12 +99,6 @@ namespace SeaBattleTrophyGame
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-
-        private Vector2D GetDirection()
-        {
-            return new Vector2D((float)-Math.Sin(AngleInDegrees * Math.PI / 180.0), (float)Math.Cos(AngleInDegrees * Math.PI / 180.0));
-        }
-
         private static Stack<MovementOrder> CreateMovementOrderStack(IShipOrderReadOnly shipOrder)
         {
             var copiedMovementOrders = shipOrder.MovementOrders.Select(order => order.Copy()).Reverse();
@@ -110,7 +109,7 @@ namespace SeaBattleTrophyGame
         private Stack<MovementOrder> _movementOrderStack;
         private float _lastTimePoint;
 
-        public void ApplyCurrentShipOrder(float t, bool isFinalChange)
+        public void ApplyCurrentShipOrder(float t, bool isFinalChange, IWind currentWind)
         {
             if (!HasValidShipOrder)
                 throw new InvalidOperationException("The order is not complete enough to send to this ship.");
@@ -118,7 +117,9 @@ namespace SeaBattleTrophyGame
             if(_movementOrderStack == null)
                 _movementOrderStack = CreateMovementOrderStack(CurrentShipOrder);
 
-            var distanceToTravelThisTimeStep = (t-_lastTimePoint) * CurrentSpeed;
+            var timeStep = (t - _lastTimePoint);
+
+            var distanceToTravelThisTimeStep =  timeStep * CurrentSpeed;
             while(_movementOrderStack.Any())
             {
                 var movementOrder = _movementOrderStack.Pop();
@@ -132,7 +133,7 @@ namespace SeaBattleTrophyGame
                     movementOrder.Distance -= distanceToTravelThisTimeStep;
                     _movementOrderStack.Push(movementOrder); 
                 }
-
+                
                 if (movementOrder is ForwardMovementOrder)
                     ApplyMovementOrder((ForwardMovementOrder)movementOrder, distanceToTravelForThisMovementOrder);
                 else if (movementOrder is YawMovementOrder)
@@ -142,6 +143,8 @@ namespace SeaBattleTrophyGame
                 if (distanceToTravelThisTimeStep.NearEquals(0f))
                     break;
             }
+
+            ApplyWindDrift(currentWind, timeStep);
 
             _lastTimePoint = t;
 
@@ -154,6 +157,13 @@ namespace SeaBattleTrophyGame
                     ChangeSailLevel(CurrentShipOrder.ShipSailLevelIncrement.Value);
             }
 
+        }
+
+        private void ApplyWindDrift(IWind wind, float timeStep)
+        {
+            var direction = Vector2D.DirectionFromAngle(wind.Angle);
+
+            Position += direction * wind.Velocity * timeStep * DriftMultiplier;
         }
 
         private void ChangeSailLevel(SailLevelChange sailLevelChange)
@@ -174,7 +184,7 @@ namespace SeaBattleTrophyGame
 
         private void ApplyMovementOrder(ForwardMovementOrder movementOrder, float distanceToTravel)
         {
-            Position += GetDirection() * distanceToTravel;
+            Position += Vector2D.DirectionFromAngle(AngleInDegrees) * distanceToTravel;
             OnPropertyChanged("Position");
         }
 

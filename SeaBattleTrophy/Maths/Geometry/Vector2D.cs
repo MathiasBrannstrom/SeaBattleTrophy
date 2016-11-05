@@ -56,5 +56,10 @@ namespace Maths.Geometry
         {
             return X.Equals(other.X) && Y.Equals(other.Y);
         }
+
+        public static Vector2D DirectionFromAngle(float angle)
+        {
+            return new Vector2D((float)-Math.Sin(angle * Math.PI / 180.0), (float)Math.Cos(angle * Math.PI / 180.0));
+        }
     }
 }

@@ -43,7 +43,7 @@ namespace SeaBattleTrophyGame
 
     public class WindManager : IWindManager
     {
-        private Wind _wind = new Wind(-20, 10);
+        private Wind _wind = new Wind(0, 10);
         public IWind CurrentWind { get { return _wind; } }
 
         public void UpdateWind(float timeStep)

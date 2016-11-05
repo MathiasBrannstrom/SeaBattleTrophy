@@ -80,7 +80,7 @@ namespace SeaBattleTrophyGame
             while (!finalStepDone)
             {
                 var isFinalChange = t.NearEquals(1.0f);
-                _shipOrderMovementPhaseManager.ApplyShipOrders(t, isFinalChange);
+                _shipOrderMovementPhaseManager.ApplyShipOrders(t, isFinalChange, _windManager.CurrentWind);
 
                 var time = DateTime.UtcNow;
                 // Check collisions etc.

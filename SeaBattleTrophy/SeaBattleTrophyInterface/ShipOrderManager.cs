@@ -20,11 +20,11 @@ namespace SeaBattleTrophyGame
 
     public interface IShipOrderMovementPhaseManager : INotifyPropertyChanged
     {
-        void ApplyShipOrders(float t, bool isFinalChange);
-
         void ClearShipOrders();
 
         bool DoesAllShipsHaveValidOrders { get; }
+
+        void ApplyShipOrders(float t, bool isFinalChange, IWind currentWind);
     }
 
     public interface IShipOrderManager : IShipOrderMovementPhaseManager, IShipOrderEditor { }
@@ -55,10 +55,10 @@ namespace SeaBattleTrophyGame
             }
         }
 
-        public void ApplyShipOrders(float t, bool isFinalChange)
+        public void ApplyShipOrders(float t, bool isFinalChange, IWind currentWind)
         {
             foreach (var ship in _shipsByIndex.Values)
-                ship.ApplyCurrentShipOrder(t, isFinalChange);
+                ship.ApplyCurrentShipOrder(t, isFinalChange, currentWind);
         }
 
         public void ClearShipOrders()
