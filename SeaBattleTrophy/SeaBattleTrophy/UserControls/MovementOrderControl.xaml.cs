@@ -83,5 +83,10 @@ namespace SeaBattleTrophy.WPF
             if (OrderAdded != null)
                 OrderAdded(Time);
         }
+
+        private void HandleMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            Time += e.Delta/240.0;
+        }
     }
 }
