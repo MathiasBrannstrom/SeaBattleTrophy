@@ -4,6 +4,7 @@ using System.Linq;
 using Maths.Geometry;
 using Utilities;
 using System.ComponentModel;
+using Maths;
 
 namespace SeaBattleTrophyGame
 {
@@ -49,7 +50,13 @@ namespace SeaBattleTrophyGame
 
     internal class Ship : IShip
     {
-        public double AngleInDegrees { get; set; }
+        private double _angleInDegrees;
+        public double AngleInDegrees { get { return _angleInDegrees; }
+            set
+            {
+                _angleInDegrees = value.Modulo(360);
+            }
+        }
 
         public Point2D Position { get; set; }
 
@@ -62,7 +69,19 @@ namespace SeaBattleTrophyGame
 
         public double DriftMultiplier
         {
-            get { return 0.1; }
+            get { return 0.2; }
+        }
+
+        public double SpeedMultiplierFromWind(IWind wind)
+        {
+            var angleDiff = 180 - Math.Abs(180 - (AngleInDegrees - wind.Angle));
+            Console.WriteLine(angleDiff);
+            if (angleDiff < 30)
+                return wind.Velocity * 0.08;
+            if(angleDiff < 150)
+                return wind.Velocity*0.1;
+
+            return wind.Velocity*0.03;
         }
 
         public SailLevel SailLevel { get; set; }
@@ -112,7 +131,7 @@ namespace SeaBattleTrophyGame
 
                 var timeSpentForThisMovementOrder = new TimeSpan(Math.Min(timeLeftToTravel.Ticks, movementOrder.TimeSpan.Ticks));
 
-                var distanceToTravelForThisMovementOrder = timeSpentForThisMovementOrder.TotalSeconds * CurrentSpeed;
+                var distanceToTravelForThisMovementOrder = timeSpentForThisMovementOrder.TotalSeconds * CurrentSpeed * SpeedMultiplierFromWind(currentWind);
 
                 if (movementOrder is ForwardMovementOrder)
                     ApplyMovementOrder((ForwardMovementOrder)movementOrder, distanceToTravelForThisMovementOrder);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Maths;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace SeaBattleTrophyGame
     {
         public Wind(double angle, double velocity)
         {
-            Angle = angle;
+            Angle = angle.Modulo(360);
             Velocity = velocity;
         }
 
@@ -48,7 +49,7 @@ namespace SeaBattleTrophyGame
 
     public class WindManager : IWindManager
     {
-        private Wind _wind = new Wind(0, 10);
+        private Wind _wind = new Wind(0, 8);
         public IWind CurrentWind { get { return _wind; } }
 
         public event PropertyChangedEventHandler PropertyChanged;

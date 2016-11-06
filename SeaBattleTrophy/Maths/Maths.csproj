@@ -40,7 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FloatExtensions.cs" />
+    <Compile Include="DoubleExtensions.cs" />
     <Compile Include="GeometryExtensions\Line2DExtensions.cs" />
     <Compile Include="GeometryExtensions\LineSegment2DExtensions.cs" />
     <Compile Include="GeometryExtensions\Polygon2DExtensions.cs" />
