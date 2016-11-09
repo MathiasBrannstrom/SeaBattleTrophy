@@ -10,10 +10,11 @@ namespace SeaBattleTrophyGame
 {
     public enum SailLevel
     {
-        LowSails = 0,
-        CombatSails = 1,
-        FullSails = 2,
-        FullSailsWithLeadSail = 3
+        NoSails = 0,
+        LowSails = 1,
+        CombatSails = 2,
+        FullSails = 3,
+        FullSailsWithLeadSail = 4,
     }
 
     public interface IShipReadOnly : INotifyPropertyChanged
@@ -22,13 +23,11 @@ namespace SeaBattleTrophyGame
         // [0, 360[   0 angle points north, increasing angle turns CCW.
         double AngleInDegrees { get; }
 
-        Point2D Position { get; }
-
+        // XY coordinates are in meters.
         Polygon2D Shape { get; }
 
-        SailLevel SailLevel { get; }
-
-        double CurrentSpeed { get; }
+        // In kilograms
+        double Mass { get; }
 
         IShipOrderReadOnly CurrentShipOrder { get; }
 
@@ -58,33 +57,21 @@ namespace SeaBattleTrophyGame
             }
         }
 
-        public Point2D Position { get; set; }
-
         public Polygon2D Shape { get; set; }
-        
-        public double CurrentSpeed
-        {
-            get { return 10.0 * SailLevelSpeedModifier(SailLevel); }
-        }
 
-        public double DriftMultiplier
-        {
-            get { return 0.2; }
-        }
+        public double Mass { get; set; }
 
-        public double SpeedMultiplierFromWind(IWind wind)
-        {
-            var angleDiff = 180 - Math.Abs(180 - (AngleInDegrees - wind.Angle));
-            Console.WriteLine(angleDiff);
-            if (angleDiff < 30)
-                return wind.Velocity * 0.08;
-            if(angleDiff < 150)
-                return wind.Velocity*0.1;
+        //public double SpeedMultiplierFromWind(IWind wind)
+        //{
+        //    var angleDiff = 180 - Math.Abs(180 - (AngleInDegrees - wind.Angle));
+        //    Console.WriteLine(angleDiff);
+        //    if (angleDiff < 30)
+        //        return wind.Velocity * 0.08;
+        //    if(angleDiff < 150)
+        //        return wind.Velocity*0.1;
 
-            return wind.Velocity*0.03;
-        }
-
-        public SailLevel SailLevel { get; set; }
+        //    return wind.Velocity*0.03;
+        //}
 
         public int Index { get; set; }
 
@@ -92,12 +79,11 @@ namespace SeaBattleTrophyGame
         IShipOrderReadOnly IShipReadOnly.CurrentShipOrder { get { return CurrentShipOrder; } }
         public bool HasValidShipOrder { get { return CurrentShipOrder.IsValid; } }
 
-
-        private ShipStatus _shipStatus = new ShipStatus();
+        private ShipStatus _shipStatus;
         public IShipStatus ShipStatus { get { return _shipStatus; } }
         IShipStatusReadOnly IShipReadOnly.ShipStatus { get { return _shipStatus; } }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        #region ShipOrders
 
         private static Stack<MovementOrder> CreateMovementOrderStack(IShipOrderReadOnly shipOrder)
         {
@@ -107,6 +93,11 @@ namespace SeaBattleTrophyGame
         }
 
         private Stack<MovementOrder> _movementOrderStack;
+
+        public Ship(ShipStatus status)
+        {
+            _shipStatus = status;
+        }
 
         public void ApplyCurrentShipOrder(TimeSpan timeStep, bool isFinalChange, IWind currentWind)
         {
@@ -131,19 +122,25 @@ namespace SeaBattleTrophyGame
 
                 var timeSpentForThisMovementOrder = new TimeSpan(Math.Min(timeLeftToTravel.Ticks, movementOrder.TimeSpan.Ticks));
 
-                var distanceToTravelForThisMovementOrder = timeSpentForThisMovementOrder.TotalSeconds * CurrentSpeed * SpeedMultiplierFromWind(currentWind);
+                var forcesOnShip = this.CalculateForceOnShip(currentWind);
+                var acceleration = forcesOnShip / Mass;
 
-                if (movementOrder is ForwardMovementOrder)
-                    ApplyMovementOrder((ForwardMovementOrder)movementOrder, distanceToTravelForThisMovementOrder);
-                else if (movementOrder is YawMovementOrder)
-                    ApplyMovementOrder((YawMovementOrder)movementOrder, distanceToTravelForThisMovementOrder);
+                
+                ShipStatus.Velocity += acceleration * timeStep.TotalSeconds;
+
+                ShipStatus.Position += ShipStatus.Velocity * timeStep.TotalSeconds;
+
+                //var distanceToTravelForThisMovementOrder = timeSpentForThisMovementOrder.TotalSeconds * CurrentSpeed * SpeedMultiplierFromWind(currentWind);
+
+                //if (movementOrder is ForwardMovementOrder)
+                //    ApplyMovementOrder((ForwardMovementOrder)movementOrder, distanceToTravelForThisMovementOrder);
+                //else if (movementOrder is YawMovementOrder)
+                //    ApplyMovementOrder((YawMovementOrder)movementOrder, distanceToTravelForThisMovementOrder);
 
                 timeLeftToTravel -= timeSpentForThisMovementOrder;
                 if (timeLeftToTravel.Ticks==0)
                     break;
             }
-
-            ApplyWindDrift(currentWind, timeStep);
 
             if (isFinalChange)
             {
@@ -155,33 +152,23 @@ namespace SeaBattleTrophyGame
 
         }
 
-        private void ApplyWindDrift(IWind wind, TimeSpan timeStep)
-        {
-            var direction = Vector2D.DirectionFromAngle(wind.Angle);
-
-            Position += direction * wind.Velocity * timeStep.TotalSeconds * DriftMultiplier;
-        }
-
         private void ChangeSailLevel(SailLevelChange sailLevelChange)
         {
             switch (sailLevelChange)
             {
                 case SailLevelChange.DecreaseSailLevel:
-                    SailLevel = (SailLevel)Math.Max(0, (int)(SailLevel - 1));
+                    ShipStatus.SailLevel = (SailLevel)Math.Max(0, (int)(ShipStatus.SailLevel - 1));
                     break;
                 case SailLevelChange.IncreaseSailLevel:
-                    SailLevel = (SailLevel)Math.Min(3, (int)(SailLevel + 1));
+                    ShipStatus.SailLevel = (SailLevel)Math.Min(3, (int)(ShipStatus.SailLevel + 1));
                     break;
             }
-
-            OnPropertyChanged("CurrentSpeed");
-            OnPropertyChanged("SailLevel");
         }
 
         private void ApplyMovementOrder(ForwardMovementOrder movementOrder, double distanceToTravel)
         {
-            Position += Vector2D.DirectionFromAngle(AngleInDegrees) * distanceToTravel;
-            OnPropertyChanged("Position");
+            //Position += Vector2D.DirectionFromAngle(AngleInDegrees) * distanceToTravel;
+            //PropertyChanged.Raise(() => Position);
         }
 
         private void ApplyMovementOrder(YawMovementOrder movementOrder, double distanceToTravel)
@@ -202,10 +189,9 @@ namespace SeaBattleTrophyGame
                     AngleInDegrees -= angleChange;
                     break;
             }
-            Position += changeVector;
-
-            OnPropertyChanged("Position");
-            OnPropertyChanged("AngleInDegrees");
+            //Position += changeVector;
+            //PropertyChanged.Raise(() => Position);
+            PropertyChanged.Raise(() => AngleInDegrees);
         }
 
         public void SetShipOrder(IShipOrder order)
@@ -226,32 +212,8 @@ namespace SeaBattleTrophyGame
                 PropertyChanged.Raise(() => HasValidShipOrder);
         }
 
-        // Create the OnPropertyChanged method to raise the event
-        public void OnPropertyChanged(string name)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
-        }
+        #endregion
 
-        // This should be moved somewhere
-        private static double SailLevelSpeedModifier(SailLevel sailLevel)
-        {
-            switch (sailLevel)
-            {
-                case SailLevel.LowSails:
-                    return 0.4f;
-                case SailLevel.CombatSails:
-                    return 0.6f;
-                case SailLevel.FullSails:
-                    return 0.8f;
-                case SailLevel.FullSailsWithLeadSail:
-                    return 1.0f;
-                default:
-                    throw new ArgumentOutOfRangeException("This sail speed is not supported!");
-            }
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

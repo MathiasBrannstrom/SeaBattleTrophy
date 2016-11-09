@@ -65,7 +65,7 @@ namespace SeaBattleTrophyGame
                 // Even more importantly, the polygons can have a lazily created bounding box that will be checked first. Should
                 // give a big speed improvment.
                 var adjustedShipPolygon = ship.Shape.Transform(Transformations.Rotation2D(ship.AngleInDegrees), 
-                    new Vector2D(ship.Position.X, ship.Position.Y));
+                    new Vector2D(ship.ShipStatus.Position.X, ship.ShipStatus.Position.Y));
 
                 var closestDistance = double.MaxValue;
                 foreach (var landMass in _seaMap.LandMasses)

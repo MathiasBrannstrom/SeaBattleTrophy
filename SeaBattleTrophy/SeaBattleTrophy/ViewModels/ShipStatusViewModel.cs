@@ -28,6 +28,21 @@ namespace SeaBattleTrophy.WPF.ViewModels
             get { return _currentShip.ShipStatus.DistanceFromLand; }
         }
 
+        public string Velocity
+        {
+            get { return _currentShip.ShipStatus.Velocity.ToString(); }
+        }
+
+        public string Position
+        {
+            get { return _currentShip.ShipStatus.Position.ToString(); }
+        }
+
+        public string SailLevel
+        {
+            get { return _currentShip.ShipStatus.SailLevel.ToString(); }
+        }
+
         private void HandleSelectedShipPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (_currentShip != null)
@@ -42,7 +57,14 @@ namespace SeaBattleTrophy.WPF.ViewModels
 
         private void HandleCurrentShipShipStatusChanged(object sender, PropertyChangedEventArgs e)
         {
-            PropertyChanged.Raise(() => DistanceToLand);
+            if(e.PropertyName == nameof(IShipStatusReadOnly.DistanceFromLand))
+                PropertyChanged.Raise(() => DistanceToLand);
+            if (e.PropertyName == nameof(IShipStatusReadOnly.Velocity))
+                PropertyChanged.Raise(() => Velocity);
+            if (e.PropertyName == nameof(IShipStatusReadOnly.Position))
+                PropertyChanged.Raise(() => Position);
+            if (e.PropertyName == nameof(IShipStatusReadOnly.SailLevel))
+                PropertyChanged.Raise(() => SailLevel);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

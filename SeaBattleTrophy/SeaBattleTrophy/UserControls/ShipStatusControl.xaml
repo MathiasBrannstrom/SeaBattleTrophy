@@ -14,8 +14,20 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Label Grid.Column="0" Content="{x:Static props:Strings.DistanceToLand}" />
-            <Label Grid.Column="1" Content="{Binding DistanceToLand}" />
+
+            <StackPanel Grid.Column="0">
+                <Label  Content="{x:Static props:Strings.DistanceToLand}" />
+                <Label Content="{x:Static props:Strings.Velocity}" />
+                <Label Content="{x:Static props:Strings.Position}" />
+                <Label Content="{x:Static props:Strings.CurrentSailLevel}" />
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <Label Content="{Binding DistanceToLand}" />
+                <Label Content="{Binding Velocity}" />
+                <Label Content="{Binding Position}" />
+                <Label Content="{Binding SailLevel}" />
+
+            </StackPanel>
         </Grid>
     </Grid> 
 </UserControl>

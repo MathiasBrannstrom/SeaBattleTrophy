@@ -70,6 +70,15 @@ namespace SeaBattleTrophy.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Current sail level:.
+        /// </summary>
+        public static string CurrentSailLevel {
+            get {
+                return ResourceManager.GetString("CurrentSailLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Decrease sail level.
         /// </summary>
         public static string DecreaseSailLevel {
@@ -133,6 +142,15 @@ namespace SeaBattleTrophy.WPF.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Position.
+        /// </summary>
+        public static string Position {
+            get {
+                return ResourceManager.GetString("Position", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove.
         /// </summary>
         public static string Remove {
@@ -165,6 +183,15 @@ namespace SeaBattleTrophy.WPF.Properties {
         public static string Up {
             get {
                 return ResourceManager.GetString("Up", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Velocity.
+        /// </summary>
+        public static string Velocity {
+            get {
+                return ResourceManager.GetString("Velocity", resourceCulture);
             }
         }
     }

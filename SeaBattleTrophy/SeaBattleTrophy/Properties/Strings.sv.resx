@@ -120,6 +120,9 @@
   <data name="AllShipsDoNotHaveOrdersYet" xml:space="preserve">
     <value>Alla skepp har inte fått orders än.</value>
   </data>
+  <data name="CurrentSailLevel" xml:space="preserve">
+    <value>Nuvarande segelnivå:</value>
+  </data>
   <data name="DecreaseSailLevel" xml:space="preserve">
     <value>Minska segelnivå</value>
   </data>
@@ -141,6 +144,9 @@
   <data name="Port" xml:space="preserve">
     <value>Babord</value>
   </data>
+  <data name="Position" xml:space="preserve">
+    <value>Position</value>
+  </data>
   <data name="Remove" xml:space="preserve">
     <value>Ta bort</value>
   </data>
@@ -152,5 +158,8 @@
   </data>
   <data name="Up" xml:space="preserve">
     <value>Upp</value>
+  </data>
+  <data name="Velocity" xml:space="preserve">
+    <value>Hastighet</value>
   </data>
 </root>

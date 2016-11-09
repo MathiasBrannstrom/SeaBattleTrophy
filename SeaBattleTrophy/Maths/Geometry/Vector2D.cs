@@ -28,6 +28,11 @@ namespace Maths.Geometry
             return new Vector2D(vector0.X + vector1.X, vector0.Y + vector1.Y);
         }
 
+        public static Vector2D operator -(Vector2D vector0, Vector2D vector1)
+        {
+            return new Vector2D(vector0.X - vector1.X, vector0.Y - vector1.Y);
+        }
+
         public double Dot(Vector2D vector)
         {
             return X * vector.X + Y * vector.Y;
@@ -60,6 +65,11 @@ namespace Maths.Geometry
         public static Vector2D DirectionFromAngle(double angle)
         {
             return new Vector2D(-Math.Sin(angle * Math.PI / 180.0), Math.Cos(angle * Math.PI / 180.0));
+        }
+
+        public override string ToString()
+        {
+            return string.Format("X: {0:0.00}; Y: {1:0.00}", X, Y);
         }
     }
 }

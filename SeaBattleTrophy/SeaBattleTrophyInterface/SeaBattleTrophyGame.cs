@@ -28,7 +28,13 @@ namespace SeaBattleTrophyGame
         {
             var rectanglePolygon = new Polygon2D(new[] { new Point2D(-5, -20), new Point2D(-5, 20), new Point2D(0, 22), new Point2D(5, 20), new Point2D(5, -20) });
             //_ships.Add(new Ship { Shape = rectanglePolygon, Position = new Point2D(20, 80), AngleInDegrees = -30, Index = 0, SailLevel = SailLevel.LowSails });
-            _ships.Add(new Ship { Shape = rectanglePolygon, Position = new Point2D(20, 40), AngleInDegrees = -90, Index = 1, SailLevel = SailLevel.FullSailsWithLeadSail });
+
+            var shipStatus0 = new ShipStatus { Position = new Point2D(20,40), SailLevel = SailLevel.NoSails };
+            _ships.Add(
+                new Ship(shipStatus0){
+                    Shape = rectanglePolygon,
+                    AngleInDegrees = -90, Index = 1,
+                    Mass = 50});
             //_ships.Add(new Ship { Width = 20, Length = 30, Position = new Point2D { X = 70, Y = 30 }, AngleInDegrees = 90, Index = 2, SailLevel = SailLevel.FullSailsWithLeadSail });
 
             Ships = _ships;

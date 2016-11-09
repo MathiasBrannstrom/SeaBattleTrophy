@@ -42,5 +42,10 @@ namespace Maths.Geometry
         {
             return new Point2D(matrix.V00 * X + matrix.V01 * Y, matrix.V10 * X + matrix.V11 * Y);
         }
+
+        public override string ToString()
+        {
+            return string.Format("X: {0:0.00}; Y: {1:0.00}", X, Y);
+        }
     }
 }

@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="GameObjects\LandMass.cs" />
     <Compile Include="GameObjects\Ship\Ship.cs" />
+    <Compile Include="GameObjects\Ship\ShipExtensions.cs" />
     <Compile Include="GameObjects\Ship\ShipStatus.cs" />
     <Compile Include="Orders\ShipOrder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
