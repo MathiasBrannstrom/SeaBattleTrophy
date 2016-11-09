@@ -40,16 +40,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Objects\LandMass.cs" />
-    <Compile Include="Objects\Ship\Ship.cs" />
-    <Compile Include="Objects\Ship\ShipStatus.cs" />
+    <Compile Include="GameObjects\LandMass.cs" />
+    <Compile Include="GameObjects\Ship\Ship.cs" />
+    <Compile Include="GameObjects\Ship\ShipStatus.cs" />
     <Compile Include="Orders\ShipOrder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SeaBattleTrophyGame.cs" />
-    <Compile Include="SeaMap.cs" />
-    <Compile Include="ShipOrderManager.cs" />
-    <Compile Include="TurnManager.cs" />
-    <Compile Include="WindManager.cs" />
+    <Compile Include="GameObjects\SeaMap.cs" />
+    <Compile Include="Managers\ShipOrderManager.cs" />
+    <Compile Include="Managers\TurnManager.cs" />
+    <Compile Include="Managers\WindManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Maths\Maths.csproj">

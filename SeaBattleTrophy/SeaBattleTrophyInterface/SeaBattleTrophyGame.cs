@@ -4,7 +4,9 @@ using Maths.Geometry;
 
 namespace SeaBattleTrophyGame
 {
-
+    /// <summary>
+    /// Interface to expose to the UI.
+    /// </summary>
     public interface ISeaBattleTrophyGame
     {
         IEnumerable<IShipReadOnly> Ships { get; }
@@ -24,8 +26,6 @@ namespace SeaBattleTrophyGame
         
         public SeaBattleTrophyGameManager()
         {
-            //var smallPolygon = new Polygon2D(new[] { new Point2D(-0.1f, -0.1f), new Point2D(-0.1f, 0.1f), new Point2D(0.1f, 0.1f), new Point2D(0.1f, -0.1f) });
-
             var rectanglePolygon = new Polygon2D(new[] { new Point2D(-5, -20), new Point2D(-5, 20), new Point2D(0, 22), new Point2D(5, 20), new Point2D(5, -20) });
             //_ships.Add(new Ship { Shape = rectanglePolygon, Position = new Point2D(20, 80), AngleInDegrees = -30, Index = 0, SailLevel = SailLevel.LowSails });
             _ships.Add(new Ship { Shape = rectanglePolygon, Position = new Point2D(20, 40), AngleInDegrees = -90, Index = 1, SailLevel = SailLevel.FullSailsWithLeadSail });
