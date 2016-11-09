@@ -11,9 +11,9 @@ namespace SeaBattleTrophyGame
             // Calculate water drift force. It is dependent on the water drift (that is based on the wind), and the 
             // size of the ship hull. 
             //const double waterDriftConstant = 1.0;
-            //const double shipSizeVariable = 1.0;
-            const double windForceConstant = 1.0;
-            const double waterFrictionConstant = 0.4;
+            //const double shipSizeVariable = 1000;
+            const double windForceConstant = 100;
+            const double waterFrictionConstant = 20;
 
             var windVector = Vector2D.DirectionFromAngle(wind.Angle) * wind.Velocity;
             var waterDriftVector = windVector;
@@ -21,13 +21,13 @@ namespace SeaBattleTrophyGame
 
             // Calculate wind force on the ship. It is dependent on wind, sail level, current velocity 
             // of the ship and current angle of the ship (technically the angle of the sails). 
-            // This could later be calculated for each sail separately.
+            // This could later be calculated for each sail separately. Force is based on velocity difference squared.
             var windShipVelocityDifference = windVector - ship.ShipStatus.Velocity;
             var shipDirection = Vector2D.DirectionFromAngle(ship.AngleInDegrees);
 
             // For now we assume all forces perpendicular to ship direction are cancelled out by water friction. (Since the broad side of the ships
             // is so big)
-            var windForceInShipDirection = shipDirection.Dot(windShipVelocityDifference) *
+            var windForceInShipDirection = Math.Pow(shipDirection.Dot(windShipVelocityDifference),2) *
                 SailLevelSpeedModifier(ship.ShipStatus.SailLevel) * windForceConstant;
             var windForce = shipDirection * windForceInShipDirection;
 
@@ -36,7 +36,9 @@ namespace SeaBattleTrophyGame
 
             // For now only consider friction along ship direction.
             var waterShipVelocityDifference = waterDriftVector - ship.ShipStatus.Velocity;
-            var waterFrictionForce = waterShipVelocityDifference * waterFrictionConstant;
+
+
+            var waterFrictionForce = waterShipVelocityDifference.Normalized() * waterShipVelocityDifference.SquaredLength() * waterFrictionConstant;
 
             return windForce + waterFrictionForce;
         }

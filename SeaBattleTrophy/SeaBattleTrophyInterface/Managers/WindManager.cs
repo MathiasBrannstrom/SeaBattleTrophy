@@ -49,14 +49,14 @@ namespace SeaBattleTrophyGame
 
     public class WindManager : IWindManager
     {
-        private Wind _wind = new Wind(0, 8);
+        private Wind _wind = new Wind(270, 10);
         public IWind CurrentWind { get { return _wind; } }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public void UpdateWind(TimeSpan timeStep)
         {
-            _wind = new Wind(_wind.Angle + timeStep.TotalSeconds*4, _wind.Velocity);
+            //_wind = new Wind(_wind.Angle + timeStep.TotalSeconds*4, _wind.Velocity);
             // Do nothing for now.
             PropertyChanged.Raise(() => CurrentWind);
         }

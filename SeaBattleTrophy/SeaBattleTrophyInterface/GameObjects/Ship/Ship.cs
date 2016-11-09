@@ -125,9 +125,7 @@ namespace SeaBattleTrophyGame
                 var forcesOnShip = this.CalculateForceOnShip(currentWind);
                 var acceleration = forcesOnShip / Mass;
 
-                
                 ShipStatus.Velocity += acceleration * timeStep.TotalSeconds;
-
                 ShipStatus.Position += ShipStatus.Velocity * timeStep.TotalSeconds;
 
                 //var distanceToTravelForThisMovementOrder = timeSpentForThisMovementOrder.TotalSeconds * CurrentSpeed * SpeedMultiplierFromWind(currentWind);

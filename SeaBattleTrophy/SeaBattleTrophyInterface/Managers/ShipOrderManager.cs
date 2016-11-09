@@ -51,6 +51,12 @@ namespace SeaBattleTrophyGame
 
         public void ApplyShipOrders(TimeSpan t, bool isFinalChange, IWind currentWind)
         {
+            if (!DoesAllShipsHaveValidOrders)
+            {
+                Console.WriteLine("Tried to send ship orders even though all of them were not ready...");
+                return;
+            }
+                
             foreach (var ship in _shipsByIndex.Values)
                 ship.ApplyCurrentShipOrder(t, isFinalChange, currentWind);
         }
